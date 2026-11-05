@@ -1,0 +1,602 @@
+"""Dibujos procedurales en estilo cartoon: escenarios y personajes.
+
+Todo se dibuja con Pillow a doble resolución y luego se reduce, para que
+los bordes queden suaves. No hace falta ninguna imagen externa.
+"""
+import math
+import random
+
+from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageChops
+
+from tipografia import fuente
+
+CONTORNO = (22, 16, 20)
+
+
+# ---------------------------------------------------------------- utilidades
+
+def rgb(c):
+    """Convierte '#rrggbb' o una tupla en tupla RGB."""
+    if isinstance(c, str):
+        c = c.lstrip("#")
+        if len(c) == 3:
+            c = "".join(ch * 2 for ch in c)
+        return tuple(int(c[i:i + 2], 16) for i in (0, 2, 4))
+    return tuple(c[:3])
+
+
+def mezclar(a, b, t):
+    a, b = rgb(a), rgb(b)
+    return tuple(int(a[i] + (b[i] - a[i]) * t) for i in range(3))
+
+
+def oscurecer(c, t=0.3):
+    return mezclar(c, (0, 0, 0), t)
+
+
+def degradado(w, h, arriba, abajo):
+    arriba, abajo = rgb(arriba), rgb(abajo)
+    col = Image.linear_gradient("L").resize((1, h))
+    capa_a = Image.new("RGB", (1, h), arriba)
+    capa_b = Image.new("RGB", (1, h), abajo)
+    return Image.composite(capa_b, capa_a, col).resize((w, h))
+
+
+def _pegar(img, capa, x, y, modo="normal"):
+    """Pega una capa RGBA en (x, y) recortando lo que se salga del lienzo."""
+    W, H = img.size
+    cw, ch = capa.size
+    x0, y0 = max(0, x), max(0, y)
+    x1, y1 = min(W, x + cw), min(H, y + ch)
+    if x1 <= x0 or y1 <= y0:
+        return
+    trozo = capa.crop((x0 - x, y0 - y, x1 - x, y1 - y))
+    if modo == "pantalla":
+        base = img.crop((x0, y0, x1, y1)).convert("RGB")
+        color = Image.new("RGB", trozo.size, (0, 0, 0))
+        color.paste(trozo.convert("RGB"), (0, 0), trozo.split()[3])
+        img.paste(ImageChops.screen(base, color), (x0, y0))
+    else:
+        img.paste(trozo, (x0, y0), trozo)
+
+
+def brillo(img, cx, cy, r, color, alpha=170, modo="pantalla"):
+    """Halo de luz difuminado centrado en (cx, cy)."""
+    borde = int(r * 1.2)
+    lado = int(2 * (r + borde))
+    capa = Image.new("RGBA", (lado, lado), (0, 0, 0, 0))
+    c = lado / 2
+    ImageDraw.Draw(capa).ellipse([c - r, c - r, c + r, c + r], fill=rgb(color) + (alpha,))
+    capa = capa.filter(ImageFilter.GaussianBlur(r * 0.55))
+    _pegar(img, capa, int(cx - c), int(cy - c), modo)
+
+
+def vineta(img, fuerza=0.75):
+    W, H = img.size
+    m = Image.radial_gradient("L").resize((W, H))
+    m = m.point(lambda v: int(min(255, max(0, (v - 90) * 1.6)) * fuerza))
+    negro = Image.new("RGB", (W, H), (6, 3, 6))
+    return Image.composite(negro, img, m)
+
+
+def niebla(img, y, alto, color=(120, 60, 60), alpha=90, semilla=1):
+    W, H = img.size
+    rnd = random.Random(semilla)
+    capa = Image.new("RGBA", (W, int(alto * 2)), (0, 0, 0, 0))
+    d = ImageDraw.Draw(capa)
+    for _ in range(14):
+        cx = rnd.uniform(-0.1, 1.1) * W
+        cy = alto + rnd.uniform(-0.3, 0.3) * alto
+        rx, ry = rnd.uniform(0.2, 0.45) * W, rnd.uniform(0.25, 0.5) * alto
+        d.ellipse([cx - rx, cy - ry, cx + rx, cy + ry], fill=rgb(color) + (alpha // 3,))
+    capa = capa.filter(ImageFilter.GaussianBlur(alto * 0.25))
+    _pegar(img, capa, 0, int(y - alto), "pantalla")
+
+
+def rect_redondo(d, caja, r, fill, ancho, contorno=CONTORNO):
+    d.rounded_rectangle(caja, radius=r, fill=fill, outline=contorno, width=ancho)
+
+
+def texto_centrado(d, cx, cy, txt, f, fill, **kw):
+    d.text((cx, cy), txt, font=f, fill=fill, anchor="mm", **kw)
+
+
+# --------------------------------------------------------------- escenarios
+# Cada fondo recibe (img, rnd, opciones). img es RGB a doble resolución.
+
+def fondo_calle(img, rnd, op):
+    W, H = img.size
+    img.paste(degradado(W, H, "#2a0f1e", "#7a2a22"))
+    d = ImageDraw.Draw(img)
+    horizonte = int(H * 0.56)
+    # edificios
+    x = -20
+    while x < W:
+        bw = rnd.randint(int(W * 0.14), int(W * 0.28))
+        bh = rnd.randint(int(H * 0.18), int(H * 0.42))
+        color = mezclar("#1d0f18", "#3a1a22", rnd.random())
+        d.rectangle([x, horizonte - bh, x + bw, horizonte], fill=color)
+        for wy in range(horizonte - bh + 40, horizonte - 40, 70):
+            for wx in range(x + 24, x + bw - 40, 56):
+                if rnd.random() < 0.35:
+                    d.rectangle([wx, wy, wx + 28, wy + 38], fill=mezclar("#ffb35a", "#ffd98a", rnd.random()))
+        x += bw + rnd.randint(4, 30)
+    # letrero
+    letrero = op.get("letrero")
+    if letrero:
+        lx, ly = int(W * 0.68), int(H * 0.25)
+        f = fuente("titulo", int(W * 0.075))
+        caja = d.textbbox((lx, ly), letrero, font=f, anchor="mm")
+        d.rectangle([caja[0] - 30, caja[1] - 24, caja[2] + 30, caja[3] + 24], fill="#140a10", outline="#3a2030", width=8)
+        brillo(img, lx, ly, W * 0.22, "#ff3b3b", 120)
+        d = ImageDraw.Draw(img)
+        apagada = op.get("letra_apagada", 1)
+        x0 = caja[0]
+        for i, letra in enumerate(letrero):
+            color = "#5a1a20" if i == apagada else "#ff5a4a"
+            d.text((x0, ly), letra, font=f, fill=color, anchor="lm")
+            x0 += d.textlength(letra, font=f)
+    # calle
+    d.rectangle([0, horizonte, W, H], fill="#1a1014")
+    cx = W // 2
+    d.polygon([(cx - 40, horizonte), (cx + 40, horizonte), (W * 1.1, H), (-W * 0.1, H)], fill="#2b1c20")
+    for i in range(7):
+        t0, t1 = (i / 7) ** 1.8, ((i + 0.5) / 7) ** 1.8
+        y0 = horizonte + (H - horizonte) * t0
+        y1 = horizonte + (H - horizonte) * t1
+        a0, a1 = 4 + 30 * t0, 4 + 30 * t1
+        d.polygon([(cx - a0, y0), (cx + a0, y0), (cx + a1, y1), (cx - a1, y1)], fill="#d9b25a")
+    # farolas
+    for fx in (0.12, 0.88):
+        x = int(W * fx)
+        d.rectangle([x - 10, int(H * 0.3), x + 10, horizonte + 160], fill="#0f0a0c")
+        brillo(img, x, int(H * 0.3), W * 0.16, "#ffb060", 200)
+        d = ImageDraw.Draw(img)
+    niebla(img, horizonte + 40, H * 0.12, (160, 70, 60), 150, rnd.randint(0, 999))
+
+
+def fondo_recepcion(img, rnd, op):
+    W, H = img.size
+    img.paste(degradado(W, H, "#3a1c16", "#1c0d0c"))
+    d = ImageDraw.Draw(img)
+    for x in range(0, W, 90):
+        d.rectangle([x, 0, x + 40, int(H * 0.62)], fill="#43221a")
+    # tablero de llaves
+    tx0, ty0, tx1, ty1 = int(W * 0.18), int(H * 0.16), int(W * 0.82), int(H * 0.40)
+    rect_redondo(d, [tx0, ty0, tx1, ty1], 20, "#5a3420", 10)
+    f = fuente("mono", int(W * 0.022))
+    for fila in range(3):
+        for col in range(6):
+            x = tx0 + 70 + col * (tx1 - tx0 - 140) / 5
+            y = ty0 + 70 + fila * (ty1 - ty0 - 110) / 2
+            d.ellipse([x - 10, y - 10, x + 10, y + 10], fill="#c9a35a")
+            if not (fila == 2 and col == 3):  # falta la llave 313
+                d.rectangle([x - 8, y + 10, x + 8, y + 70], fill="#d8b46a", outline=CONTORNO, width=4)
+            d.text((x, y - 34), f"{fila + 1}{col + 1:02d}", font=f, fill="#e8c890", anchor="mm")
+    brillo(img, W * 0.5, H * 0.1, W * 0.3, "#ffc070", 110)
+    d = ImageDraw.Draw(img)
+    # mostrador
+    my = int(H * 0.62)
+    d.rectangle([0, my + 60, W, H], fill="#2a1410")
+    rect_redondo(d, [-20, my, W + 20, my + 90], 16, "#7a4524", 10)
+    d.rectangle([-20, my + 90, W + 20, H], fill="#5a3018", outline=CONTORNO, width=10)
+    for x in range(60, W, 200):
+        d.rectangle([x, my + 140, x + 120, H - 80], outline="#43220f", width=8)
+    # campana
+    bx = int(W * 0.78)
+    d.chord([bx - 60, my - 70, bx + 60, my + 50], 180, 360, fill="#e0b84a", outline=CONTORNO, width=8)
+    d.rectangle([bx - 75, my - 10, bx + 75, my + 4], fill="#b8922a", outline=CONTORNO, width=6)
+
+
+def fondo_pasillo(img, rnd, op):
+    W, H = img.size
+    img.paste((30, 12, 14), (0, 0, W, H))
+    d = ImageDraw.Draw(img)
+    fx, fy = W / 2, H * 0.43            # punto de fuga
+    pw, ph = W * 0.16, H * 0.14         # tamaño del fondo del pasillo
+    lejos = [fx - pw, fy - ph, fx + pw, fy + ph]
+    # techo, suelo y paredes
+    d.polygon([(0, 0), (W, 0), (lejos[2], lejos[1]), (lejos[0], lejos[1])], fill="#2a1416")
+    d.polygon([(0, H), (W, H), (lejos[2], lejos[3]), (lejos[0], lejos[3])], fill="#5a1418")
+    d.polygon([(0, 0), (lejos[0], lejos[1]), (lejos[0], lejos[3]), (0, H)], fill="#6a3a2c")
+    d.polygon([(W, 0), (lejos[2], lejos[1]), (lejos[2], lejos[3]), (W, H)], fill="#5e3226")
+    d.rectangle(lejos, fill="#0a0507")
+    # patrón de la alfombra
+    for i in range(1, 9):
+        t = (i / 9) ** 1.7
+        y = lejos[3] + (H - lejos[3]) * t
+        xa = lejos[0] - (lejos[0]) * t
+        xb = lejos[2] + (W - lejos[2]) * t
+        d.line([(xa, y), (xb, y)], fill="#7a2228", width=int(4 + 10 * t))
+
+    # puertas a ambos lados
+    def en_pared(lado, t):
+        """Punto sobre la pared a profundidad t (0 = cerca, 1 = lejos)."""
+        x = (0 if lado < 0 else W) + ((lejos[0] if lado < 0 else lejos[2]) - (0 if lado < 0 else W)) * t
+        arriba = 0 + (lejos[1]) * t
+        abajo = H + (lejos[3] - H) * t
+        return x, arriba, abajo
+
+    f = fuente("mono", int(W * 0.03))
+    for lado in (-1, 1):
+        for k, (t0, t1) in enumerate([(0.08, 0.32), (0.5, 0.64), (0.75, 0.83)]):
+            x0, a0, b0 = en_pared(lado, t0)
+            x1, a1, b1 = en_pared(lado, t1)
+            alto0, alto1 = b0 - a0, b1 - a1
+            pts = [(x0, a0 + alto0 * 0.25), (x1, a1 + alto1 * 0.25), (x1, b1), (x0, b0)]
+            d.polygon(pts, fill="#3a1c14", outline=CONTORNO)
+            d.line(pts + [pts[0]], fill=CONTORNO, width=int(10 * (1 - t0)))
+            if k == 0:
+                num = op.get("puertas", ["311", "312"])[0 if lado < 0 else 1]
+                d.text(((x0 + x1) / 2, a0 + alto0 * 0.31), num, font=f, fill="#d8b46a", anchor="mm")
+    # lámparas del techo
+    for t in (0.15, 0.45, 0.7, 0.86):
+        y = lejos[1] * t
+        ancho = (1 - t) * W * 0.12 + 10
+        parpadea = op.get("parpadeo") and t == 0.45
+        color = "#5a3a2a" if parpadea else "#ffd090"
+        d.rectangle([fx - ancho, y + 10, fx + ancho, y + 10 + ancho * 0.2], fill=color)
+        if not parpadea:
+            brillo(img, fx, y + 40, ancho * 2.2, "#ff9a50", 110)
+            d = ImageDraw.Draw(img)
+
+
+def fondo_habitacion(img, rnd, op):
+    W, H = img.size
+    img.paste(degradado(W, H, "#2c1620", "#170a10"))
+    d = ImageDraw.Draw(img)
+    suelo = int(H * 0.66)
+    for x in range(0, W, 120):
+        d.line([(x, 0), (x, suelo)], fill="#341b26", width=30)
+    d.rectangle([0, suelo, W, H], fill="#2a1612")
+    for y in range(suelo + 50, H, 110):
+        d.line([(0, y), (W, y)], fill="#21100e", width=10)
+    # puerta (izquierda)
+    px0, px1, py0 = int(W * 0.06), int(W * 0.42), int(H * 0.24)
+    rect_redondo(d, [px0, py0, px1, suelo + 10], 10, "#4a2416", 12)
+    d.rectangle([px0 + 50, py0 + 60, px1 - 50, py0 + 360], outline="#331709", width=10)
+    d.rectangle([px0 + 50, py0 + 440, px1 - 50, suelo - 60], outline="#331709", width=10)
+    d.ellipse([px1 - 90, int(H * 0.46) - 26, px1 - 38, int(H * 0.46) + 26], fill="#d8b04a", outline=CONTORNO, width=6)
+    d.text(((px0 + px1) / 2, py0 + 30 + 0), "313", font=fuente("mono", int(W * 0.03)), fill="#d8b46a", anchor="mt")
+    # luz bajo la puerta, con sombras de pies
+    d.rectangle([px0 + 10, suelo - 4, px1 - 10, suelo + 14], fill="#ffcf7a")
+    for sx in (0.42, 0.6):
+        x = px0 + (px1 - px0) * sx
+        d.rectangle([x - 30, suelo - 4, x + 30, suelo + 14], fill="#1a0a08")
+    # ventana (derecha)
+    vx0, vx1, vy0, vy1 = int(W * 0.56), int(W * 0.94), int(H * 0.14), int(H * 0.38)
+    vent = degradado(vx1 - vx0, vy1 - vy0, "#0a1230", "#3a2a50")
+    img.paste(vent, (vx0, vy0))
+    brillo(img, vx0 + (vx1 - vx0) * 0.7, vy0 + 140, 70, "#f0f0ff", 230)
+    d = ImageDraw.Draw(img)
+    d.rectangle([vx0, vy0, vx1, vy1], outline=CONTORNO, width=16)
+    d.line([((vx0 + vx1) / 2, vy0), ((vx0 + vx1) / 2, vy1)], fill=CONTORNO, width=12)
+    # cama
+    cx0, cy0 = int(W * 0.48), int(H * 0.53)
+    rect_redondo(d, [cx0, cy0 - 120, W + 40, cy0 + 30], 30, "#4a2a1c", 10)
+    rect_redondo(d, [cx0 - 10, cy0, W + 40, suelo + 80], 26, "#7a2c34", 10)
+    rect_redondo(d, [cx0 + 30, cy0 - 50, cx0 + 260, cy0 + 40], 30, "#e8d8c8", 8)
+    # lámpara de noche
+    brillo(img, W * 0.47, H * 0.45, W * 0.12, "#ffb060", 140)
+
+
+def fondo_puerta(img, rnd, op):
+    W, H = img.size
+    img.paste(degradado(W, H, "#1a0c10", "#0d0608"))
+    d = ImageDraw.Draw(img)
+    suelo = int(H * 0.86)
+    px0, px1 = int(W * 0.12), int(W * 0.88)
+    rect_redondo(d, [px0 - 40, int(H * 0.02), px1 + 40, suelo + 20], 16, "#2e170e", 16)
+    d.rectangle([px0, int(H * 0.05), px1, suelo], fill="#53291a", outline=CONTORNO, width=14)
+    for y0, y1 in [(0.1, 0.42), (0.48, 0.8)]:
+        d.rectangle([px0 + 80, int(H * y0), px1 - 80, int(H * y1)], outline="#3a1b0e", width=16)
+    # mirilla
+    d.ellipse([W / 2 - 34, H * 0.2 - 34, W / 2 + 34, H * 0.2 + 34], fill="#c9a24a", outline=CONTORNO, width=8)
+    d.ellipse([W / 2 - 12, H * 0.2 - 12, W / 2 + 12, H * 0.2 + 12], fill="#110808")
+    # perilla
+    kx, ky = px1 - 130, int(H * 0.47)
+    d.ellipse([kx - 60, ky - 60, kx + 60, ky + 60], fill="#d8b04a", outline=CONTORNO, width=10)
+    d.ellipse([kx - 24, ky - 40, kx + 4, ky - 12], fill="#f8e4a0")
+    # luz bajo la puerta y pies
+    d.rectangle([px0, suelo, px1, suelo + 26], fill="#ffd27a")
+    brillo(img, W / 2, suelo + 10, W * 0.3, "#ffa040", 120)
+    d = ImageDraw.Draw(img)
+    for sx in (0.4, 0.58):
+        x = W * sx
+        d.rectangle([x - 50, suelo, x + 50, suelo + 26], fill="#120606")
+    d.rectangle([0, suelo + 26, W, H], fill="#1a0c0a")
+
+
+def fondo_ascensor(img, rnd, op):
+    W, H = img.size
+    img.paste(degradado(W, H, "#3a3434", "#141010"))
+    d = ImageDraw.Draw(img)
+    for x in range(0, W, int(W / 6)):
+        d.line([(x, 0), (x, H)], fill="#2a2424", width=8)
+    # pantalla de piso
+    sx, sy = W / 2, H * 0.12
+    rect_redondo(d, [sx - 170, sy - 90, sx + 170, sy + 90], 20, "#0a0404", 10)
+    piso = str(op.get("piso", "0"))
+    f = fuente("mono", int(W * 0.12))
+    brillo(img, sx, sy, 150, "#ff2020", 120)
+    d = ImageDraw.Draw(img)
+    d.text((sx, sy), piso, font=f, fill="#ff3a2a", anchor="mm")
+    # botonera
+    bx0, by0 = int(W * 0.72), int(H * 0.3)
+    rect_redondo(d, [bx0, by0, bx0 + 200, by0 + 560], 20, "#8a8484", 10)
+    fb = fuente("mono", 40)
+    for i, n in enumerate(["5", "4", "3", "2", "1", "0"]):
+        y = by0 + 60 + i * 88
+        encendido = n == piso
+        d.ellipse([bx0 + 60, y - 32, bx0 + 124, y + 32], fill="#ff5a3a" if encendido else "#d8d0c8", outline=CONTORNO, width=6)
+        d.text((bx0 + 92, y), n, font=fb, fill=CONTORNO, anchor="mm")
+    brillo(img, W / 2, 0, W * 0.4, "#fff0d0", 90)
+    # luz roja de alarma
+    if piso == "0":
+        capa = Image.new("RGB", img.size, (140, 10, 10))
+        img.paste(Image.blend(img, capa, 0.18))
+
+
+def fondo_oscuro(img, rnd, op):
+    W, H = img.size
+    img.paste(degradado(W, H, "#0a0406", "#2a0a0c"))
+    brillo(img, W / 2, H * 0.95, W * 0.6, "#a01818", 120)
+
+
+def fondo_nota(img, rnd, op):
+    """Una hoja con las reglas escritas, sobre una mesa a oscuras."""
+    W, H = img.size
+    img.paste(degradado(W, H, "#24120c", "#100806"))
+    d = ImageDraw.Draw(img)
+    for y in range(0, H, 140):
+        d.line([(0, y + rnd.randint(-10, 10)), (W, y + rnd.randint(-10, 10))], fill="#1a0c08", width=6)
+    hw, hh = int(W * 0.84), int(H * 0.47)
+    hoja = Image.new("RGBA", (hw, hh), (0, 0, 0, 0))
+    hd = ImageDraw.Draw(hoja)
+    hd.rectangle([0, 0, hw - 1, hh - 1], fill="#efe2c4", outline=CONTORNO, width=10)
+    paso, y0 = int(hh * 0.088), int(hh * 0.25)
+    for y in range(y0, hh - 30, paso):
+        hd.line([(40, y + 14), (hw - 40, y + 14)], fill="#c9b892", width=4)
+    hd.line([(110, 30), (110, hh - 30)], fill="#e0a0a0", width=4)
+    hd.text((hw / 2, hh * 0.13), op.get("encabezado", "REGLAS"), font=fuente("titulo", int(hw * 0.1)), fill="#5a1414", anchor="mm")
+    f = fuente("mono", int(paso * 0.56))
+    resaltar = op.get("resaltar")
+    y = y0
+    for i, linea in enumerate(op.get("lineas", [])):
+        color = "#b01818" if resaltar == i + 1 else "#2a1a14"
+        for trozo in _envolver(hd, f"{i + 1}. {linea}", f, hw - 170):
+            hd.text((130, y), trozo, font=f, fill=color, anchor="ls")
+            y += paso
+    sombra = Image.new("RGBA", (hw + 80, hh + 80), (0, 0, 0, 0))
+    ImageDraw.Draw(sombra).rectangle([40, 50, hw + 40, hh + 50], fill=(0, 0, 0, 160))
+    sombra = sombra.filter(ImageFilter.GaussianBlur(30))
+    hoja = hoja.rotate(rnd.uniform(-4, 4), expand=True, resample=Image.BICUBIC)
+    _pegar(img, sombra, (W - hw) // 2 - 40, int(H * 0.27) - 40)
+    _pegar(img, hoja, (W - hoja.width) // 2, int(H * 0.27))
+    brillo(img, W * 0.5, H * 0.35, W * 0.45, "#ffb060", 60)
+
+
+def _envolver(d, texto, f, ancho):
+    palabras, lineas, actual = texto.split(), [], ""
+    for p in palabras:
+        prueba = (actual + " " + p).strip()
+        if d.textlength(prueba, font=f) > ancho and actual:
+            lineas.append(actual)
+            actual = p
+        else:
+            actual = prueba
+    if actual:
+        lineas.append(actual)
+    return lineas
+
+
+FONDOS = {
+    "calle": fondo_calle,
+    "recepcion": fondo_recepcion,
+    "pasillo": fondo_pasillo,
+    "habitacion": fondo_habitacion,
+    "puerta": fondo_puerta,
+    "ascensor": fondo_ascensor,
+    "oscuro": fondo_oscuro,
+    "nota": fondo_nota,
+}
+
+
+# --------------------------------------------------------------- personajes
+
+PIEL = "#eab48c"
+
+
+def personaje(img, cx, base, alto, spec, expresion="neutral", mirar=0.0):
+    """Dibuja un personaje de pie. `base` es la línea de los pies; `alto` su altura total."""
+    d = ImageDraw.Draw(img)
+    sombra = spec.get("sombra", False)
+    piel = rgb("#140c10" if sombra else spec.get("piel", PIEL))
+    ropa = rgb("#0e080a" if sombra else spec.get("ropa", "#3b4a6b"))
+    pantalon = rgb("#0a0608" if sombra else spec.get("pantalon", "#28243a"))
+    pelo = rgb("#0a0608" if sombra else spec.get("color_pelo", "#2a1c16"))
+    lw = max(4, int(alto * 0.012))
+    u = alto
+
+    # piernas y zapatos
+    for s in (-1, 1):
+        x = cx + s * 0.065 * u
+        rect_redondo(d, [x - 0.05 * u, base - 0.24 * u, x + 0.05 * u, base - 0.02 * u], 0.03 * u, pantalon, lw)
+        d.ellipse([x - 0.065 * u + s * 0.01 * u, base - 0.05 * u, x + 0.065 * u + s * 0.01 * u, base + 0.005 * u],
+                  fill=oscurecer(pantalon, 0.5), outline=CONTORNO, width=lw)
+    # brazos (detrás del torso)
+    for s in (-1, 1):
+        x = cx + s * 0.185 * u
+        rect_redondo(d, [x - 0.045 * u, base - 0.54 * u, x + 0.045 * u, base - 0.27 * u], 0.04 * u, oscurecer(ropa, 0.15), lw)
+        d.ellipse([x - 0.042 * u, base - 0.31 * u, x + 0.042 * u, base - 0.23 * u], fill=piel, outline=CONTORNO, width=lw)
+    # torso
+    rect_redondo(d, [cx - 0.17 * u, base - 0.57 * u, cx + 0.17 * u, base - 0.2 * u], 0.07 * u, ropa, lw)
+    if spec.get("detalle") == "chaleco":
+        for y in (0.42, 0.33):
+            d.rectangle([cx - 0.165 * u, base - y * u, cx + 0.165 * u, base - (y - 0.025) * u], fill="#e8e040")
+    elif spec.get("detalle") == "corbata":
+        d.polygon([(cx, base - 0.56 * u), (cx - 0.03 * u, base - 0.5 * u), (cx, base - 0.32 * u), (cx + 0.03 * u, base - 0.5 * u)],
+                  fill="#8a1a1a", outline=CONTORNO)
+    else:
+        d.line([(cx, base - 0.55 * u), (cx, base - 0.22 * u)], fill=oscurecer(ropa, 0.35), width=lw)
+        d.rectangle([cx - 0.09 * u, base - 0.36 * u, cx + 0.09 * u, base - 0.28 * u], outline=oscurecer(ropa, 0.35), width=lw)
+
+    # cabeza
+    hr = 0.235 * u
+    hy = base - 0.57 * u - hr * 0.82
+    tipo = spec.get("pelo", "corto")
+    if tipo == "largo":
+        d.rounded_rectangle([cx - hr * 1.08, hy - hr * 0.6, cx + hr * 1.08, hy + hr * 1.25], radius=hr * 0.5,
+                            fill=pelo, outline=CONTORNO, width=lw)
+    for s in (-1, 1):  # orejas
+        d.ellipse([cx + s * hr * 0.98 - hr * 0.16, hy - hr * 0.08, cx + s * hr * 0.98 + hr * 0.16, hy + hr * 0.28],
+                  fill=piel, outline=CONTORNO, width=lw)
+    d.ellipse([cx - hr, hy - hr, cx + hr, hy + hr], fill=piel, outline=CONTORNO, width=lw)
+    _pelo(d, cx, hy, hr, tipo, pelo, lw)
+    _cara(d, cx, hy, hr, expresion, mirar, lw, sombra, spec)
+
+
+def _pelo(d, cx, hy, hr, tipo, color, lw):
+    if tipo == "calvo":
+        for s in (-1, 1):
+            d.chord([cx + s * hr * 0.9 - hr * 0.22, hy - hr * 0.35, cx + s * hr * 0.9 + hr * 0.22, hy + hr * 0.2],
+                    90 if s < 0 else 270, 270 if s < 0 else 90, fill=color)
+        return
+    if tipo == "gorra":
+        d.chord([cx - hr * 1.02, hy - hr * 1.1, cx + hr * 1.02, hy + hr * 0.5], 180, 360, fill=color, outline=CONTORNO, width=lw)
+        d.rounded_rectangle([cx - hr * 1.2, hy - hr * 0.36, cx + hr * 0.4, hy - hr * 0.2], radius=hr * 0.08,
+                            fill=oscurecer(color, 0.3), outline=CONTORNO, width=lw)
+        return
+    # casquete
+    d.chord([cx - hr * 1.03, hy - hr * 1.06, cx + hr * 1.03, hy + hr * 0.45], 180, 360, fill=color, outline=CONTORNO, width=lw)
+    # mechones sobre la frente
+    pts = []
+    n = 6
+    for i in range(n + 1):
+        t = i / n
+        x = cx - hr * 0.98 + t * hr * 1.96
+        y = hy - hr * 0.22 + (0.0 if i % 2 == 0 else -hr * 0.22) - math.sin(t * math.pi) * hr * 0.12
+        pts.append((x, y))
+    pts += [(cx + hr * 0.98, hy - hr * 0.6), (cx - hr * 0.98, hy - hr * 0.6)]
+    d.polygon(pts, fill=color)
+    if tipo == "corto":
+        # mechones en punta sobre la coronilla
+        for i in range(5):
+            a0 = math.radians(205 + i * 26)
+            a1 = a0 + math.radians(26)
+            am = (a0 + a1) / 2
+            base0 = (cx + math.cos(a0) * hr * 0.92, hy + math.sin(a0) * hr * 0.92)
+            base1 = (cx + math.cos(a1) * hr * 0.92, hy + math.sin(a1) * hr * 0.92)
+            punta = (cx + math.cos(am + 0.12) * hr * 1.2, hy + math.sin(am + 0.12) * hr * 1.2)
+            d.polygon([base0, punta, base1], fill=color)
+            d.line([base0, punta, base1], fill=CONTORNO, width=lw, joint="curve")
+    if tipo == "mono":
+        d.ellipse([cx - hr * 0.35, hy - hr * 1.45, cx + hr * 0.35, hy - hr * 0.8], fill=color, outline=CONTORNO, width=lw)
+
+
+def _cara(d, cx, hy, hr, exp, mirar, lw, sombra, spec):
+    ex, ey, er = hr * 0.36, hy + hr * 0.02, hr * 0.24
+    pupila = er * (0.25 if exp in ("miedo", "grito", "sonrisa_rara") else 0.42)
+    dy_p = -er * 0.15 if exp in ("miedo", "grito") else 0
+    blanco = "#fff6e8"
+    for s in (-1, 1):
+        x = cx + s * ex
+        d.ellipse([x - er, ey - er * 1.1, x + er, ey + er * 1.1], fill=blanco, outline=CONTORNO, width=lw)
+        if exp != "vacio" and not sombra:
+            px = x + mirar * er * 0.45
+            d.ellipse([px - pupila, ey + dy_p - pupila, px + pupila, ey + dy_p + pupila], fill=CONTORNO)
+            d.ellipse([px - pupila * 0.2 + pupila * 0.35, ey + dy_p - pupila * 0.65, px + pupila * 0.45, ey + dy_p - pupila * 0.1],
+                      fill="#ffffff")
+        if exp in ("sospecha", "cansado"):
+            d.chord([x - er - lw, ey - er * 1.2, x + er + lw, ey + er * (0.1 if exp == "sospecha" else 0.3)], 180, 360,
+                    fill=spec.get("piel", PIEL), outline=CONTORNO, width=lw)
+    if spec.get("lentes"):
+        for s in (-1, 1):
+            x = cx + s * ex
+            d.ellipse([x - er * 1.35, ey - er * 1.35, x + er * 1.35, ey + er * 1.35], outline=CONTORNO, width=lw)
+        d.line([(cx - ex + er * 1.35, ey), (cx + ex - er * 1.35, ey)], fill=CONTORNO, width=lw)
+
+    # cejas
+    by = ey - er * 1.55
+    ancho = er * 0.9
+    for s in (-1, 1):
+        x = cx + s * ex
+        if exp in ("miedo", "grito", "triste"):
+            # extremo interior levantado
+            p = [(x + s * ancho, by + er * 0.45), (x - s * ancho, by - er * 0.05)]
+        elif exp in ("enojado", "sonrisa_rara"):
+            p = [(x + s * ancho, by - er * 0.15), (x - s * ancho, by + er * 0.4)]
+        elif exp == "feliz":
+            p = [(x - ancho, by + er * 0.1), (x, by - er * 0.2), (x + ancho, by + er * 0.1)]
+        else:
+            p = [(x - ancho, by + er * 0.12), (x + ancho, by + er * 0.12)]
+        d.line(p, fill=CONTORNO if not sombra else "#000", width=int(lw * 1.6), joint="curve")
+
+    # boca
+    my = hy + hr * 0.58
+    mw = hr * 0.28
+    oscuro = "#3a0c12"
+    if exp == "feliz":
+        d.chord([cx - mw, my - mw * 0.9, cx + mw, my + mw * 0.7], 0, 180, fill=oscuro, outline=CONTORNO, width=lw)
+    elif exp == "grito":
+        d.ellipse([cx - mw * 0.8, my - mw * 0.7, cx + mw * 0.8, my + mw * 1.1], fill=oscuro, outline=CONTORNO, width=lw)
+        d.chord([cx - mw * 0.5, my + mw * 0.3, cx + mw * 0.5, my + mw * 1.05], 180, 360, fill="#d04a5a")
+    elif exp == "miedo":
+        pts = [(cx - mw * 0.8 + i * mw * 0.32, my + (mw * 0.12 if i % 2 else -mw * 0.12)) for i in range(6)]
+        d.line(pts, fill=CONTORNO, width=lw, joint="curve")
+        gx, gy = cx + hr * 0.82, hy - hr * 0.4    # gota de sudor
+        d.polygon([(gx, gy - hr * 0.2), (gx - hr * 0.09, gy), (gx + hr * 0.09, gy)], fill="#9fd8ff")
+        d.ellipse([gx - hr * 0.09, gy - hr * 0.08, gx + hr * 0.09, gy + hr * 0.1], fill="#9fd8ff", outline=CONTORNO, width=max(2, lw // 2))
+    elif exp == "triste":
+        d.arc([cx - mw * 0.8, my, cx + mw * 0.8, my + mw], 200, 340, fill=CONTORNO, width=lw)
+    elif exp == "sonrisa_rara":
+        d.chord([cx - mw * 1.9, my - mw * 1.0, cx + mw * 1.9, my + mw * 0.9], 0, 180, fill="#fff6e8", outline=CONTORNO, width=lw)
+        for i in range(1, 8):
+            x = cx - mw * 1.9 + i * mw * 3.8 / 8
+            d.line([(x, my - mw * 0.05), (x, my + mw * 0.75)], fill=CONTORNO, width=max(2, lw // 2))
+    elif exp == "vacio":
+        d.line([(cx - mw * 0.5, my), (cx + mw * 0.5, my)], fill="#000", width=lw)
+    elif exp == "silencio":
+        d.ellipse([cx - mw * 0.25, my - mw * 0.2, cx + mw * 0.25, my + mw * 0.25], fill=oscuro, outline=CONTORNO, width=lw)
+        # dedo sobre los labios
+        d.rounded_rectangle([cx - mw * 0.22, my - mw * 1.0, cx + mw * 0.22, my + mw * 1.6], radius=mw * 0.2,
+                            fill=spec.get("piel", PIEL), outline=CONTORNO, width=lw)
+    else:
+        d.line([(cx - mw * 0.55, my), (cx + mw * 0.55, my)], fill=CONTORNO, width=lw)
+
+
+PLANOS = {
+    # altura del personaje y línea de pies, como fracción del alto del lienzo
+    "general": (0.42, 0.84),
+    "medio": (0.95, 1.13),
+    "primer_plano": (1.35, 1.46),
+}
+
+
+def componer_escena(ancho, alto, escena, reparto, semilla=0):
+    """Devuelve una imagen RGB (ancho x alto) con el fondo y los personajes."""
+    S = 2
+    W, H = ancho * S, alto * S
+    img = Image.new("RGB", (W, H))
+    rnd = random.Random(semilla)
+    nombre = escena.get("fondo", "oscuro")
+    if nombre not in FONDOS:
+        raise ValueError(f"Fondo desconocido: {nombre!r}. Opciones: {', '.join(FONDOS)}")
+    FONDOS[nombre](img, rnd, escena.get("opciones_fondo", {}))
+
+    plano = escena.get("plano", "general")
+    alto_p, base_p = PLANOS[plano]
+    for p in escena.get("personajes", []):
+        quien = p["quien"]
+        if quien not in reparto:
+            raise ValueError(f"El personaje {quien!r} no está en el reparto")
+        tam = p.get("tam", 1.0)
+        a = H * alto_p * tam
+        base = H * base_p - (H * alto_p - a) * 0.15 + p.get("subir", 0) * -H
+        personaje(img, W * p.get("x", 0.5), base, a, reparto[quien], p.get("expresion", "neutral"), p.get("mirar", 0))
+
+    img = vineta(img, escena.get("vineta", 0.8))
+    tinte = escena.get("tinte")
+    if tinte:
+        img = Image.blend(img, Image.new("RGB", img.size, rgb(tinte)), 0.18)
+    return img.resize((ancho, alto), Image.LANCZOS)
