@@ -11,7 +11,11 @@ import asyncio
 import hashlib
 import json
 import math
+import multiprocessing as mp
+import os
 import random
+import shutil
+import tempfile
 import re
 import subprocess
 import sys
@@ -22,7 +26,8 @@ from PIL import Image, ImageDraw
 
 sys.path.insert(0, str(Path(__file__).parent))
 import sonido  # noqa: E402
-from dibujos import componer_escena, rgb  # noqa: E402
+from dibujos import componer_fondo, rgb  # noqa: E402
+from personajes import PLANOS, dibujar, estado  # noqa: E402
 from tipografia import fuente  # noqa: E402
 
 FPS = 30
@@ -36,6 +41,7 @@ VOZ_POR_DEFECTO = "es-MX-JorgeNeural"
 def tokens(texto):
     """Separa el texto en palabras y marca las que van entre *asteriscos*."""
     salida, resaltado = [], False
+    texto = re.sub(r"^\s*[—-]\s*", "", texto)   # el guion de diálogo no se muestra
     for trozo in re.split(r"(\*)", texto):
         if trozo == "*":
             resaltado = not resaltado
@@ -181,7 +187,7 @@ def planificar(guion, base_dir, usar_voz, cache):
         if bloques:  # el último bloque se queda en pantalla hasta el final de la escena
             a, _, g = bloques[-1]
             bloques[-1] = (a, dur, g)
-        escenas.append(dict(datos=esc, inicio=t, dur=dur, audio=audio, bloques=bloques, indice=i))
+        escenas.append(dict(datos=esc, inicio=t, dur=dur, audio=audio, bloques=bloques, indice=i, hablado=hablado))
         t += dur
     return escenas, t
 
@@ -194,10 +200,42 @@ class Renderizador:
         self.reparto = guion.get("reparto", {})
         self.cache_txt = {}
         self.ruido = [np.random.default_rng(k).integers(-10, 11, (H // 2, W // 2, 1), dtype=np.int16) for k in range(4)]
+        # viñeta: oscurece los bordes del cuadro
+        yy, xx = np.mgrid[0:H, 0:W]
+        r = np.sqrt(((xx - W / 2) / (W * 0.62)) ** 2 + ((yy - H / 2) / (H * 0.62)) ** 2)
+        self.vineta = (1 - 0.8 * np.clip((r - 0.55) / 0.6, 0, 1) ** 1.4)[..., None].astype(np.float32)
 
     def fondo(self, esc):
         bw, bh = int(self.W * MARGEN), int(self.H * MARGEN)
-        return componer_escena(bw, bh, esc["datos"], self.reparto, semilla=esc["indice"] * 7 + 3)
+        return componer_fondo(bw, bh, esc["datos"], semilla=esc["indice"] * 7 + 3)
+
+    def _personajes(self, img, esc, t, caja, bw, bh):
+        """Dibuja a cada personaje con su pose del instante t, ya en coordenadas de pantalla."""
+        datos = esc["datos"]
+        x0, y0, vw = caja
+        k = self.W / vw
+        alto_p, base_p = PLANOS[datos.get("plano", "general")]
+        for j, p in enumerate(datos.get("personajes", [])):
+            quien = p["quien"]
+            if quien not in self.reparto:
+                raise ValueError(f"El personaje {quien!r} no está en el reparto")
+            e = estado(p, t, esc["dur"], esc["hablado"], semilla=esc["indice"] * 31 + j * 7)
+            a_b = bh * alto_p * p.get("tam", 1.0) * e["escala"]
+            base_b = bh * base_p - (bh * alto_p - a_b) * 0.15 - p.get("subir", 0) * bh + e["bob"] * a_b
+            cx_b = bw * e["x"] + e["dx"] * a_b
+            u = a_b * k
+            cx, base = (cx_b - x0) * k, (base_b - y0) * k
+            bx0, bx1 = max(0, int(cx - 0.55 * u)), min(self.W, int(cx + 0.55 * u) + 1)
+            by0, by1 = max(0, int(base - 1.22 * u)), min(self.H, int(base + 0.06 * u) + 1)
+            if bx1 <= bx0 or by1 <= by0:
+                continue
+            S = 2
+            capa = Image.new("RGBA", ((bx1 - bx0) * S, (by1 - by0) * S), (0, 0, 0, 0))
+            dibujar(ImageDraw.Draw(capa), (cx - bx0) * S, (base - by0) * S, u * S, self.reparto[quien], e)
+            capa = capa.reduce(S)
+            if e["alpha"] < 1:
+                capa.putalpha(capa.split()[3].point(lambda v, a=e["alpha"]: int(v * a)))
+            img.paste(capa, (bx0, by0), capa)
 
     def txt(self, clave, fabricar):
         if clave not in self.cache_txt:
@@ -239,6 +277,13 @@ class Renderizador:
         cx = min(max(bw / 2 + dx, vw / 2), bw - vw / 2)
         cy = min(max(bh / 2 + dy, vh / 2), bh - vh / 2)
         img = base.resize((W, H), Image.BILINEAR, box=(cx - vw / 2, cy - vh / 2, cx + vw / 2, cy + vh / 2))
+        self._personajes(img, esc, t, (cx - vw / 2, cy - vh / 2, vw), bw, bh)
+
+        # viñeta y tinte de color
+        a = np.asarray(img).astype(np.float32) * self.vineta
+        if datos.get("tinte"):
+            a = a * 0.8 + np.array(rgb(datos["tinte"]), dtype=np.float32) * 0.2
+        img = Image.fromarray(np.clip(a, 0, 255).astype(np.uint8))
 
         # parpadeo de luz
         if "parpadeo" in efectos:
@@ -369,7 +414,10 @@ def mezclar_audio(guion, escenas, total, base_dir):
             x = fabricar() * vol
             s0 = int(esc["inicio"] * sonido.SR)
             pista[s0:s0 + len(x)] += x[: n - s0]
-    pista += sonido.ambiente(n / sonido.SR) * guion.get("volumen_ambiente", 0.22)
+    amb = np.zeros(n)
+    a = sonido.ambiente(n / sonido.SR)[:n]
+    amb[:len(a)] = a
+    pista += amb * guion.get("volumen_ambiente", 0.22)
     if guion.get("musica"):
         m = sonido.leer_audio(base_dir / guion["musica"])
         m = np.tile(m, int(np.ceil(n / len(m))))[:n]
@@ -396,6 +444,23 @@ def escribir_srt(escenas, ruta):
     ruta.write_text("\n".join(lineas), encoding="utf-8")
 
 
+def _render_escena(trabajo):
+    guion, W, H, esc, n0, cuadros, destino = trabajo
+    rend = Renderizador(guion, W, H)
+    base = rend.fondo(esc)
+    ff = subprocess.Popen([
+        "ffmpeg", "-v", "error", "-y",
+        "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
+        "-c:v", "libx264", "-preset", "medium", "-crf", "20", "-pix_fmt", "yuv420p", destino,
+    ], stdin=subprocess.PIPE)
+    for k in range(cuadros):
+        ff.stdin.write(rend.cuadro(esc, base, k / FPS, n0 + k).tobytes())
+    ff.stdin.close()
+    if ff.wait() != 0:
+        raise RuntimeError(f"ffmpeg falló en la escena {esc['indice'] + 1}")
+    return esc["indice"]
+
+
 def main():
     ap = argparse.ArgumentParser(description="Genera un vídeo vertical de suspenso desde un guion JSON.")
     ap.add_argument("guion", type=Path)
@@ -403,6 +468,7 @@ def main():
     ap.add_argument("--rapido", action="store_true", help="540x960, para pruebas rápidas")
     ap.add_argument("--sin-voz", action="store_true", help="no generar narración automática")
     ap.add_argument("--previa", action="store_true", help="solo genera una imagen con todas las escenas")
+    ap.add_argument("--procesos", type=int, help="núcleos a usar (por defecto, todos)")
     args = ap.parse_args()
 
     guion = json.loads(args.guion.read_text(encoding="utf-8"))
@@ -414,8 +480,6 @@ def main():
     cache.mkdir(parents=True, exist_ok=True)
     nombre = args.guion.stem
     W, H = (540, 960) if args.rapido else (1080, 1920)
-    rend = Renderizador(guion, W, H)
-
     if args.previa:
         escenas, _ = planificar(guion, base_dir, False, cache)
         cols = 6
@@ -444,24 +508,28 @@ def main():
     salida = args.salida or carpeta / f"{nombre}.mp4"
     escribir_srt(escenas, salida.with_suffix(".srt"))
 
-    ff = subprocess.Popen([
-        "ffmpeg", "-v", "error", "-y",
-        "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
-        "-i", str(wav),
-        "-c:v", "libx264", "-preset", "medium", "-crf", "20", "-pix_fmt", "yuv420p",
-        "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", str(salida),
-    ], stdin=subprocess.PIPE)
-    n = 0
+    # cada escena se renderiza en paralelo como un trozo de vídeo y luego se unen
+    tmp = Path(tempfile.mkdtemp(prefix="suspenso_"))
+    trabajos = []
     for esc in escenas:
-        base = rend.fondo(esc)
-        cuadros = round((esc["inicio"] + esc["dur"]) * FPS) - round(esc["inicio"] * FPS)
-        for k in range(cuadros):
-            ff.stdin.write(rend.cuadro(esc, base, k / FPS, n).tobytes())
-            n += 1
-        print(f"  escena {esc['indice'] + 1:>2}/{len(escenas)}  {esc['dur']:.1f} s", flush=True)
-    ff.stdin.close()
-    if ff.wait() != 0:
-        sys.exit("ffmpeg falló al codificar el vídeo")
+        ligera = {k: v for k, v in esc.items() if k != "audio"}
+        n0 = round(esc["inicio"] * FPS)
+        cuadros = round((esc["inicio"] + esc["dur"]) * FPS) - n0
+        trabajos.append((guion, W, H, ligera, n0, cuadros, str(tmp / f"{esc['indice']:03d}.mp4")))
+    procesos = args.procesos or max(1, (os.cpu_count() or 2))
+    try:
+        with mp.Pool(procesos) as pool:
+            for k, i in enumerate(pool.imap_unordered(_render_escena, trabajos), 1):
+                print(f"  escena {i + 1:>2} lista  ({k}/{len(escenas)})", flush=True)
+        lista = tmp / "lista.txt"
+        lista.write_text("".join(f"file '{t[-1]}'\n" for t in trabajos))
+        r = subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", str(lista),
+                            "-i", str(wav), "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-shortest",
+                            "-movflags", "+faststart", str(salida)])
+        if r.returncode != 0:
+            sys.exit("ffmpeg falló al unir el vídeo")
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
     wav.unlink()
     print(f"Listo: {salida}")
 

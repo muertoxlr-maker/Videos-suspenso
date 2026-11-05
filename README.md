@@ -1,9 +1,11 @@
 # Videos de suspenso
 
 Generador automático de vídeos verticales de suspenso del tipo **"reglas + dilema final"**
-(formato TikTok / Reels / Shorts, 1080×1920). Escribes un guion en JSON y el programa dibuja
-los escenarios y personajes en estilo cartoon, anima la cámara, pone los subtítulos con
-palabras clave en amarillo, genera la voz del narrador y mezcla el ambiente y los efectos de sonido.
+(formato TikTok / Reels / Shorts, 1080×1920), hecho **solo con código**: sin imágenes ni
+programas de edición. Escribes un guion en JSON y el programa dibuja los escenarios, **anima a
+los personajes** (caminan, parpadean, hablan, tiemblan, se asustan…), mueve la cámara, pone los
+subtítulos con palabras clave en amarillo, genera la voz del narrador y mezcla el ambiente y los
+efectos de sonido.
 
 ## Instalación
 
@@ -86,7 +88,7 @@ Copia `guiones/hotel_medianoche.json` y cámbialo. Estructura básica:
 | `texto` | Lo que dice el narrador. Las palabras entre `*asteriscos*` salen en amarillo. Empieza con `—` para un diálogo. |
 | `fondo` | `calle`, `recepcion`, `pasillo`, `habitacion`, `puerta`, `ascensor`, `nota`, `oscuro` |
 | `opciones_fondo` | Detalles del fondo: `letrero` y `letra_apagada` (calle), `puertas` y `parpadeo` (pasillo), `piso` (ascensor), `lineas`, `resaltar` y `encabezado` (nota) |
-| `personajes` | Lista de `{"quien", "x" (0–1), "expresion", "mirar" (-1 a 1), "tam", "subir"}` |
+| `personajes` | Lista de personajes en escena (ver abajo). |
 | `plano` | `general` (cuerpo entero), `medio` (de cintura arriba), `primer_plano` (la cara) |
 | `rotulo` | Etiqueta arriba a la izquierda que aparece como máquina de escribir. |
 | `titulo` | Texto grande arriba, p. ej. `"REGLA Nº 1"` (suena un golpe automáticamente). |
@@ -98,6 +100,26 @@ Copia `guiones/hotel_medianoche.json` y cámbialo. Estructura básica:
 | `duracion` | Duración mínima en segundos (si no, se ajusta a la voz). |
 | `voz`, `velocidad_voz`, `tono` | Cambiar la voz solo en esta escena (p. ej. `"tono": "-12Hz"` para una voz más grave e inquietante). |
 | `audio` | Tu propia grabación para esta escena. |
+
+### Personajes en una escena
+
+```json
+{"quien": "tu", "x": 0.2, "x_fin": 0.6, "accion": "caminar", "expresion": "miedo", "habla": true}
+```
+
+| Campo | Qué hace |
+|---|---|
+| `quien` | Nombre del personaje en el `reparto`. |
+| `x` | Posición horizontal (0 = izquierda, 1 = derecha). |
+| `x_fin` | Hasta dónde llega si camina o corre. |
+| `accion` | Una o varias (lista): `caminar`, `correr`, `temblar`, `susto` (salta y levanta los brazos), `brazos_arriba`, `senalar`, `asentir`, `negar`, `llorar`, `acercarse` (crece hacia la cámara, con `tam_fin`), `aparecer` (surge de la oscuridad). |
+| `habla` | `true` → mueve la boca mientras suena el texto de la escena. |
+| `expresion` | Cara del personaje (lista abajo). |
+| `mirar`, `mirar_fin` | Hacia dónde mira (-1 izquierda, 1 derecha); con `mirar_fin` gira los ojos durante la escena. |
+| `tam`, `subir` | Tamaño y altura (para poner a alguien lejos, al fondo de un pasillo). |
+| `ojos_cerrados` | `true` → con los ojos cerrados. |
+
+Todos los personajes **respiran, se balancean y parpadean** solos, aunque no tengan acción.
 
 ### Personajes (`reparto`)
 
@@ -124,7 +146,8 @@ Copia `guiones/hotel_medianoche.json` y cámbialo. Estructura básica:
 ```
 generador/
   crear_video.py   ← programa principal (guion → vídeo)
-  dibujos.py       ← escenarios y personajes dibujados con código
+  dibujos.py       ← escenarios dibujados con código
+  personajes.py    ← personajes animados (poses, parpadeo, boca, caminar…)
   sonido.py        ← ambiente y efectos de sonido sintetizados
   tipografia.py    ← carga de fuentes
   fuentes/         ← Inter y JetBrains Mono (licencia OFL)

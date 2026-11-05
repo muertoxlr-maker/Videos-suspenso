@@ -3,99 +3,387 @@
   "voz": "es-MX-JorgeNeural",
   "velocidad_voz": "+6%",
   "volumen_ambiente": 0.22,
-
   "reparto": {
-    "tu":            {"piel": "#eab48c", "pelo": "corto", "color_pelo": "#2a1c16", "ropa": "#3b5a7a", "pantalon": "#26243a"},
-    "otro":          {"piel": "#eab48c", "pelo": "corto", "color_pelo": "#2a1c16", "ropa": "#3b5a7a", "pantalon": "#26243a"},
-    "recepcionista": {"piel": "#d9a27a", "pelo": "calvo", "color_pelo": "#6a6460", "ropa": "#5a1a1a", "detalle": "corbata", "lentes": true},
-    "silueta":       {"sombra": true, "pelo": "corto"}
+    "tu": {
+      "piel": "#eab48c",
+      "pelo": "corto",
+      "color_pelo": "#2a1c16",
+      "ropa": "#3b5a7a",
+      "pantalon": "#26243a"
+    },
+    "otro": {
+      "piel": "#eab48c",
+      "pelo": "corto",
+      "color_pelo": "#2a1c16",
+      "ropa": "#3b5a7a",
+      "pantalon": "#26243a"
+    },
+    "recepcionista": {
+      "piel": "#d9a27a",
+      "pelo": "calvo",
+      "color_pelo": "#6a6460",
+      "ropa": "#5a1a1a",
+      "detalle": "corbata",
+      "lentes": true
+    },
+    "silueta": {
+      "sombra": true,
+      "pelo": "corto"
+    }
   },
-
   "escenas": [
-    {"fondo": "calle", "opciones_fondo": {"letrero": "HOTEL", "letra_apagada": 1},
-     "personajes": [{"quien": "tu", "x": 0.42, "expresion": "neutral", "mirar": 0.6}],
-     "rotulo": "NOCHE 1 · 2:47 AM · CARRETERA 9",
-     "texto": "Imagina que tu coche se queda sin gasolina *a las tres de la mañana.*"},
-
-    {"fondo": "calle", "opciones_fondo": {"letrero": "HOTEL", "letra_apagada": 1}, "camara": "in",
-     "personajes": [{"quien": "tu", "x": 0.3, "tam": 0.7, "expresion": "sospecha", "mirar": 0.8}],
-     "texto": "Lo único abierto es un hotel *sin nombre.*"},
-
-    {"fondo": "recepcion", "plano": "medio",
-     "personajes": [{"quien": "recepcionista", "expresion": "sospecha"}],
-     "texto": "El recepcionista no te pregunta *ni tu nombre.*"},
-
-    {"fondo": "recepcion", "plano": "primer_plano",
-     "personajes": [{"quien": "recepcionista", "expresion": "neutral", "mirar": -0.3}],
-     "texto": "Solo te da la llave *313...* y una hoja."},
-
-    {"fondo": "nota", "titulo": "REGLA Nº 1", "sonidos": ["whoosh"],
-     "opciones_fondo": {"lineas": ["Si tocan tres veces, no abras.", "El ascensor nunca baja al piso 0.", "Si ves a alguien idéntico a ti, no le hables."], "resaltar": 1},
-     "texto": "Regla número uno: si tocan *tres veces*, no abras."},
-
-    {"fondo": "pasillo", "opciones_fondo": {"parpadeo": true, "puertas": ["311", "312"]}, "efectos": ["parpadeo"],
-     "personajes": [{"quien": "tu", "x": 0.5, "expresion": "miedo"}],
-     "texto": "Aquí nadie toca *tres veces.*"},
-
-    {"fondo": "ascensor", "titulo": "REGLA Nº 2", "opciones_fondo": {"piso": "0"},
-     "texto": "Regla número dos: el ascensor *nunca* baja al piso cero."},
-
-    {"fondo": "ascensor", "plano": "medio", "opciones_fondo": {"piso": "0"}, "sonidos": ["latido"],
-     "personajes": [{"quien": "tu", "expresion": "miedo", "mirar": -0.5}],
-     "texto": "Y si lo hace... *no salgas.*"},
-
-    {"fondo": "pasillo", "titulo": "REGLA Nº 3", "opciones_fondo": {"puertas": ["311", "312"]},
-     "personajes": [{"quien": "otro", "x": 0.5, "tam": 0.32, "subir": 0.13, "expresion": "vacio"}],
-     "texto": "Regla número tres: si ves a alguien *idéntico a ti...*"},
-
-    {"fondo": "pasillo", "plano": "primer_plano", "efectos": ["sacudida"], "sonidos": ["impacto"],
-     "personajes": [{"quien": "tu", "expresion": "grito"}],
-     "texto": "no le hables. *No es tu reflejo.*"},
-
-    {"fondo": "habitacion", "rotulo": "HABITACIÓN 313 · 3:30 AM",
-     "personajes": [{"quien": "tu", "x": 0.62, "expresion": "cansado"}],
-     "texto": "Entras a tu cuarto. Cierras con llave."},
-
-    {"fondo": "puerta", "sonidos": ["toc3"], "camara": "fijo",
-     "texto": "A las tres y treinta y tres... *tocan.*"},
-
-    {"fondo": "puerta", "sonidos": ["toc3"], "camara": "in",
-     "texto": "Una. Dos. *Tres veces.*"},
-
-    {"fondo": "habitacion", "plano": "primer_plano", "sonidos": ["latido"],
-     "personajes": [{"quien": "tu", "expresion": "miedo", "mirar": -0.8}],
-     "texto": "Del otro lado escuchas *tu propia voz:*"},
-
-    {"fondo": "puerta", "camara": "izquierda", "tono": "-12Hz",
-     "texto": "—Ábreme. Soy yo. *El de verdad.*"},
-
-    {"fondo": "puerta", "camara": "out", "tono": "-12Hz", "tinte": "#7a0000",
-     "texto": "—El que está contigo *no eres tú.*"},
-
-    {"fondo": "habitacion", "efectos": ["destello"], "sonidos": ["impacto"],
-     "personajes": [{"quien": "tu", "x": 0.25, "expresion": "miedo", "mirar": 0.8},
-                    {"quien": "otro", "x": 0.74, "expresion": "neutral", "mirar": -0.8}],
-     "texto": "Te das la vuelta. En la cama... *estás tú.*"},
-
-    {"fondo": "habitacion", "plano": "medio",
-     "personajes": [{"quien": "otro", "expresion": "silencio"}],
-     "texto": "Te mira tranquilo y *susurra:*"},
-
-    {"fondo": "habitacion", "plano": "primer_plano", "tono": "-6Hz", "velocidad_voz": "-5%",
-     "personajes": [{"quien": "otro", "expresion": "sospecha"}],
-     "texto": "—No abras. *Ese no soy yo.*"},
-
-    {"fondo": "puerta", "efectos": ["sacudida"], "sonidos": ["chirrido"], "camara": "in",
-     "texto": "Los golpes paran. La perilla *empieza a girar.*"},
-
-    {"fondo": "oscuro", "sonidos": ["latido"], "plano": "primer_plano", "camara": "in",
-     "personajes": [{"quien": "silueta", "expresion": "vacio"}],
-     "texto": "Solo uno de los dos *es real.*"},
-
-    {"fondo": "habitacion", "camara": "fijo", "sonidos": ["whoosh"],
-     "personajes": [{"quien": "tu", "x": 0.25, "expresion": "miedo"},
-                    {"quien": "otro", "x": 0.74, "expresion": "neutral", "mirar": -0.6}],
-     "opciones": ["ABRO", "NO ABRO"],
-     "texto": "¿Abres la puerta... o le crees *al que está contigo?*"}
+    {
+      "fondo": "calle",
+      "opciones_fondo": {
+        "letrero": "HOTEL",
+        "letra_apagada": 1
+      },
+      "personajes": [
+        {
+          "quien": "tu",
+          "x": 0.2,
+          "expresion": "neutral",
+          "accion": "caminar",
+          "x_fin": 0.48
+        }
+      ],
+      "rotulo": "NOCHE 1 · 2:47 AM · CARRETERA 9",
+      "texto": "Imagina que tu coche se queda sin gasolina *a las tres de la mañana.*"
+    },
+    {
+      "fondo": "calle",
+      "opciones_fondo": {
+        "letrero": "HOTEL",
+        "letra_apagada": 1
+      },
+      "camara": "in",
+      "personajes": [
+        {
+          "quien": "tu",
+          "x": 0.3,
+          "tam": 0.7,
+          "expresion": "sospecha",
+          "mirar": -0.2,
+          "mirar_fin": 0.9
+        }
+      ],
+      "texto": "Lo único abierto es un hotel *sin nombre.*"
+    },
+    {
+      "fondo": "recepcion",
+      "plano": "medio",
+      "personajes": [
+        {
+          "quien": "recepcionista",
+          "expresion": "sospecha",
+          "accion": "negar"
+        }
+      ],
+      "texto": "El recepcionista no te pregunta *ni tu nombre.*"
+    },
+    {
+      "fondo": "recepcion",
+      "plano": "primer_plano",
+      "personajes": [
+        {
+          "quien": "recepcionista",
+          "expresion": "neutral",
+          "mirar": -0.3,
+          "accion": "asentir"
+        }
+      ],
+      "texto": "Solo te da la llave *313...* y una hoja."
+    },
+    {
+      "fondo": "recepcion",
+      "plano": "primer_plano",
+      "camara": "out",
+      "tono": "-8Hz",
+      "personajes": [
+        {
+          "quien": "recepcionista",
+          "expresion": "enojado",
+          "habla": true
+        }
+      ],
+      "texto": "—Léala bien. *Su vida* depende de eso."
+    },
+    {
+      "fondo": "nota",
+      "titulo": "REGLA Nº 1",
+      "sonidos": [
+        "whoosh"
+      ],
+      "opciones_fondo": {
+        "lineas": [
+          "Si tocan tres veces, no abras.",
+          "El ascensor nunca baja al piso 0.",
+          "Si ves a alguien idéntico a ti, no le hables."
+        ],
+        "resaltar": 1
+      },
+      "texto": "Regla número uno: si tocan *tres veces*, no abras."
+    },
+    {
+      "fondo": "pasillo",
+      "opciones_fondo": {
+        "parpadeo": true,
+        "puertas": [
+          "311",
+          "312"
+        ]
+      },
+      "efectos": [
+        "parpadeo"
+      ],
+      "personajes": [
+        {
+          "quien": "tu",
+          "x": 0.5,
+          "expresion": "miedo",
+          "accion": [
+            "caminar",
+            "acercarse"
+          ],
+          "tam_fin": 1.35
+        }
+      ],
+      "texto": "Aquí nadie toca *tres veces.*"
+    },
+    {
+      "fondo": "ascensor",
+      "titulo": "REGLA Nº 2",
+      "opciones_fondo": {
+        "piso": "0"
+      },
+      "texto": "Regla número dos: el ascensor *nunca* baja al piso cero."
+    },
+    {
+      "fondo": "ascensor",
+      "plano": "medio",
+      "opciones_fondo": {
+        "piso": "0"
+      },
+      "sonidos": [
+        "latido"
+      ],
+      "personajes": [
+        {
+          "quien": "tu",
+          "expresion": "miedo",
+          "mirar": -0.6,
+          "accion": "temblar",
+          "mirar_fin": 0.6
+        }
+      ],
+      "texto": "Y si lo hace... *no salgas.*"
+    },
+    {
+      "fondo": "pasillo",
+      "titulo": "REGLA Nº 3",
+      "opciones_fondo": {
+        "puertas": [
+          "311",
+          "312"
+        ]
+      },
+      "personajes": [
+        {
+          "quien": "otro",
+          "x": 0.5,
+          "tam": 0.32,
+          "subir": 0.13,
+          "expresion": "vacio",
+          "accion": "aparecer"
+        }
+      ],
+      "texto": "Regla número tres: si ves a alguien *idéntico a ti...*"
+    },
+    {
+      "fondo": "pasillo",
+      "plano": "primer_plano",
+      "efectos": [
+        "sacudida"
+      ],
+      "sonidos": [
+        "impacto"
+      ],
+      "personajes": [
+        {
+          "quien": "tu",
+          "expresion": "grito",
+          "accion": "susto"
+        }
+      ],
+      "texto": "no le hables. *No es tu reflejo.*"
+    },
+    {
+      "fondo": "habitacion",
+      "rotulo": "HABITACIÓN 313 · 3:30 AM",
+      "personajes": [
+        {
+          "quien": "tu",
+          "x": 0.3,
+          "expresion": "cansado",
+          "accion": "caminar",
+          "x_fin": 0.62
+        }
+      ],
+      "texto": "Entras a tu cuarto. Cierras con llave."
+    },
+    {
+      "fondo": "puerta",
+      "sonidos": [
+        "toc3"
+      ],
+      "camara": "fijo",
+      "texto": "A las tres y treinta y tres... *tocan.*"
+    },
+    {
+      "fondo": "puerta",
+      "sonidos": [
+        "toc3"
+      ],
+      "camara": "in",
+      "texto": "Una. Dos. *Tres veces.*"
+    },
+    {
+      "fondo": "habitacion",
+      "plano": "primer_plano",
+      "sonidos": [
+        "latido"
+      ],
+      "personajes": [
+        {
+          "quien": "tu",
+          "expresion": "miedo",
+          "mirar": -0.8,
+          "accion": "temblar"
+        }
+      ],
+      "texto": "Del otro lado escuchas *tu propia voz:*"
+    },
+    {
+      "fondo": "puerta",
+      "camara": "izquierda",
+      "tono": "-12Hz",
+      "texto": "—Ábreme. Soy yo. *El de verdad.*"
+    },
+    {
+      "fondo": "puerta",
+      "camara": "out",
+      "tono": "-12Hz",
+      "tinte": "#7a0000",
+      "texto": "—El que está contigo *no eres tú.*"
+    },
+    {
+      "fondo": "habitacion",
+      "efectos": [
+        "destello"
+      ],
+      "sonidos": [
+        "impacto"
+      ],
+      "personajes": [
+        {
+          "quien": "tu",
+          "x": 0.25,
+          "expresion": "miedo",
+          "mirar": 0.8,
+          "accion": "susto"
+        },
+        {
+          "quien": "otro",
+          "x": 0.74,
+          "expresion": "neutral",
+          "mirar": -0.8,
+          "accion": "asentir"
+        }
+      ],
+      "texto": "Te das la vuelta. En la cama... *estás tú.*"
+    },
+    {
+      "fondo": "habitacion",
+      "plano": "medio",
+      "personajes": [
+        {
+          "quien": "otro",
+          "expresion": "silencio",
+          "accion": "asentir"
+        }
+      ],
+      "texto": "Te mira tranquilo y *susurra:*"
+    },
+    {
+      "fondo": "habitacion",
+      "plano": "primer_plano",
+      "tono": "-6Hz",
+      "velocidad_voz": "-5%",
+      "personajes": [
+        {
+          "quien": "otro",
+          "expresion": "sospecha",
+          "habla": true
+        }
+      ],
+      "texto": "—No abras. *Ese no soy yo.*"
+    },
+    {
+      "fondo": "puerta",
+      "efectos": [
+        "sacudida"
+      ],
+      "sonidos": [
+        "chirrido"
+      ],
+      "camara": "in",
+      "texto": "Los golpes paran. La perilla *empieza a girar.*"
+    },
+    {
+      "fondo": "oscuro",
+      "sonidos": [
+        "latido"
+      ],
+      "plano": "primer_plano",
+      "camara": "in",
+      "personajes": [
+        {
+          "quien": "silueta",
+          "expresion": "vacio",
+          "accion": [
+            "aparecer",
+            "acercarse"
+          ],
+          "tam_fin": 1.25
+        }
+      ],
+      "texto": "Solo uno de los dos *es real.*"
+    },
+    {
+      "fondo": "habitacion",
+      "camara": "fijo",
+      "sonidos": [
+        "whoosh"
+      ],
+      "personajes": [
+        {
+          "quien": "tu",
+          "x": 0.25,
+          "expresion": "miedo",
+          "accion": "temblar"
+        },
+        {
+          "quien": "otro",
+          "x": 0.74,
+          "expresion": "neutral",
+          "mirar": -0.6
+        }
+      ],
+      "opciones": [
+        "ABRO",
+        "NO ABRO"
+      ],
+      "texto": "¿Abres la puerta... o le crees *al que está contigo?*"
+    }
   ]
 }
