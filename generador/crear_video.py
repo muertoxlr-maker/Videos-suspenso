@@ -199,7 +199,7 @@ class Renderizador:
         self.guion, self.W, self.H = guion, W, H
         self.reparto = guion.get("reparto", {})
         self.cache_txt = {}
-        self.ruido = [np.random.default_rng(k).integers(-10, 11, (H // 2, W // 2, 1), dtype=np.int16) for k in range(4)]
+        self.ruido = [np.random.default_rng(k).integers(-6, 7, (H // 2, W // 2, 1), dtype=np.int16) for k in range(4)]
         # viñeta: oscurece los bordes del cuadro
         yy, xx = np.mgrid[0:H, 0:W]
         r = np.sqrt(((xx - W / 2) / (W * 0.62)) ** 2 + ((yy - H / 2) / (H * 0.62)) ** 2)
@@ -451,7 +451,7 @@ def _render_escena(trabajo):
     ff = subprocess.Popen([
         "ffmpeg", "-v", "error", "-y",
         "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
-        "-c:v", "libx264", "-preset", "medium", "-crf", "20", "-pix_fmt", "yuv420p", destino,
+        "-c:v", "libx264", "-preset", "medium", "-crf", "23", "-pix_fmt", "yuv420p", destino,
     ], stdin=subprocess.PIPE)
     for k in range(cuadros):
         ff.stdin.write(rend.cuadro(esc, base, k / FPS, n0 + k).tobytes())
