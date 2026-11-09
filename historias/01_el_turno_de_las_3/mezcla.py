@@ -191,7 +191,7 @@ poner(sonido.latido(), t(116) + 0.2, 0.35)
 # la abuela se ahoga
 for k in range(5):
     poner(tos(), t(126) + k * 0.42, 0.22)
-poner(respiracion(t(181) - t(129)), t(129), 0.05)
+poner(respiracion(t(181) - t(129)), t(129), 0.012)  # muy baja: con más volumen sonaba a estática bajo la voz
 # inhalador vacío: dos clics y un soplo sin aire
 for k, d in enumerate((0.0, 0.47)):
     poner(clic(), t(130) + d, 0.4); poner(soplo_vacio(), t(130) + d + 0.02, 0.3)
@@ -217,10 +217,11 @@ while s < DUR - 0.4:
 # ------------------------------------------------------------------ voz y mezcla
 voz = sonido.leer_audio(AQUI / "voz" / "voz_final.mp3")
 vz = np.zeros(N); vz[: min(N, len(voz))] = voz[:N]
-# ducking: el fondo baja ~5 dB cuando habla el narrador
+# ducking: el fondo baja ~10 dB cuando habla el narrador (con ~5 dB se oía "estática" bajo la voz en el celular)
 env = np.convolve(np.abs(vz), np.ones(int(0.12 * SR)) / int(0.12 * SR), mode="same")
-duck = 1 - 0.45 * np.clip(env / (np.percentile(env[env > 1e-4], 60) + 1e-9), 0, 1)
-fondo = (ambiente * 0.62 + pista * 2.8) * duck
+duck = 1 - 0.68 * np.clip(env / (np.percentile(env[env > 1e-4], 60) + 1e-9), 0, 1)
+# el zumbido de 55 Hz no lo reproducen las bocinas del celular y las hace vibrar: se filtra por debajo de 100 Hz
+fondo = pasa(ambiente * 0.45 + pista * 2.8, 100, None) * duck
 mezcla = vz * 1.0 + fondo
 mezcla /= max(1.0, np.max(np.abs(mezcla)) / 0.95)
 salida = AQUI / "audio"

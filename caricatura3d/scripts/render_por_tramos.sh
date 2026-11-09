@@ -8,7 +8,7 @@ for ((a=0; a<TOTAL; a+=PASO)); do
   b=$(( a + PASO - 1 )); (( b >= TOTAL )) && b=$(( TOTAL - 1 ))
   f=$(printf "%s/tramos/t_%04d.mp4" "$OUT" "$a")
   esperado=$(( b - a + 1 ))
-  if [[ -f "$f" ]] && [[ "$(ffprobe -v error -count_packets -select_streams v:0 -show_entries stream=nb_read_packets -of csv=p=0 "$f" 2>/dev/null)" == "$esperado" ]]; then
+  if [[ -f "$f" ]] && [[ "$(ffprobe -v error -count_packets -select_streams v:0 -show_entries stream=nb_read_packets -of csv=p=0 "$f" 2>/dev/null | tr -d ",[:space:]")" == "$esperado" ]]; then
     echo "tramo $a-$b ya hecho"; continue
   fi
   echo "tramo $a-$b: renderizando…"
