@@ -1,0 +1,138 @@
+{
+ "nota": "Medido sobre el audio de cada video con Whisper medium (tiempos por palabra) y ffmpeg ebur128. Sincronía: cuadro en que cambia la palabra amarilla del subtítulo menos el inicio de la palabra en la voz (negativo = el resaltado llega antes).",
+ "video2": {
+  "tema": "fiesta de XV",
+  "voz_empieza_s": 0.0,
+  "cola_tras_ultima_palabra_s": 0.43,
+  "palabras": 196,
+  "pal_por_s": 2.67,
+  "pausas_mayores_0_3s": 30,
+  "pausa_mediana_s": 0.46,
+  "silencio_total_s": 14.9,
+  "LUFS": -13.8,
+  "LRA": 2.4,
+  "fondo_en_pausas_dB_bajo_voz": -7.0,
+  "reglas_en_s": [
+   13.0,
+   19.9,
+   45.2
+  ],
+  "sincronia": {
+   "cambios_resaltado": 195,
+   "desfase_mediano_cuadros": -1.8,
+   "p25_p75": [
+    -2.7,
+    -0.6
+   ],
+   "pct_dentro_3_cuadros": 77.9
+  }
+ },
+ "video3": {
+  "tema": "búnker del vecino",
+  "voz_empieza_s": 0.54,
+  "cola_tras_ultima_palabra_s": 0.67,
+  "palabras": 204,
+  "pal_por_s": 2.63,
+  "pausas_mayores_0_3s": 29,
+  "pausa_mediana_s": 0.46,
+  "silencio_total_s": 13.5,
+  "LUFS": -14.4,
+  "LRA": 2.3,
+  "fondo_en_pausas_dB_bajo_voz": -5.7,
+  "reglas_en_s": [
+   13.1,
+   30.0,
+   42.0
+  ],
+  "sincronia": {
+   "cambios_resaltado": 204,
+   "desfase_mediano_cuadros": -1.6,
+   "p25_p75": [
+    -2.4,
+    0.0
+   ],
+   "pct_dentro_3_cuadros": 78.3
+  }
+ },
+ "video4": {
+  "tema": "mordida sin síntomas",
+  "voz_empieza_s": 0.0,
+  "cola_tras_ultima_palabra_s": 0.71,
+  "palabras": 194,
+  "pal_por_s": 2.63,
+  "pausas_mayores_0_3s": 28,
+  "pausa_mediana_s": 0.42,
+  "silencio_total_s": 12.0,
+  "LUFS": -14.4,
+  "LRA": 3.1,
+  "fondo_en_pausas_dB_bajo_voz": -5.8,
+  "reglas_en_s": [
+   15.7,
+   28.9,
+   43.1
+  ],
+  "sincronia": {
+   "cambios_resaltado": 193,
+   "desfase_mediano_cuadros": -1.4,
+   "p25_p75": [
+    -2.4,
+    2.2
+   ],
+   "pct_dentro_3_cuadros": 72.6
+  }
+ },
+ "video5": {
+  "tema": "rancho del abuelo",
+  "voz_empieza_s": 0.0,
+  "cola_tras_ultima_palabra_s": 0.46,
+  "palabras": 196,
+  "pal_por_s": 2.6,
+  "pausas_mayores_0_3s": 30,
+  "pausa_mediana_s": 0.4,
+  "silencio_total_s": 13.4,
+  "LUFS": -14.4,
+  "LRA": 2.0,
+  "fondo_en_pausas_dB_bajo_voz": -3.9,
+  "reglas_en_s": [
+   17.4,
+   24.6,
+   28.5
+  ],
+  "sincronia": {
+   "cambios_resaltado": 190,
+   "desfase_mediano_cuadros": -1.8,
+   "p25_p75": [
+    -2.7,
+    -0.6
+   ],
+   "pct_dentro_3_cuadros": 77.5
+  }
+ },
+ "video6": {
+  "tema": "hotel",
+  "voz_empieza_s": 0.0,
+  "cola_tras_ultima_palabra_s": 0.77,
+  "palabras": 191,
+  "pal_por_s": 2.58,
+  "pausas_mayores_0_3s": 24,
+  "pausa_mediana_s": 0.44,
+  "silencio_total_s": 11.4,
+  "LUFS": -15.2,
+  "LRA": 2.3,
+  "fondo_en_pausas_dB_bajo_voz": -7.2,
+  "reglas_en_s": [
+   13.2,
+   19.2,
+   45.8
+  ],
+  "sincronia": {
+   "cambios_resaltado": 190,
+   "desfase_mediano_cuadros": -1.6,
+   "p25_p75": [
+    -2.6,
+    0.5
+   ],
+   "pct_dentro_3_cuadros": 75.5
+  }
+ }
+}
