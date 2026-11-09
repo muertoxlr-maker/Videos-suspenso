@@ -1,5 +1,32 @@
 {
  "nota": "Medido sobre el audio de cada video con Whisper medium (tiempos por palabra) y ffmpeg ebur128. Sincronía: cuadro en que cambia la palabra amarilla del subtítulo menos el inicio de la palabra en la voz (negativo = el resaltado llega antes).",
+ "video1": {
+  "tema": "gimnasio de madrugada",
+  "voz_empieza_s": 0.0,
+  "cola_tras_ultima_palabra_s": 0.84,
+  "palabras": 199,
+  "pal_por_s": 2.66,
+  "pausas_mayores_0_3s": 27,
+  "pausa_mediana_s": 0.44,
+  "silencio_total_s": 11.7,
+  "LUFS": -14.6,
+  "LRA": 2.3,
+  "fondo_en_pausas_dB_bajo_voz": -5.3,
+  "reglas_en_s": [
+   17.3,
+   28.7,
+   43.7
+  ],
+  "sincronia": {
+   "cambios_resaltado": 198,
+   "desfase_mediano_cuadros": -1.5,
+   "p25_p75": [
+    -2.4,
+    0.8
+   ],
+   "pct_dentro_3_cuadros": 80.6
+  }
+ },
  "video2": {
   "tema": "fiesta de XV",
   "voz_empieza_s": 0.0,
