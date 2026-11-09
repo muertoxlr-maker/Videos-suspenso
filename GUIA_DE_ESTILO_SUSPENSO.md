@@ -109,8 +109,9 @@ Medido en **todos los cuadros** con `herramientas/medir_referencia.py` (máscara
   perspectiva en los acercamientos, compatible con ambos.
 
 ### Personajes 👁 (medido a mano en 5 cuadros de cuerpo entero)
-- **Cabeza redonda grande: 41–46 % de la altura total** (≈ 2.2–2.5 cabezas de alto). Torso de cápsula ≈ 30 %,
-  piernas de palito ≈ 22–27 %.
+- **Cabeza redonda grande: 41–46 % de la altura total** (≈ 2.2–2.5 cabezas de alto). Torso ≈ 30 %, piernas de
+  palito ≈ 22–27 %. ⚠️ Corregido tras el estudio detallado (ver «Acabado de personajes»): el torso es
+  **rectangular**, no de cápsula, y brazos y piernas son líneas finas.
 - **Ojos**: círculos blancos grandes con pupila negra pequeña; las pupilas se mueven. Cejas de trazo grueso que
   cambian la expresión. Sin nariz o con nariz mínima.
 - **Bocas**: línea, «o» abierta, dientes apretados en zigzag (miedo), boca grande de grito.
@@ -119,6 +120,44 @@ Medido en **todos los cuadros** con `herramientas/medir_referencia.py` (máscara
 - **Ropa**: un color plano y 1–2 detalles que identifican (corona y vestido, bigote y corbata, gorra y lentes,
   sombrero y camisa a cuadros, chaleco, mochila, bufanda). Tonos de piel variados.
 - **Monstruos** (mordidos): misma base, pero piel grisácea, ojos rojos, dientes afilados y pelo enmarañado.
+
+### Acabado de personajes y escenarios — estudio detallado (video 4 y video 6)
+
+Comparado a resolución completa (576×1024) en cuadros nítidos: video 4 cuadros 300, 650, 760, 925 y 1900;
+video 6 cuadros 590, 780 y 960. 👁 = observado en esos cuadros · 📏 = medido con píxeles · ≈ = estimado.
+
+**Proporciones** (📏 a mano en 2 cuerpos enteros nítidos, cuadros 650 y 760 del video 4; ≈ ±10 %)
+- Altura total ≈ **2.5–2.6 diámetros de cabeza (D)**: pelo ≈ 0.1 D sobre la cabeza · cabeza 1 D · torso ≈ 0.85 D ·
+  piernas ≈ 0.65 D. La cabeza con pelo es ≈ 40–44 % de la altura.
+- **Torso rectangular**, esquinas casi rectas, lados rectos o apenas abiertos hacia abajo; ancho ≈ **0.65–0.8 D**
+  (más angosto en el adulto del video 6). No es una cápsula ni un óvalo.
+- **Piernas y brazos de línea fina** (≈ el grosor del contorno); **manos pequeñas y redondas** (≈ 0.1 D de diámetro);
+  **pies diminutos** oscuros. Brazos colgando junto al torso; cuando se mueven, se doblan en el codo.
+
+**Trazo y acabado** 👁
+- Contorno casi negro alrededor de cabeza, pelo, torso y manos; 📏 ≈ 2.5–4 % del ancho de la cabeza en un primer
+  plano (cuadro 925). Los ojos llevan un aro negro más grueso que el resto de los trazos.
+- El **pelo** es una masa oscura con picos irregulares y algunos mechones sueltos; tapa la parte alta de la cabeza.
+- **Degradados suaves**, no colores planos: la cara es más clara del lado de la luz y se oscurece hacia el borde
+  contrario; la ropa se oscurece hacia abajo; hay una franja de sombra bajo la barbilla. Pieles pálidas
+  y algo apagadas de noche.
+- Detalle de ropa con líneas finas: solapas, cierres, botones, tirantes de mochila, pañuelo.
+
+**Luz sobre los personajes** 👁
+- Toman el color de la luz del lugar (cálidos junto a una lámpara, fríos y apagados de noche) pero **la cara siempre
+  se lee**. Sombra de contacto oscura bajo los pies y, junto a una lámpara, **sombra alargada en el suelo** (video 6, cuadro 590).
+
+**Hotel** 👁 (video 6)
+- Pasillo: **papel tapiz verde con dibujo tenue**, zócalo de madera oscura, moldura en el techo, **apliques de dos focos
+  con pantallita**, puertas de madera con **placa de latón con el número**, manija de palanca y mirilla, alfombra rojo
+  oscuro, carrito de limpieza. Habitación: lámpara de buró con pantalla, buró de cajones, sillón amarillo, termostato.
+
+**Color de los cuadros estudiados** 📏 (mismo método que §4)
+| Cuadro | Brillo | Saturación |
+|---|---|---|
+| Video 4 · 760 (refugio, cuerpos enteros) | 0.19 | 0.47 |
+| Video 4 · 925 (primer plano) | 0.22 | 0.43 |
+| Video 6 · 590 (habitación del hotel) | 0.22 | 0.52 |
 
 ### Movimiento de personajes 👁 (revisado en cuadros consecutivos de cada plano)
 - **Parpadeo** de 2–3 cuadros; ojos que miran de un lado a otro.
