@@ -18,7 +18,7 @@ import { dibGafete, dibInhalador, dibManos, dibMonitor, dibPantallaElevador, dib
 import PALABRAS from "./palabras.json";
 
 export const FPS = 30;
-export const TURNO_CUADROS = Math.ceil(82.08 * FPS);
+export const TURNO_CUADROS = Math.ceil(75.72 * FPS); // duración de voz_final.mp3
 const P = PALABRAS as { txt: string; ini: number; fin: number }[];
 const fw = (i: number) => Math.round(P[i].ini * FPS); // cuadro en que empieza la palabra i
 const NOMBRE = "Diego Ferrer Luna";

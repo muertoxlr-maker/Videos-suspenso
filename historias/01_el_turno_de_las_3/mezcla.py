@@ -19,7 +19,7 @@ import sonido  # noqa: E402  (ambiente, impacto, latido, whoosh, chirrido, toc)
 SR = sonido.SR
 FPS = 30
 P = json.load(open(AQUI / "voz" / "palabras.json"))
-DUR = 2463 / FPS
+DUR = 2272 / FPS  # = TURNO_CUADROS del video
 N = int(DUR * SR)
 rng = np.random.default_rng(7)
 
