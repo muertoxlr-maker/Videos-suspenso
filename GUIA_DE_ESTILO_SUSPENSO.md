@@ -192,7 +192,10 @@ video 6 cuadros 590, 780 y 960. 👁 = observado en esos cuadros · 📏 = medid
   `eleven_v4`, estabilidad 0.5, similitud 0.75, estilo 0, velocidad 1.0, speaker boost, MP3 192 kbps. Con
   `eleven_multilingual_v2` + similitud 0.95 + velocidad 0.92 salió apagada y distorsionada («bocina vieja»). Antes de
   cambiar algo, revisar su historial (`GET /v1/history`) y comparar. Script de referencia:
-  `historias/01_el_turno_de_las_3/voz/preparar_voz.py`.
+  `herramientas/voz_elevenlabs.py` (usar este para videos nuevos).
+- **Tratamiento de voz del usuario (obligatorio, aprobado en «Último vagón»)**: tono ×0.96 sin cambiar velocidad,
+  filtro 85–5200 Hz, +2 dB en graves y claridad, compresión 1.6:1, eco muy tenue (43 y 87 ms), −16 LUFS con picos
+  ≤ −2 dB. Sin él, la voz cruda de ElevenLabs «se satura» en el celular. Ya va incluido en `voz_elevenlabs.py`.
 - **Bajo la voz, nada de ruido en la banda de la voz** (respiraciones o «aire» hechos con ruido filtrado suenan a
   estática) y nada por debajo de 100 Hz (las bocinas del celular vibran). Fondo ≈ −14 dB bajo la voz al hablar.
 - ⚠️ No se pudo escuchar: el tipo de música, los efectos y si los diálogos usan otra voz siguen **pendientes**
