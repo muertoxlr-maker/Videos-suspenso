@@ -38,7 +38,7 @@ export type Pose = {
   cejasAlto: number;
   cejasMiedo: number;
   boca: "linea" | "dientes" | "o" | "sonrisa" | "abierta" | "amable";
-  sostiene?: "inhalador"; // objeto en la mano derecha del personaje (izquierda de la pantalla)
+  sostiene?: "inhalador" | "celular" | "celularEncendido"; // objeto en la mano derecha del personaje (izquierda de la pantalla)
   bocaAbre?: number; // 0 … 1 con boca "abierta" (hablar)
   ojosVacios?: boolean; // «el otro turno»: pupila mínima y ojeras
   sudor: number;
@@ -225,6 +225,16 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
     const [hx2, hy2] = manos[0];
     contorno(() => ctx.roundRect(hx2 - 14, hy2 - 52, 28, 50, 8), "#c7ccd2", 5);
     contorno(() => ctx.roundRect(hx2 - 20, hy2 - 16, 40, 44, 10), "#6fa0c8", 6);
+  }
+  if (p.sostiene === "celular" || p.sostiene === "celularEncendido") {
+    const [hx2, hy2] = manos[0];
+    if (p.sostiene === "celularEncendido") { // brillo de la pantalla alrededor de la mano
+      const gl = ctx.createRadialGradient(hx2, hy2 - 30, 4, hx2, hy2 - 30, 90);
+      gl.addColorStop(0, "rgba(190,230,255,0.75)"); gl.addColorStop(1, "rgba(190,230,255,0)");
+      ctx.fillStyle = gl; ctx.fillRect(hx2 - 90, hy2 - 120, 180, 180);
+    }
+    contorno(() => ctx.roundRect(hx2 - 17, hy2 - 62, 34, 62, 7), "#1d2126", 5);
+    ctx.fillStyle = p.sostiene === "celularEncendido" ? "#d8f0ff" : "#2c333b"; ctx.fillRect(hx2 - 12, hy2 - 56, 24, 46);
   }
   // manos pequeñas y redondas, con su lado de sombra
   for (const [mx, my] of manos) {
