@@ -17,8 +17,13 @@ export type Aspecto = {
   ropaInterior: string; // camisa / cuello que asoma
   pantalon: string;
   zapatos: string;
-  peinado: "revuelto" | "mono";
+  peinado: "revuelto" | "mono" | "rizado" | "trenza" | "recogido";
   lentes?: boolean;
+  // ---- opcionales (añadidos para «El turno de las 3:00»; sin ellos el dibujo es el aprobado) ----
+  bigote?: boolean;
+  cuello?: "v" | "capucha" | "redondo";
+  estampado?: "puntos"; // bata de hospital
+  insignia?: { tipo: "gafete" | "etiqueta" };
   semilla: number; // para el temblor del trazo
 };
 
@@ -32,7 +37,10 @@ export type Pose = {
   parpadeo: boolean;
   cejasAlto: number;
   cejasMiedo: number;
-  boca: "linea" | "dientes" | "o";
+  boca: "linea" | "dientes" | "o" | "sonrisa" | "abierta" | "amable";
+  sostiene?: "inhalador"; // objeto en la mano derecha del personaje (izquierda de la pantalla)
+  bocaAbre?: number; // 0 … 1 con boca "abierta" (hablar)
+  ojosVacios?: boolean; // «el otro turno»: pupila mínima y ojeras
   sudor: number;
   // brazos articulados: hombro y codo, ángulos desde la vertical (positivo = hacia fuera)
   brazoIzq: [number, number];
@@ -138,6 +146,9 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
   brazo(-1, p.brazoIzq);
   brazo(1, p.brazoDer);
 
+  if (a.cuello === "capucha") {
+    contorno(() => ctx.roundRect(cx - anchoHombro * 0.42, torsoTop - D * 0.1, anchoHombro * 0.84, D * 0.26, D * 0.12), sombra(a.ropa, 0.2), 7);
+  }
   // ---------------- torso rectangular ----------------
   const torso = () => {
     ctx.moveTo(cx - anchoHombro / 2 + 6, torsoTop);
@@ -158,7 +169,28 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
   gv.addColorStop(0, "rgba(12,16,26,0.42)"); gv.addColorStop(0.18, "rgba(12,16,26,0.0)");
   gv.addColorStop(0.7, "rgba(12,16,26,0.0)"); gv.addColorStop(1, "rgba(12,16,26,0.28)");
   ctx.fillStyle = gv; ctx.fillRect(0, torsoTop, W, torsoH);
-  if (p.vista === "frente") {
+  if (a.estampado === "puntos") {
+    ctx.fillStyle = sombra(a.ropa, 0.28);
+    for (let yy = torsoTop + 14; yy < torsoBot; yy += 26) for (let xx = cx - anchoBajo / 2 + ((yy / 26) % 2 ? 6 : 19); xx < cx + anchoBajo / 2; xx += 26) {
+      ctx.beginPath(); ctx.arc(xx, yy, 4, 0, 7); ctx.fill();
+    }
+  }
+  if (p.vista === "frente" && a.cuello === "capucha") {
+    // sudadera: cuello redondo con la camiseta, cordones de la capucha y bolsillo canguro
+    ctx.fillStyle = a.ropaInterior;
+    ctx.beginPath(); ctx.ellipse(cx, torsoTop, D * 0.16, D * 0.09, 0, 0, Math.PI); ctx.fill();
+    ctx.lineWidth = 5; ctx.strokeStyle = TINTA; ctx.stroke();
+    ctx.lineWidth = 4; ctx.strokeStyle = "#e9e4d8";
+    for (const s of [-1, 1]) { ctx.beginPath(); ctx.moveTo(cx + s * D * 0.07, torsoTop + 6); ctx.lineTo(cx + s * D * 0.08, torsoTop + D * 0.28); ctx.stroke(); }
+    ctx.lineWidth = 4; ctx.strokeStyle = sombra(a.ropa, 0.55);
+    ctx.beginPath(); ctx.moveTo(cx - D * 0.24, torsoTop + torsoH * 0.62); ctx.lineTo(cx + D * 0.24, torsoTop + torsoH * 0.62);
+    ctx.lineTo(cx + D * 0.28, torsoBot - 22); ctx.moveTo(cx - D * 0.24, torsoTop + torsoH * 0.62); ctx.lineTo(cx - D * 0.28, torsoBot - 22); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx - anchoBajo / 2, torsoBot - 20); ctx.lineTo(cx + anchoBajo / 2, torsoBot - 20); ctx.stroke();
+  } else if (p.vista === "frente" && a.cuello === "redondo") {
+    ctx.fillStyle = a.ropaInterior;
+    ctx.beginPath(); ctx.ellipse(cx, torsoTop, D * 0.15, D * 0.1, 0, 0, Math.PI); ctx.fill();
+    ctx.lineWidth = 5; ctx.strokeStyle = TINTA; ctx.stroke();
+  } else if (p.vista === "frente") {
     // cuello de la camisa en V y abertura del suéter
     ctx.fillStyle = a.ropaInterior;
     ctx.beginPath(); ctx.moveTo(cx - D * 0.17, torsoTop - 2); ctx.lineTo(cx, torsoTop + D * 0.32); ctx.lineTo(cx + D * 0.17, torsoTop - 2); ctx.closePath(); ctx.fill();
@@ -172,12 +204,28 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
       ctx.beginPath(); ctx.moveTo(cx + s * D * 0.12, torsoTop + torsoH * 0.66); ctx.lineTo(cx + s * D * 0.31, torsoTop + torsoH * 0.66); ctx.stroke();
     }
     ctx.beginPath(); ctx.moveTo(cx - anchoBajo / 2, torsoBot - 20); ctx.lineTo(cx + anchoBajo / 2, torsoBot - 20); ctx.stroke();
-  } else {
+  } else if (p.vista === "espalda") {
     ctx.lineWidth = 4; ctx.strokeStyle = sombra(a.ropa, 0.55);
     ctx.beginPath(); ctx.moveTo(cx - anchoBajo / 2, torsoBot - 20); ctx.lineTo(cx + anchoBajo / 2, torsoBot - 20); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(cx - D * 0.2, torsoTop + 6); ctx.quadraticCurveTo(cx, torsoTop + 22, cx + D * 0.2, torsoTop + 6); ctx.stroke();
   }
+  if (p.vista === "frente" && a.insignia) {
+    // gafete (enfermera) o etiqueta de visitante, sobre el pecho izquierdo del personaje
+    const bx = cx + D * 0.2, by = torsoTop + torsoH * 0.3, bw = D * 0.2, bh = D * 0.15;
+    ctx.fillStyle = "#f2efe6"; ctx.fillRect(bx - bw / 2, by - bh / 2, bw, bh);
+    ctx.lineWidth = 3; ctx.strokeStyle = TINTA; ctx.strokeRect(bx - bw / 2, by - bh / 2, bw, bh);
+    if (a.insignia.tipo === "etiqueta") { ctx.fillStyle = "#b8262e"; ctx.fillRect(bx - bw / 2, by - bh / 2, bw, bh * 0.32); }
+    else { ctx.fillStyle = "#8aa0a8"; ctx.fillRect(bx - bw / 2 + 4, by - bh / 2 + 4, bw * 0.3, bh * 0.55); }
+    ctx.lineWidth = 2; ctx.strokeStyle = "#5a5450";
+    for (const k of [0.15, 0.32]) { ctx.beginPath(); ctx.moveTo(bx - bw * 0.05, by + bh * k - 2); ctx.lineTo(bx + bw * 0.4, by + bh * k - 2); ctx.stroke(); }
+  }
   ctx.restore();
+  // objeto en la mano (se dibuja antes de la mano para que los dedos lo tapen)
+  if (p.sostiene === "inhalador") {
+    const [hx2, hy2] = manos[0];
+    contorno(() => ctx.roundRect(hx2 - 14, hy2 - 52, 28, 50, 8), "#c7ccd2", 5);
+    contorno(() => ctx.roundRect(hx2 - 20, hy2 - 16, 40, 44, 10), "#6fa0c8", 6);
+  }
   // manos pequeñas y redondas, con su lado de sombra
   for (const [mx, my] of manos) {
     const g = ctx.createRadialGradient(mx - L * -6, my - 6, 2, mx, my, 17);
@@ -190,6 +238,13 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
   const g = p.vista === "frente" ? p.giro : 0;
   if (a.peinado === "mono") {
     contorno(() => ctx.arc(cx - g * r * 0.3 + (p.vista === "espalda" ? 0 : 0), cabezaY - r * 0.95, r * 0.3, 0, Math.PI * 2), gradLado(cx - r * 0.3, cx + r * 0.3, a.pelo, 0.4));
+  }
+  if (a.peinado === "trenza" && p.vista === "frente") {
+    // trenza que cae por detrás del hombro derecho del personaje (izquierda de la pantalla)
+    for (let i = 0; i < 6; i++) {
+      const tx = cx - r * 0.78 - i * r * 0.03, ty = cabezaY + r * 0.25 + i * r * 0.27;
+      contorno(() => ctx.ellipse(tx, ty, r * 0.16 - i * 2, r * 0.17, 0.3 * (i % 2 ? 1 : -1), 0, Math.PI * 2), gradLado(tx - r * 0.2, tx + r * 0.2, a.pelo, 0.35), 6);
+    }
   }
   // orejas
   for (const s of [-1, 1]) {
@@ -231,7 +286,10 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
   contorno(() => {
     ctx.moveTo(cx - r * 1.06, cabezaY + r * 0.05);
     ctx.bezierCurveTo(cx - r * 1.24, cabezaY - r * 1.42, cx + r * 1.24, cabezaY - r * 1.42, cx + r * 1.06, cabezaY + r * 0.05);
-    if (a.peinado === "revuelto") {
+    if (a.peinado === "rizado") {
+      ctx.lineTo(cx + r * 1.08, cabezaY - r * 0.4);
+      ctx.quadraticCurveTo(cx, cabezaY - r * 0.9, cx - r * 1.08, cabezaY - r * 0.4);
+    } else if (a.peinado === "revuelto") {
       // mechón suelto del lado derecho
       ctx.lineTo(cx + r * 1.1, cabezaY - r * 0.22);
       const n = 7;
@@ -247,6 +305,24 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
     }
     ctx.closePath();
   }, gp);
+  if (a.peinado === "rizado") {
+    // rizos: bucles pequeños con su contorno sobre la silueta y la línea del pelo
+    for (let i = 0; i <= 12; i++) {
+      const ang = Math.PI * (1.0 + i / 12);
+      const rr = i === 0 || i === 12 ? r * 0.95 : r * 1.12;
+      const bx = cx + Math.cos(ang) * rr, by = cabezaY - r * 0.12 + Math.sin(ang) * rr * 0.98;
+      contorno(() => ctx.arc(bx, by, r * 0.17, 0, Math.PI * 2), gradLado(bx - r * 0.2, bx + r * 0.2, a.pelo, 0.25), 5);
+    }
+    for (let i = 0; i < 7; i++) {
+      const bx = cx + r * (-0.72 + i * 0.24), by = cabezaY - r * (0.66 + 0.08 * Math.sin((i / 6) * Math.PI));
+      contorno(() => ctx.arc(bx, by, r * 0.13, 0, Math.PI * 2), luz(a.pelo, 0.06), 5);
+    }
+  }
+  if (a.peinado === "trenza" || a.peinado === "recogido") {
+    // raya al medio
+    ctx.lineWidth = 4; ctx.strokeStyle = sombra(a.pelo, 0.5);
+    ctx.beginPath(); ctx.moveTo(px, cabezaY - r * 1.0); ctx.quadraticCurveTo(px + 4, cabezaY - r * 0.8, px - 2, cabezaY - r * 0.62); ctx.stroke();
+  }
   if (a.peinado === "revuelto") {
     // pelos sueltos en la coronilla
     ctx.lineWidth = 5; ctx.strokeStyle = TINTA;
@@ -276,7 +352,11 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
       continue;
     }
     contorno(() => ctx.ellipse(x, ey, er * sx, er * 1.06, 0, 0, Math.PI * 2), "#f6f1e6", 6);
-    const pr = er * p.pupila;
+    if (p.ojosVacios) { // ojeras grisáceas bajo cada ojo
+      ctx.lineWidth = 4; ctx.strokeStyle = "rgba(60,50,70,0.55)";
+      ctx.beginPath(); ctx.ellipse(x, ey + er * 0.2, er * sx * 1.05, er * 1.15, 0, 0.15 * Math.PI, 0.85 * Math.PI); ctx.stroke();
+    }
+    const pr = er * (p.ojosVacios ? 0.11 : p.pupila);
     ctx.beginPath(); ctx.arc(x + (p.mirarX * 0.55 + g * 0.2) * er * sx, ey + p.mirarY * 0.45 * er, pr, 0, Math.PI * 2);
     ctx.fillStyle = TINTA; ctx.fill();
   }
@@ -307,11 +387,26 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
     ctx.lineWidth = 3.5; ctx.strokeStyle = TINTA;
     ctx.beginPath(); ctx.moveTo(mx - mw, my); ctx.lineTo(mx + mw, my); ctx.stroke();
     for (let i = 1; i < 5; i++) { const x = mx - mw + (2 * mw * i) / 5; ctx.beginPath(); ctx.moveTo(x, my - r * 0.1); ctx.lineTo(x, my + r * 0.1); ctx.stroke(); }
+  } else if (p.boca === "sonrisa") {
+    // sonrisa fija, demasiado ancha, con todos los dientes
+    const sw = mw * 1.75;
+    contorno(() => { ctx.moveTo(mx - sw, my - r * 0.06); ctx.quadraticCurveTo(mx, my + r * 0.34, mx + sw, my - r * 0.06); ctx.quadraticCurveTo(mx, my + r * 0.08, mx - sw, my - r * 0.06); }, "#f3eee2", 6);
+    ctx.lineWidth = 3; ctx.strokeStyle = TINTA;
+    for (let i = 1; i < 8; i++) { const x = mx - sw + (2 * sw * i) / 8; ctx.beginPath(); ctx.moveTo(x, my - r * 0.02 + Math.abs(i - 4) * -1.5); ctx.lineTo(x, my + r * 0.16 - Math.abs(i - 4) * 4); ctx.stroke(); }
+  } else if (p.boca === "amable") {
+    ctx.lineWidth = 7; ctx.strokeStyle = TINTA;
+    ctx.beginPath(); ctx.moveTo(mx - mw * 0.7, my - r * 0.03); ctx.quadraticCurveTo(mx, my + r * 0.12, mx + mw * 0.7, my - r * 0.03); ctx.stroke();
+  } else if (p.boca === "abierta") {
+    const k = Math.max(0.05, p.bocaAbre ?? 0.5);
+    contorno(() => ctx.ellipse(mx, my, mw * 0.55, r * (0.03 + 0.11 * k), 0, 0, Math.PI * 2), "#3a0d14", 6);
   } else if (p.boca === "o") {
     contorno(() => ctx.ellipse(mx, my, mw * 0.4, r * 0.12, 0, 0, Math.PI * 2), "#3a0d14", 6);
   } else {
     ctx.lineWidth = 7; ctx.strokeStyle = TINTA;
     ctx.beginPath(); ctx.moveTo(mx - mw * 0.6, my); ctx.lineTo(mx + mw * 0.6, my); ctx.stroke();
+  }
+  if (a.bigote) {
+    contorno(() => { ctx.moveTo(mx - mw * 1.0, my - r * 0.08); ctx.quadraticCurveTo(mx, my - r * 0.3, mx + mw * 1.0, my - r * 0.08); ctx.quadraticCurveTo(mx, my - r * 0.14, mx - mw * 1.0, my - r * 0.08); }, a.pelo, 5);
   }
   // gota de sudor
   if (p.sudor > 0) {
