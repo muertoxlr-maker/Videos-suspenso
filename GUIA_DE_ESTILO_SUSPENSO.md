@@ -225,6 +225,102 @@ video 6 cuadros 590, 780 y 960. 👁 = observado en esos cuadros · 📏 = medid
 | Personajes | Cabeza de frijol, 3.5 cabezas de alto | **Cabeza redonda, 2.2–2.5 cabezas de alto**, ojos grandes, palitos |
 | Se mantiene | Personajes 2D con contorno en mundo 3D, luz de escena sobre los personajes, sombra de contacto, desenfoque de fondo, voz desde el cuadro 0, −14 LUFS, el video termina con la última palabra |
 
+## 8. Estándar aprobado: prueba del pasillo v2 ✅
+
+**Aprobada por el usuario.** Es el punto de partida obligatorio de todos los videos nuevos: se cambian escenario y
+personajes según la historia, pero **se mantienen estas reglas y valores**. Si algo de lo anterior de esta guía
+choca con esta sección, manda esta sección.
+
+- Video y cuadros de referencia: `referencias/aprobado/prueba_pasillo_v2.mp4`, `cuadro_03.jpg` (plano general),
+  `cuadro_38.jpg` (reacción), `cuadro_86.jpg` (plano por encima del hombro).
+- Código: `caricatura3d/src/videos/prueba_pasillo/` — `personaje.ts` (dibujo y poses) y `Prueba.tsx` (escenario, luz,
+  cámara, posproceso). Composición `PruebaPasillo` (90 cuadros, 30 fps, 1080×1920).
+
+### 8.1 Diseño y proporciones del personaje (`personaje.ts`)
+| Parte | Valor aprobado |
+|---|---|
+| Alto total | **2.55 D** (D = diámetro de la cabeza sin pelo) |
+| Pelo sobre la cabeza | 0.12 D; masa oscura con flequillo en picos irregulares y 2 mechones sueltos en la coronilla |
+| Cabeza | círculo de diámetro D (ancho 1.02 D) |
+| Torso | **rectángulo**, alto 0.85 D, ancho 0.66 D en hombros y 0.72 D abajo, esquinas de radio pequeño |
+| Piernas | **línea fina** (9 px en el lienzo de 600×1000) desde la cadera hasta el pie; ≈ 0.65 D |
+| Pies | óvalo oscuro pequeño (≈ 50×20 px) |
+| Brazos | **dos segmentos** (hombro y codo) de 0.36 D cada uno, línea de 10 px del color de la manga |
+| Manos | círculo de 15 px de radio con su sombra |
+| Ojos | círculo blanco de radio 0.2 × radio de cabeza, aro de 6 px; pupila 0.32 del ojo (0.19 con miedo) |
+| Cejas | trazo de 7 px; suben y se inclinan con miedo |
+| Bocas | línea (7 px) · dientes apretados (rectángulo con rejilla) · «o» |
+| Ropa | color base + prenda interior que asoma (cuello en V) + 2–3 detalles finos (botones, bolsillos, dobladillo) |
+
+Para un personaje nuevo se cambia solo su `Aspecto` (piel, pelo, ropa, ropa interior, pantalón, zapatos,
+peinado, lentes): las proporciones son las mismas para todos. Para distinguir personajes en un plano: **silueta del
+pelo distinta, altura distinta (1.72 m y 1.84 m en la prueba) y colores de ropa opuestos** (ocre frente a vino).
+
+### 8.2 Contorno y acabado
+- Tinta casi negra `#141012`; contorno de 9 px en cabeza, pelo y torso (≈ 2.5 % del ancho de la cabeza);
+  5–6 px en detalles, ojos y manos. Ligero temblor de trazo a mano en el pelo.
+- **Degradados en vez de colores planos**: cara con degradado radial (más clara del lado de la luz, sombra fría en
+  el borde contrario), torso con degradado lateral según la luz, oscurecido arriba (sombra bajo la barbilla) y
+  abajo; sombra suave del pelo sobre la frente.
+- Las sombras se mezclan hacia **azul frío** (`#1a1f2a`), nunca hacia café; las luces, hacia crema cálido (`#fff4e2`).
+- El mundo 3D lleva la tinta del tutorial (`InkPass`, 3.6 px de cerca → 2.2 px de lejos); los personajes no, porque ya
+  traen su propio contorno.
+
+### 8.3 Iluminación y color
+- Ambiente de noche: luz ambiental `#5a8088` (0.32) + hemisférica `#40626a`/`#140d0a` (0.4) + niebla `#0b1416` de
+  6 a 24 m.
+- **Luces prácticas que justifican cada charco de luz** (apliques cálidos `#ffcf9a` de 2.2–3.4, luz fría de la
+  escalera `#cfe6ff`, letrero verde de SALIDA), con un halo pintado en la pared.
+- Los personajes **reciben la luz de la escena** (material Lambert) con solo 0.12 de brillo propio, para que las caras
+  se lean sin verse pegadas. La dirección de la luz principal (`luzX`) se le pasa al dibujo para orientar los degradados.
+- **Sombra de contacto** oscura (opacidad 0.9) y **sombra alargada** (0.7) en dirección contraria a la luz principal.
+- Posproceso: tinta → desenfoque de lente → bloom (0.8) + tono NEUTRAL + saturación −0.12 + brillo +0.135 / contraste
+  +0.04 + viñeta (0.3 / 0.7); exposición 1.4.
+- **Objetivo medido**: brillo medio **0.17–0.20** y saturación **0.40–0.45** (la referencia está en 0.19–0.22 y
+  0.43–0.52). Comprobarlo con `herramientas/medir_referencia.py` antes de entregar.
+
+### 8.4 Escenario
+- Nivel de detalle mínimo por lugar: superficies con textura pintada (papel tapiz con dibujo, zócalo con paneles,
+  alfombra con borde), molduras, **objetos propios del lugar** (en el hotel: puertas numeradas con placa, mirilla y
+  manija, «No molestar», bandeja de servicio, consola con planta, cuadro, extintor, detectores de humo) y al menos
+  una luz práctica visible por plano.
+- **Todo espacio que se ve a través de una puerta o ventana debe estar construido y tener su propia luz justificada**
+  (en la prueba: escalera de emergencia de concreto con barandal y tubo fluorescente). Nunca un fondo liso.
+- Escala: personajes de 1.7–1.85 m; puertas de 2.15–2.2 m.
+
+### 8.5 Cámara y encuadre
+- Planos de ≈ 1.8 s con **acercamiento lento continuo** (≈ 0.08 % de zoom por cuadro) y corte duro entre planos.
+- Plano general: cámara a ≈ 4.5 m, a la altura del pecho, objetivo de 40°; el personaje ocupa ≈ la mitad del alto
+  y se ve el lugar.
+- **Plano por encima del hombro**: la nuca reconocible (pelo con mechones, oreja, cuello de la ropa) en el **tercio
+  izquierdo**, a ≈ 3.4 m de la cámara, poco desenfocada; lo que mira queda libre en el **tercio derecho**. Nunca
+  una mancha borrosa que tape la acción.
+- Desenfoque: foco en el personaje que actúa (cInf 7–9 px); el primer término se desenfoca poco (factor 0.3).
+
+### 8.6 Cómo animar
+- **Los pies nunca se mueven** salvo al caminar: el cuerpo se desplaza moviendo la cadera (`cuerpoX`) y las piernas
+  se inclinan desde el pie fijo. Sin saltos que despeguen los pies. Comprobado midiendo los zapatos cuadro a cuadro
+  (< 1 px por cuadro, solo por el movimiento de cámara).
+- **Orden de una reacción** (en cuadros a 30 fps): parpadeo de 3 cuadros antes del estímulo → **la mirada se adelanta**
+  (4 cuadros) → los hombros se tensan → **la cabeza gira** (10 cuadros, con suavizado) → **el torso acompaña con
+  2–4 cuadros de retraso** → susto en 4 cuadros (cejas arriba, ojos más grandes, pupilas chicas, dientes apretados,
+  hombros encogidos, rodillas dobladas, codos hacia fuera y manos junto a la cara) → **se asienta** en ≈ 9 cuadros con
+  un pequeño rebote → temblor leve en cadera y cabeza, respiración agitada y gota de sudor.
+- **Giro de cabeza** en vista de 3/4: el contorno de la cabeza y la silueta del pelo **no se mueven**; solo se
+  desplazan los rasgos (0.26 del radio), el flequillo y las orejas (se oculta la del lado al que gira). El ojo lejano
+  se angosta y nunca pasa del borde del cráneo.
+- **Vista de espaldas**: el pelo cubre casi toda la cabeza, con mechones; solo asoma una franja corta de nuca.
+- Caminar: piernas que se levantan alternadas (ciclo de 14 cuadros) y brazos que se balancean; el cuerpo avanza en
+  el mundo 3D.
+- Revisión obligatoria antes de entregar: hoja de cuadros consecutivos del giro y la reacción, posición de los pies
+  medida en cada cuadro, encuadre del último plano y del espacio detrás de puertas y ventanas.
+
+### 8.7 Pendientes conocidos de esta versión
+- La sombra alargada casi no se nota sobre alfombras oscuras.
+- El escenario tiene menos objetos y gente al fondo que las referencias.
+- La señora tapa casi toda la escalera; la puerta se abre muy rápido (≈ 10 cuadros).
+- Render sin GPU: ≈ 5 minutos por cada 3 segundos.
+
 ## Herramientas y archivos
 - `herramientas/medir_referencia.py` — mide todos los cuadros (cámara, cortes, transiciones, color, tiras por plano).
 - `herramientas/medir_sincronia.py` — sincronía de la palabra amarilla con la voz.

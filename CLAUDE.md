@@ -3,6 +3,10 @@
 - **Antes de escribir guiones, diseñar escenas, personajes, cámara, subtítulos, voz o sonido, lee
   `GUIA_DE_ESTILO_SUSPENSO.md`.** Tiene las medidas de los videos de referencia y lo que ya está comprobado o
   pendiente. Si contradice a `tutorial-caricatura/` (cortes, subtítulos, ritmo de la voz, brillo), manda la guía.
+- **Estándar visual aprobado: §8 de la guía** (prueba del pasillo v2, en `referencias/aprobado/` y
+  `caricatura3d/src/videos/prueba_pasillo/`). Todo video nuevo parte de ese código y esos valores: se adaptan
+  escenario y personajes a la historia, pero se mantienen proporciones, contorno, iluminación, color medido y forma de
+  animar. Compara siempre con `referencias/aprobado/` y con las medidas antes de entregar.
 - La base técnica de caricatura (Three.js + Remotion) está en `caricatura3d/`; su origen y licencia, en
   `tutorial-caricatura/ORIGEN.md` y `tutorial-caricatura/LICENSE` (MIT: conserva los avisos de copyright).
 - Las referencias son solo para el estilo: **nunca copies sus historias, frases, personajes ni tomas**. No subas a
