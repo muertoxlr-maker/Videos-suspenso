@@ -14,13 +14,13 @@ export const PUERTA_604 = { z: 1.5, ancho: 1.1, alto: 2.15 };
 export const CAMA_ABUELA = { x: 0.95, z: -1.9 };
 export const CAMA_SENOR = { x: -1.35, z: -1.9 };
 
-const texPiso = (rep: [number, number], a = "#b9c3bc", b = "#aab5ae") => lienzo((g, w, h) => {
+const texPiso = (rep: [number, number], a = "#8f9a93", b = "#808b84") => lienzo((g, w, h) => {
   g.fillStyle = a; g.fillRect(0, 0, w, h);
   g.fillStyle = b; g.fillRect(0, 0, w / 2, h / 2); g.fillRect(w / 2, h / 2, w / 2, h / 2);
   g.strokeStyle = "#8d9893"; g.lineWidth = 3; g.strokeRect(0, 0, w, h); g.beginPath(); g.moveTo(w / 2, 0); g.lineTo(w / 2, h); g.moveTo(0, h / 2); g.lineTo(w, h / 2); g.stroke();
   for (let i = 0; i < 40; i++) { g.fillStyle = "rgba(90,100,95,0.12)"; g.fillRect((i * 37) % w, (i * 71) % h, 4, 3); }
 }, 128, 128, rep);
-const texPared = (rep: [number, number], arriba = "#a9c1b6", abajo = "#6f8c81") => lienzo((g, w, h) => {
+const texPared = (rep: [number, number], arriba = "#7a978b", abajo = "#4f6a61") => lienzo((g, w, h) => {
   g.fillStyle = arriba; g.fillRect(0, 0, w, h);
   g.fillStyle = abajo; g.fillRect(0, h * 0.62, w, h * 0.38);
   g.fillStyle = "#5a7369"; g.fillRect(0, h * 0.6, w, h * 0.03);
@@ -70,7 +70,7 @@ export function crearHospital() {
   // ================= HABITACIÓN 604 =================
   const pisoH = new THREE.Mesh(new THREE.PlaneGeometry(W, Dz), lambert({ map: texPiso([W / 0.6, Dz / 0.6]) }));
   pisoH.rotation.x = -Math.PI / 2; raiz.add(pisoH);
-  const techoH = new THREE.Mesh(new THREE.PlaneGeometry(W, Dz), lambert({ color: "#c9d1cc" })); techoH.rotation.x = Math.PI / 2; techoH.position.y = ALTO; raiz.add(techoH);
+  const techoH = new THREE.Mesh(new THREE.PlaneGeometry(W, Dz), lambert({ color: "#8c9691" })); techoH.rotation.x = Math.PI / 2; techoH.position.y = ALTO; raiz.add(techoH);
   // pared del fondo (con ventana) y pared de enfrente
   const paredMat = (largo: number) => lambert({ map: texPared([largo / 1.2, 1]) });
   const fondo = new THREE.Group();
@@ -141,15 +141,15 @@ export function crearHospital() {
 
   // ================= PASILLO DEL PISO 6 =================
   const PW = PAS.x1 - PAS.x0, PL = PAS.z1 - PAS.z0, pcz = (PAS.z0 + PAS.z1) / 2;
-  const pisoP = new THREE.Mesh(new THREE.PlaneGeometry(PW, PL), lambert({ map: texPiso([PW / 0.6, PL / 0.6], "#b4bfb8", "#a2ada6") }));
+  const pisoP = new THREE.Mesh(new THREE.PlaneGeometry(PW, PL), lambert({ map: texPiso([PW / 0.6, PL / 0.6], "#8a958e", "#7a857e") }));
   pisoP.rotation.x = -Math.PI / 2; pisoP.position.set(PAS.cx, 0.001, pcz); raiz.add(pisoP);
-  const techoP = new THREE.Mesh(new THREE.PlaneGeometry(PW, PL), lambert({ color: "#c2cbc6" })); techoP.rotation.x = Math.PI / 2; techoP.position.set(PAS.cx, ALTO, pcz); raiz.add(techoP);
+  const techoP = new THREE.Mesh(new THREE.PlaneGeometry(PW, PL), lambert({ color: "#88928d" })); techoP.rotation.x = Math.PI / 2; techoP.position.set(PAS.cx, ALTO, pcz); raiz.add(techoP);
   // pared exterior del pasillo (la de la habitación ya existe del otro lado: se añade su cara hacia el pasillo)
   for (const [a, b] of [[PAS.z0, pz0], [pz1, PAS.z1]] as const) {
     const p = new THREE.Mesh(new THREE.PlaneGeometry(b - a, ALTO), lambert({ map: texPared([(b - a) / 1.2, 1]) }));
     p.rotation.y = -Math.PI / 2; p.position.set(PAS.x1 - 0.001, ALTO / 2, (a + b) / 2); raiz.add(p);
   }
-  const dintelP = new THREE.Mesh(new THREE.PlaneGeometry(PUERTA_604.ancho, ALTO - PUERTA_604.alto), lambert({ color: "#a9c1b6" }));
+  const dintelP = new THREE.Mesh(new THREE.PlaneGeometry(PUERTA_604.ancho, ALTO - PUERTA_604.alto), lambert({ color: "#7a978b" }));
   dintelP.rotation.y = -Math.PI / 2; dintelP.position.set(PAS.x1 - 0.001, (ALTO + PUERTA_604.alto) / 2, PUERTA_604.z); raiz.add(dintelP);
   const opuesta = new THREE.Mesh(new THREE.PlaneGeometry(PL, ALTO), lambert({ map: texPared([PL / 1.2, 1]) }));
   opuesta.rotation.y = Math.PI / 2; opuesta.position.set(PAS.x0, ALTO / 2, pcz); raiz.add(opuesta);
@@ -202,7 +202,7 @@ export function crearHospital() {
     raiz.add(caja(1.3, 0.05, 0.32, mMetal, PAS.cx, ALTO - 0.03, z));
     const tubo = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.03, 0.22), new THREE.MeshBasicMaterial({ color: "#eefcf4", toneMapped: false }));
     tubo.position.set(PAS.cx, ALTO - 0.06, z); raiz.add(tubo);
-    const luz = new THREE.PointLight("#d9f2e6", 2.4, 6.5, 1.5); luz.position.set(PAS.cx, ALTO - 0.3, z); raiz.add(luz);
+    const luz = new THREE.PointLight("#d9f2e6", 1.7, 6.5, 1.5); luz.position.set(PAS.cx, ALTO - 0.3, z); raiz.add(luz);
     fluorescentes.push({ tubo, luz });
   }
   // elevador al fondo

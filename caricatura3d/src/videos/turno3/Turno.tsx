@@ -232,7 +232,7 @@ class Mundo {
   constructor() {
     for (const c of Object.values(this.cartas)) this.h.raiz.add(c.grupo);
     this.insertos.forEach((l, i) => {
-      const m = new THREE.Mesh(new THREE.PlaneGeometry(0.5 * 1.12, 0.889 * 1.12), new THREE.MeshBasicMaterial({ map: l.tex }));
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(0.5 * 1.12, 0.889 * 1.12), new THREE.MeshBasicMaterial({ map: l.tex, color: "#6f7f7a" }));
       m.position.set([40, 43, 46, 49, 52, 55][i], 1, 0); m.layers.set(NOINK); this.h.raiz.add(m); this.mallasInserto.push(m);
     });
   }
@@ -268,7 +268,7 @@ class Mundo {
     this.h.fila.visible = this.filaCamillas;
     this.h.fluorescentes.forEach((l, i) => {
       const apagada = (i === 1 && this.parpadeoLuz) || (i === 3 && this.parpadeoLuz5);
-      l.luz.intensity = apagada ? 0.15 : 2.4; (l.tubo.material as THREE.MeshBasicMaterial).color.set(apagada ? "#3a4440" : "#eefcf4");
+      l.luz.intensity = apagada ? 0.12 : 1.7; (l.tubo.material as THREE.MeshBasicMaterial).color.set(apagada ? "#3a4440" : "#eefcf4");
     });
   }
 }
@@ -284,8 +284,8 @@ const Escena: React.FC = () => {
     lens: new LensBlur({ maxCoC: 22, nearScale: 1.0 }),
     bloom: new BloomEffect({ blendFunction: BlendFunction.ADD, intensity: 0.7, luminanceThreshold: 0.72, luminanceSmoothing: 0.25, mipmapBlur: true, radius: 0.7 }),
     tone: new ToneMappingEffect({ mode: ToneMappingMode.NEUTRAL }),
-    sat: new HueSaturationEffect({ saturation: -0.12 }),
-    luz: new BrightnessContrastEffect({ brightness: 0.135, contrast: 0.04 }),
+    sat: new HueSaturationEffect({ saturation: -0.2 }),
+    luz: new BrightnessContrastEffect({ brightness: 0.04, contrast: 0.06 }),
     vin: new VignetteEffect({ offset: 0.3, darkness: 0.7 }),
   }), [scene, cam]);
   useEffect(() => () => fx.ink.dispose(), [fx]);
@@ -389,7 +389,7 @@ export const TurnoDeLas3: React.FC = () => {
   const f = useCurrentFrame();
   return (
     <AbsoluteFill style={{ background: "#05090b" }}>
-      <ThreeCanvas width={1080} height={1920} gl={{ antialias: false, stencil: false, toneMappingExposure: 1.4 }} camera={{ fov: 40, near: 0.05, far: 60 }}>
+      <ThreeCanvas width={1080} height={1920} gl={{ antialias: false, stencil: false, toneMappingExposure: 1.0 }} camera={{ fov: 40, near: 0.05, far: 60 }}>
         <ambientLight intensity={0.34} color="#6a8f8c" />
         <hemisphereLight args={["#4a6f72", "#140d0a", 0.42]} />
         <Escena />
