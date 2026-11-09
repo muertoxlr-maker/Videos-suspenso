@@ -52,3 +52,12 @@ src/
   personajes/dibujarPersonaje.ts ← dibuja al personaje (cara, ojos, boca, expresiones)
 remotion.config.ts            ← render por software y búsqueda del navegador
 ```
+
+## Prueba de estilo de suspenso (3 s, sin voz)
+
+`src/videos/prueba_pasillo/` sigue `GUIA_DE_ESTILO_SUSPENSO.md`: personajes de cabeza redonda (43 % de la altura),
+dos planos (1.8 s + 1.2 s) con corte duro y acercamiento lento, tono azul-verdoso oscuro con luces cálidas.
+
+```bash
+npx remotion render PruebaPasillo salida/prueba_pasillo.mp4 --codec=h264 --crf=18   # ~5.5 min sin GPU
+```
