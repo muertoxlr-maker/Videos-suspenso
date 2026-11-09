@@ -154,11 +154,25 @@ def resumen(filas):
     br = np.array([f["brillo"] for f in filas])
     med = np.median(dif[1:]) if n > 1 else 0
     # corte duro: salto grande de imagen y de colores en un solo cuadro
-    cortes = [i for i in range(1, n) if (dif[i] > max(18, 6 * med) and dh[i] > 0.25) or dh[i] > 0.45]
+    crudos = [i for i in range(1, n) if (dif[i] > max(18, 6 * med) and dh[i] > 0.25) or dh[i] > 0.45]
+    # cortes seguidos (<= 3 cuadros) son UNA transición: corte a negro + fundido, o plano relámpago
+    grupos = []
+    for c in crudos:
+        if grupos and c - grupos[-1][-1] <= 3:
+            grupos[-1].append(c)
+        else:
+            grupos.append([c])
+    cortes = [g[0] for g in grupos]
+    transiciones = []
+    for g in grupos:
+        if len(g) > 1:
+            oscuro = float(br[g[0]:g[-1] + 1].min()) < 0.06
+            transiciones.append({"cuadro": g[0], "cuadros": g[-1] - g[0] + 1,
+                                 "tipo": "corte a negro + fundido" if oscuro else "plano relámpago"})
     # destello/fundido: el brillo se dispara o cae y vuelve en <= 8 cuadros sin ser corte
     destellos = []
     for i in range(1, n - 1):
-        if i in cortes:
+        if i in crudos:
             continue
         if abs(br[i] - br[i - 1]) > 0.08:
             destellos.append(i)
@@ -167,10 +181,10 @@ def resumen(filas):
     giro = np.array([abs(f["giro"]) for f in filas])
     medido = np.array([not f["sin_medida"] for f in filas])
     mov = ((vel > 0.3) | (zoom > 0.03) | (giro > 0.02)) & medido
-    for c in cortes:
+    for c in crudos:
         mov[c] = False
     # planos entre cortes
-    limites = [0] + cortes + [n]
+    limites = [0] + [g[-1] if len(g) > 1 else g[0] for g in grupos] + [n]
     planos = []
     for a, b in zip(limites[:-1], limites[1:]):
         b -= 1
@@ -198,6 +212,7 @@ def resumen(filas):
             "duracion_plano_mediana_s": round(float(np.median(dur)) / FPS, 2),
             "duracion_plano_media_s": round(float(dur.mean()) / FPS, 2),
             "duracion_plano_min_max_s": [round(float(dur.min()) / FPS, 2), round(float(dur.max()) / FPS, 2)],
+            "transiciones_compuestas": len(transiciones),
             "destellos_o_fundidos": len(destellos),
             "pct_cuadros_camara_moviendose": round(100 * float(mov.mean()), 1),
             "pct_cuadros_medibles": round(100 * float(medido.mean()), 1),
@@ -210,6 +225,7 @@ def resumen(filas):
             "saturacion_media": round(float(np.mean([f["saturacion"] for f in filas])), 3),
         },
         "cortes_en_cuadro": cortes,
+        "transiciones": transiciones,
         "destellos_en_cuadro": destellos,
         "planos": planos,
     }
