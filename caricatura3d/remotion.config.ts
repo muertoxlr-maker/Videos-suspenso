@@ -21,5 +21,9 @@ function buscarNavegador(): string | null {
 const navegador = buscarNavegador();
 if (navegador) Config.setBrowserExecutable(navegador);
 
+// Sin GPU, preparar escenas grandes (p. ej. los 100,000 soldados de Alejandro) tarda más de los
+// 30 s que Remotion espera por defecto. Damos hasta 5 minutos.
+Config.setDelayRenderTimeoutInMilliseconds(300000);
+
 Config.setVideoImageFormat("jpeg");
 Config.setOverwriteOutput(true);
