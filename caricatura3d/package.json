@@ -1,0 +1,26 @@
+{
+  "name": "caricatura3d",
+  "private": true,
+  "description": "Vídeos de suspenso: personajes 2D en escenarios 3D (Three.js + Remotion)",
+  "type": "module",
+  "scripts": {
+    "estudio": "remotion studio",
+    "prueba": "remotion still Plantilla salida/prueba.png --frame=45",
+    "video": "remotion render Plantilla salida/plantilla.mp4",
+    "revisar": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@react-three/fiber": "^9.8.2",
+    "@remotion/cli": "4.0.541",
+    "@remotion/three": "4.0.541",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "remotion": "4.0.541",
+    "three": "^0.187.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/three": "^0.187.0",
+    "typescript": "^5.9.3"
+  }
+}
