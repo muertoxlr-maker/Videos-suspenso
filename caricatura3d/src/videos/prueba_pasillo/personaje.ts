@@ -191,42 +191,47 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
   contorno(() => ctx.ellipse(cx, cabezaY, r * 1.02, r, 0, 0, Math.PI * 2), gc);
 
   if (p.vista === "espalda") {
-    // nuca: el pelo cubre la parte de arriba y los lados; abajo asoma la piel de la nuca
-    const gp = ctx.createLinearGradient(0, cabezaY - r, 0, cabezaY + r * 0.5);
-    gp.addColorStop(0, luz(a.pelo, 0.1)); gp.addColorStop(1, sombra(a.pelo, 0.2));
+    // nuca: el pelo cubre casi toda la cabeza (también los lados); solo asoma una franja de piel junto al cuello
+    const gp = ctx.createLinearGradient(cx - r, cabezaY - r, cx + r, cabezaY + r);
+    gp.addColorStop(0, L < 0 ? a.pelo : sombra(a.pelo, 0.15)); gp.addColorStop(1, L < 0 ? sombra(a.pelo, 0.2) : a.pelo);
     contorno(() => {
-      ctx.moveTo(cx - r * 1.04, cabezaY + r * 0.18);
-      ctx.bezierCurveTo(cx - r * 1.12, cabezaY - r * 1.25, cx + r * 1.12, cabezaY - r * 1.25, cx + r * 1.04, cabezaY + r * 0.18);
-      for (let i = 0; i <= 8; i++) { // borde inferior con mechones
-        const t = i / 8, x = cx + r * (1.04 - 2.08 * t);
-        ctx.lineTo(x, cabezaY + r * (0.42 + (i % 2 ? 0.1 : -0.02)) - Math.sin(t * Math.PI) * -r * 0.1);
+      ctx.moveTo(cx - r * 1.05, cabezaY + r * 0.45);
+      ctx.bezierCurveTo(cx - r * 1.24, cabezaY - r * 1.44, cx + r * 1.24, cabezaY - r * 1.44, cx + r * 1.03, cabezaY + r * 0.45);
+      for (let i = 0; i <= 10; i++) { // borde de la nuca con mechones cortos, más bajo en el centro
+        const t = i / 10, x = cx + r * (1.03 - 2.06 * t);
+        ctx.lineTo(x, cabezaY + r * (0.5 + 0.28 * Math.sin(t * Math.PI) + (i % 2 ? 0.07 : -0.02)));
       }
       ctx.closePath();
     }, gp);
+    // mechones dibujados encima para que se lea como pelo y no como una mancha
+    ctx.lineWidth = 4; ctx.strokeStyle = sombra(a.pelo, 0.45);
+    for (const [x0, y0, x1, y1] of [[-0.5, -0.6, -0.35, 0.1], [0.05, -0.75, 0.0, 0.2], [0.5, -0.55, 0.38, 0.12], [-0.2, -0.3, -0.12, 0.45], [0.25, -0.25, 0.2, 0.42]]) {
+      ctx.beginPath(); ctx.moveTo(cx + x0 * r, cabezaY + y0 * r); ctx.quadraticCurveTo(cx + (x0 + x1) * 0.5 * r + 8, cabezaY + (y0 + y1) * 0.5 * r, cx + x1 * r, cabezaY + y1 * r); ctx.stroke();
+    }
     if (a.peinado === "mono") contorno(() => ctx.arc(cx, cabezaY - r * 0.1, r * 0.28, 0, Math.PI * 2), sombra(a.pelo, 0.1));
     return;
   }
 
   // pelo revuelto: casquete con flequillo en picos irregulares y mechones sueltos a los lados
-  const px = cx - g * r * 0.2;
-  const gp = ctx.createLinearGradient(px - r, 0, px + r, 0);
+  const px = cx + g * r * 0.12; // el flequillo se corre un poco hacia donde mira; la silueta del pelo no se mueve
+  const gp = ctx.createLinearGradient(cx - r, 0, cx + r, 0);
   gp.addColorStop(0, L < 0 ? luz(a.pelo, 0.12) : a.pelo); gp.addColorStop(1, L < 0 ? a.pelo : luz(a.pelo, 0.12));
   contorno(() => {
-    ctx.moveTo(px - r * 1.06, cabezaY + r * 0.05);
-    ctx.bezierCurveTo(px - r * 1.24, cabezaY - r * 1.42, px + r * 1.24, cabezaY - r * 1.42, px + r * 1.06, cabezaY + r * 0.05);
+    ctx.moveTo(cx - r * 1.06, cabezaY + r * 0.05);
+    ctx.bezierCurveTo(cx - r * 1.24, cabezaY - r * 1.42, cx + r * 1.24, cabezaY - r * 1.42, cx + r * 1.06, cabezaY + r * 0.05);
     if (a.peinado === "revuelto") {
       // mechón suelto del lado derecho
-      ctx.lineTo(px + r * 1.12, cabezaY - r * 0.22);
+      ctx.lineTo(cx + r * 1.1, cabezaY - r * 0.22);
       const n = 7;
       for (let i = n; i >= 0; i--) {
-        const t = i / n, x = px + r * (-0.95 + 1.9 * t);
+        const t = i / n, x = cx + r * (-0.95 + 1.9 * t) + g * r * 0.12 * Math.sin(t * Math.PI);
         const pico = i % 2 ? 0.0 : 0.17 + rnd() * 0.08;
         ctx.lineTo(x + (rnd() - 0.5) * 6, cabezaY - r * (0.56 - pico) + Math.sin(t * Math.PI) * -r * 0.04);
       }
-      ctx.lineTo(px - r * 1.13, cabezaY - r * 0.2);
+      ctx.lineTo(cx - r * 1.1, cabezaY - r * 0.2);
     } else {
       ctx.quadraticCurveTo(px + r * 0.2, cabezaY - r * 0.55, px - r * 0.2, cabezaY - r * 0.62);
-      ctx.quadraticCurveTo(px - r * 0.7, cabezaY - r * 0.5, px - r * 1.06, cabezaY + r * 0.05);
+      ctx.quadraticCurveTo(px - r * 0.7, cabezaY - r * 0.5, cx - r * 1.06, cabezaY + r * 0.05);
     }
     ctx.closePath();
   }, gp);
@@ -245,10 +250,10 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
   ctx.restore();
 
   // ---------------- cara (se corre hacia el lado del giro: 3/4) ----------------
-  const fx = cx + g * r * 0.4;
+  const fx = cx + g * r * 0.26;
   const ey = cabezaY + r * 0.08;
   const er = r * 0.2 * p.ojos;
-  const sep = r * 0.4 * (1 - 0.15 * Math.abs(g));
+  const sep = r * 0.4 * (1 - 0.22 * Math.abs(g));
   for (const s of [-1, 1]) {
     const lejano = Math.sign(g) === s;
     const sx = lejano ? 1 - 0.35 * Math.abs(g) : 1;
