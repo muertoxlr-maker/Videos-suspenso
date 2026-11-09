@@ -40,6 +40,11 @@ export type Pose = {
   piernas: [number, number]; // cuánto se levanta cada pie (0 … 1)
   respira: number;
   luzX: number; // -1 luz desde la izquierda de la pantalla … 1 desde la derecha
+  // cuerpo (los pies NO se mueven: la cadera se desplaza y las piernas se inclinan)
+  cuerpoX?: number; // desplazamiento lateral de cadera y torso, en diámetros de cabeza
+  cabezaX?: number; // desplazamiento extra de la cabeza sobre el torso
+  hombros?: number; // 0 … 1: hombros encogidos (la cabeza se hunde entre ellos)
+  agacha?: number; // 0 … 1: flexiona las rodillas (baja la cadera)
 };
 
 const TINTA = "#141012";
@@ -71,13 +76,16 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
   const rnd = azar(a.semilla);
 
   const alto = PIES - TOPE;
-  const cx = W / 2;
+  let cx = W / 2;
+  const cxPies = cx;
   // proporciones (video 4): pelo 0.12 D · cabeza D · torso 0.85 D · piernas 0.65 D  →  alto ≈ 2.55 D
   const D = alto / 2.55; // diámetro de la cabeza (sin pelo)
   const r = D / 2;
   const resp = p.respira * 3;
-  const cabezaY = TOPE + 0.12 * D + r + resp * 0.5;
-  const torsoTop = cabezaY + r * 0.86 + resp * 0.3;
+  const baja = (p.agacha ?? 0) * D * 0.07;
+  const encoge = (p.hombros ?? 0);
+  const cabezaY = TOPE + 0.12 * D + r + resp * 0.5 + baja + encoge * D * 0.06;
+  const torsoTop = TOPE + 0.12 * D + r + r * 0.86 + resp * 0.8 + baja;
   const torsoH = D * 0.85;
   const torsoBot = torsoTop + torsoH;
   const anchoHombro = D * 0.66, anchoBajo = D * 0.72;
@@ -105,15 +113,18 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
   };
 
   // ---------------- piernas (línea fina) y pies diminutos ----------------
+  const cxCadera = cx + (p.cuerpoX ?? 0) * D;
   for (const [i, s] of [[0, -1], [1, 1]] as const) {
-    const x = cx + s * anchoBajo * 0.2;
+    const x = cxPies + s * anchoBajo * 0.2; // el pie se queda donde está
+    const xc = cxCadera + s * anchoBajo * 0.2;
     const pieY = PIES - 9 - p.piernas[i] * 40;
-    linea([[x, torsoBot - 6], [x, pieY - 4]], sombra(a.pantalon, 0.15), 9);
+    linea([[xc, torsoBot - 6], [x, pieY - 4]], sombra(a.pantalon, 0.15), 9);
     contorno(() => ctx.ellipse(x + s * 9, pieY, 25, 10, 0, 0, Math.PI * 2), a.zapatos, 5);
   }
 
+  cx = cxCadera; // desde aquí, torso, brazos y cabeza siguen a la cadera
   // ---------------- brazos articulados (detrás del torso) ----------------
-  const hombroY = torsoTop + D * 0.12;
+  const hombroY = torsoTop + D * 0.12 - encoge * D * 0.07;
   const seg = D * 0.36;
   const manos: [number, number][] = [];
   const brazo = (s: -1 | 1, [aH, aC]: [number, number]) => {
@@ -175,6 +186,7 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
   }
 
   // ---------------- cabeza ----------------
+  cx += (p.cabezaX ?? 0) * D;
   const g = p.vista === "frente" ? p.giro : 0;
   if (a.peinado === "mono") {
     contorno(() => ctx.arc(cx - g * r * 0.3 + (p.vista === "espalda" ? 0 : 0), cabezaY - r * 0.95, r * 0.3, 0, Math.PI * 2), gradLado(cx - r * 0.3, cx + r * 0.3, a.pelo, 0.4));

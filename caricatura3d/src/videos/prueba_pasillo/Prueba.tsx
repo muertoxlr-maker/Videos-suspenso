@@ -160,14 +160,20 @@ class Tarjeta {
   dibujar(p: Pose) { dibujarPersonaje(this.ctx, this.aspecto, p); this.tex.needsUpdate = true; }
 }
 
-function poseHuesped(f: number): { pose: Pose; salto: number; temblor: number } {
+function poseHuesped(f: number): Pose {
+  // 0–8 quieto (parpadea en 4–6) · 9–13 la mirada se adelanta · 12–16 se tensa · 14–24 gira la cabeza
+  // 16–28 el torso acompaña con retraso · 27–31 susto: se encoge y dobla las rodillas · 31–40 se asienta y tiembla
+  const tension = suave(12, 16, f);
   const giro = -0.85 * suave(14, 24, f);
+  const torso = suave(16, 28, f);
   const susto = suave(27, 31, f);
-  const pose: Pose = {
+  const asienta = suave(31, 40, f); // pequeño rebote después del pico del susto
+  const tiembla = f > 31 ? (ruido(f) - 0.5) : 0;
+  return {
     ...POSE,
-    respira: Math.sin((f / 30) * Math.PI * 2 * 0.45),
+    respira: Math.sin((f / 30) * Math.PI * 2 * 0.45) * (1 - susto) + Math.sin(f * 1.7) * 0.6 * susto, // respiración agitada
     giro,
-    mirarX: f < 9 ? 0 : -0.9 * suave(9, 13, f),
+    mirarX: -0.9 * suave(9, 13, f),
     ojos: 1 + 0.18 * susto,
     pupila: 0.32 - 0.13 * susto,
     parpadeo: f >= 4 && f <= 6,
@@ -175,12 +181,14 @@ function poseHuesped(f: number): { pose: Pose; salto: number; temblor: number } 
     cejasMiedo: susto,
     boca: f < 27 ? "linea" : "dientes",
     sudor: suave(31, 40, f),
-    brazoIzq: [0.08 + 0.82 * susto, -0.04 - 3.26 * susto], // codos hacia fuera, manos junto a la cara
-    brazoDer: [0.08 + 0.82 * susto, -0.04 - 3.26 * susto],
+    hombros: 0.3 * tension + 0.7 * susto - 0.2 * asienta,
+    agacha: 0.65 * susto - 0.3 * asienta,
+    cuerpoX: -0.05 * torso + 0.01 * tiembla,
+    cabezaX: -0.05 * suave(14, 24, f) + 0.012 * tiembla,
+    brazoIzq: [0.08 + 0.1 * tension + 0.72 * susto, -0.04 - 0.2 * tension - 3.0 * susto + 0.25 * asienta], // codos fuera, manos a la cara
+    brazoDer: [0.08 + 0.1 * tension + 0.72 * susto, -0.04 - 0.2 * tension - 3.0 * susto + 0.25 * asienta],
     luzX: -1,
   };
-  const k = (f - 27) / 9;
-  return { pose, salto: k > 0 && k < 1 ? Math.sin(Math.PI * k) * 0.035 : 0, temblor: f > 31 ? (ruido(f) - 0.5) * 0.01 : 0 };
 }
 
 // ------------------------------------------------------------------ escenario: pasillo del hotel
@@ -397,13 +405,13 @@ const Escena: React.FC = () => {
 
   // huésped
   if (f < CORTE) {
-    const { pose, salto, temblor } = poseHuesped(f);
-    mundo.huesped.dibujar(pose);
-    mundo.huesped.grupo.position.set(0.05 + temblor, salto, 0);
+    mundo.huesped.dibujar(poseHuesped(f));
+    mundo.huesped.grupo.position.set(0.05, 0, 0); // los pies no se mueven: el cuerpo se mueve en el dibujo
     mundo.huesped.orientarSombra(-0.85, 1.25); // la lámpara está atrás a su derecha (pantalla izquierda)
   } else {
-    mundo.huesped.dibujar({ ...POSE, vista: "espalda", brazoIzq: [0.3, -1.1], brazoDer: [0.3, -1.1], respira: Math.sin(f * 0.5), luzX: -0.4 });
-    mundo.huesped.grupo.position.set(-0.25 + (ruido(f) - 0.5) * 0.008, 0, -1.3);
+    mundo.huesped.dibujar({ ...POSE, vista: "espalda", brazoIzq: [0.3, -1.1], brazoDer: [0.3, -1.1], respira: Math.sin(f * 1.2) * 0.6, luzX: -0.4,
+      hombros: 0.55, agacha: 0.3, cabezaX: (ruido(f) - 0.5) * 0.012 });
+    mundo.huesped.grupo.position.set(-0.25, 0, -1.3);
     mundo.huesped.orientarSombra(-0.85, 1.25);
   }
 
