@@ -188,6 +188,13 @@ video 6 cuadros 590, 780 y 960. 👁 = observado en esos cuadros · 📏 = medid
 | Fondo en las pausas | −5.3 dB | −7.0 | −5.7 | −5.8 | −3.9 | −7.2 | música/ambiente **continuo**, solo 4–7 dB bajo la voz |
 
 - **Un narrador** con voz grave, pausado y con pausas dramáticas cortas: más «contar un secreto» que «dato rápido».
+- **Voz del usuario (ElevenLabs, voz «Videos suspenso»): usar siempre SU configuración habitual** — modelo
+  `eleven_v4`, estabilidad 0.5, similitud 0.75, estilo 0, velocidad 1.0, speaker boost, MP3 192 kbps. Con
+  `eleven_multilingual_v2` + similitud 0.95 + velocidad 0.92 salió apagada y distorsionada («bocina vieja»). Antes de
+  cambiar algo, revisar su historial (`GET /v1/history`) y comparar. Script de referencia:
+  `historias/01_el_turno_de_las_3/voz/preparar_voz.py`.
+- **Bajo la voz, nada de ruido en la banda de la voz** (respiraciones o «aire» hechos con ruido filtrado suenan a
+  estática) y nada por debajo de 100 Hz (las bocinas del celular vibran). Fondo ≈ −14 dB bajo la voz al hablar.
 - ⚠️ No se pudo escuchar: el tipo de música, los efectos y si los diálogos usan otra voz siguen **pendientes**
   (solo hay medidas de volumen).
 
