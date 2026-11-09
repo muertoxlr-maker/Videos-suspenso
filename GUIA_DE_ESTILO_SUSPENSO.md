@@ -315,6 +315,22 @@ pelo distinta, altura distinta (1.72 m y 1.84 m en la prueba) y colores de ropa 
 - Revisión obligatoria antes de entregar: hoja de cuadros consecutivos del giro y la reacción, posición de los pies
   medida en cada cuadro, encuadre del último plano y del espacio detrás de puertas y ventanas.
 
+### 8.6b Aprendido en el primer video completo («El turno de las 3:00»)
+- **Distancia de cámara**: las cabezas miden ≈ 0.6 m y el cuadro vertical es angosto. Primer plano a **≈ 2.7 m**
+  (objetivo de 38°), plano medio a 3–3.6 m, general a más de 4.4 m. A 1.5 m la cara se sale del cuadro.
+- **Calibrar el color en cada escenario nuevo**: los valores de posproceso del hotel dejaron el hospital (paredes
+  claras + fluorescentes) en brillo 0.42 y saturación 0.25. Medir 10–12 fotos de revisión con
+  `medir_referencia`/OpenCV y ajustar exposición, saturación y colores de paredes **antes** del render largo.
+  Los insertos dibujados sobre papel blanco se tiñen con la luz de la escena para no quedar blancos.
+- **Render por tramos** (`caricatura3d/scripts/render_por_tramos.sh`): 250 cuadros por tramo, se retoma si el entorno
+  se reinicia. 82 s ≈ 2.5 h sin GPU (≈ 3.7 s por cuadro con 4 procesos).
+- Antes del render largo: hoja con un fotograma de cada plano (`scripts/fotos.mjs`), revisión de encuadres y medidas.
+- Resultado medido del video: 37 cortes, plano mediano 2.05 s, brillo 0.18, saturación 0.49, −14 LUFS, fondo a −6 dB
+  de la voz, palabra amarilla 1.1 cuadros antes de la voz (100 % dentro de ±3 cuadros).
+- Mejorar en el siguiente: acercamientos más rápidos (cámara en movimiento solo el 45 % de los cuadros; referencia
+  ≈ 55 %), personajes de espaldas con más detalle (de lejos se ven como manchas negras) y más movimiento corporal
+  en los planos de diálogo.
+
 ### 8.7 Pendientes conocidos de esta versión
 - La sombra alargada casi no se nota sobre alfombras oscuras.
 - El escenario tiene menos objetos y gente al fondo que las referencias.
