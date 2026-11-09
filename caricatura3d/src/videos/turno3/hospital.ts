@@ -32,6 +32,21 @@ const texCortina = (rep: [number, number]) => lienzo((g, w, h) => {
   g.fillStyle = "#7aa294"; for (let y = 20; y < h; y += 40) for (let x = 10; x < w; x += 40) { g.fillRect(x, y, 8, 8); }
 }, 128, 128, rep);
 
+// pulsera de paciente vista desde arriba: banda blanca con franja azul, nombre, cuarto, código de barras y broche
+const texPulsera = () => lienzo((g, w, h) => {
+  g.clearRect(0, 0, w, h);
+  const r = h * 0.42;
+  g.fillStyle = "#fbfbf7"; g.beginPath(); g.roundRect(4, 6, w - 8, h - 12, r); g.fill();
+  g.strokeStyle = "#9aa3a0"; g.lineWidth = 3; g.stroke();
+  g.fillStyle = "#2f6fd0"; g.fillRect(w * 0.06, 6, w * 0.06, h - 12); // franja azul
+  g.fillStyle = "#c9ced0"; g.beginPath(); g.arc(w * 0.9, h / 2, h * 0.2, 0, Math.PI * 2); g.fill(); // broche
+  g.fillStyle = "#7d8587"; g.beginPath(); g.arc(w * 0.9, h / 2, h * 0.09, 0, Math.PI * 2); g.fill();
+  g.fillStyle = "#14204a"; g.textBaseline = "middle"; g.textAlign = "left";
+  g.font = "bold 60px 'DejaVu Sans', sans-serif"; g.fillText("RAÚL PEÑA", w * 0.15, h * 0.36);
+  g.font = "bold 42px 'DejaVu Sans', sans-serif"; g.fillText("HAB. 603", w * 0.15, h * 0.72);
+  for (let i = 0, x = w * 0.5; x < w * 0.82; i++) { const a = [3, 6, 2, 4, 8, 3][i % 6]; g.fillRect(x, h * 0.58, a, h * 0.28); x += a + [4, 3, 6, 3][i % 4]; } // código de barras
+}, 1024, 256);
+
 function cama(m: { marco: THREE.Material; colchon: THREE.Material; cobija: THREE.Material; almohada: THREE.Material }, x: number, z: number) {
   const g = new THREE.Group(); g.position.set(x, 0, z);
   g.add(caja(1.0, 0.36, 2.1, m.marco, 0, 0.33, 0)); // base
@@ -107,7 +122,19 @@ export function crearHospital() {
   const senorCama = cama({ marco: mMarcoCama, colchon: mColchon, cobija: mCobija, almohada: mAlmohada }, CAMA_SENOR.x, CAMA_SENOR.z);
   raiz.add(abuelaCama.g, senorCama.g);
   // cobija tendida (cama vacía del señor): se muestra en su lugar cuando se lo llevan
-  const tendida = caja(1.0, 0.04, 1.9, lambert({ color: "#eef0ec" }), CAMA_SENOR.x, 0.67, CAMA_SENOR.z + 0.05); tendida.visible = false; raiz.add(tendida);
+  // (sábana estirada, doblez blanco bajo la almohada y la pulsera de paciente del señor encima de la almohada)
+  const tendida = new THREE.Group(); tendida.position.set(CAMA_SENOR.x, 0, CAMA_SENOR.z); tendida.visible = false; raiz.add(tendida);
+  tendida.add(caja(1.0, 0.04, 1.9, lambert({ color: "#c9d3cf" }), 0, 0.67, 0.05));
+  tendida.add(caja(1.02, 0.05, 0.22, lambert({ color: "#dde3e0" }), 0, 0.68, -0.42)); // doblez de la sábana
+  const almohadaMullida = new THREE.Mesh(new THREE.SphereGeometry(1, 28, 14), lambert({ color: "#e2e7e4" }));
+  almohadaMullida.scale.set(0.36, 0.085, 0.22); almohadaMullida.position.set(0, 0.72, -0.74); tendida.add(almohadaMullida);
+  // la pulsera se curva siguiendo la superficie de la almohada (elipsoide 0.36 × 0.085 × 0.22)
+  const geoPulsera = new THREE.PlaneGeometry(0.4, 0.1, 32, 4); geoPulsera.rotateX(-Math.PI / 2); geoPulsera.rotateY(0.06);
+  const vp = geoPulsera.attributes.position;
+  for (let k = 0; k < vp.count; k++) { const x = vp.getX(k) + 0.02, z = vp.getZ(k) + 0.02; vp.setY(k, 0.085 * Math.sqrt(Math.max(0, 1 - (x / 0.36) ** 2 - (z / 0.22) ** 2)) + 0.004); }
+  geoPulsera.computeVertexNormals();
+  const pulsera = new THREE.Mesh(geoPulsera, lambert({ map: texPulsera(), transparent: true }));
+  pulsera.position.set(0.02, 0.72, -0.72); tendida.add(pulsera);
   // panel de tomas de oxígeno sobre las cabeceras
   for (const x of [CAMA_ABUELA.x, CAMA_SENOR.x]) {
     raiz.add(caja(1.4, 0.24, 0.06, lambert({ color: "#d9dedb" }), x, 1.55, HAB.z0 + 0.04));

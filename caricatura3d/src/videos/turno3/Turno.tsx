@@ -14,7 +14,7 @@ import { LensBlur } from "../alejandro/lensblur";
 import { Aspecto, Pose } from "../prueba_pasillo/personaje";
 import { LienzoVivo, POSE, Tarjeta, lerp, parpadea, ruido, suave } from "./comun";
 import { CAMA_ABUELA, CAMA_SENOR, PAS, crearHospital } from "./hospital";
-import { dibGafete, dibInhalador, dibManos, dibMonitor, dibPantallaElevador, dibPulsera, dibReceta, dibReloj, dibTimbre } from "./insertos";
+import { dibGafete, dibInhalador, dibManos, dibMonitor, dibPantallaElevador, dibReceta, dibReloj, dibTimbre } from "./insertos";
 import PALABRAS from "./palabras.json";
 
 export const FPS = 30;
@@ -135,8 +135,9 @@ const PLANOS: Plano[] = [
   { w: 105, foco: 2.6, cInf: 8, ini: { pos: [0.4, 1.45, 0.9], mira: [-1.3, 0.8, -1.9], fov: 42 }, fin: { pos: [0.35, 1.42, 0.65], mira: [-1.3, 0.8, -1.9], fov: 42 },
     hacer: ({ f, m }) => { m.cortina(1 - suave(fw(105), fw(105) + 18, f) * 0.85); m.camaVacia = true; m.ver("tu", [0.05, 0, -1.25], { vista: "espalda", hombros: 0.4, cabezaX: 0.03 * Math.sin(f) }); } },
   // 20 · Su cama, tendida.
-  { w: 116, foco: 1.4, cInf: 0, ini: { pos: [46, 1, 1.45], mira: [46, 1, 0], fov: 35 }, fin: { pos: [46, 1, 1.3], mira: [46, 1, 0], fov: 35 },
-    hacer: ({ m }) => { m.insertar(2, (c, w, h) => dibPulsera(c, w, h)); } },
+  // (cama del señor vacía y recién tendida, con su pulsera de paciente sobre la almohada; acercamiento lento)
+  { w: 116, foco: 2.6, cInf: 8, ini: { pos: [-0.15, 1.75, 0.35], mira: [-1.35, 0.72, -2.2], fov: 40 }, fin: { pos: [-0.6, 1.6, -0.8], mira: [-1.35, 0.75, -2.45], fov: 40 },
+    hacer: ({ m }) => { m.camaVacia = true; m.cortina(0.15); } },
   // 21 · A las tres y cuarenta,
   { w: 119, foco: 1.75, cInf: 9, ini: { pos: [1.18, 1.45, -0.61], mira: [1.78, 1.45, -2.2], fov: 40 }, fin: { pos: [1.25, 1.45, -0.8], mira: [1.78, 1.45, -2.2], fov: 40 },
     hacer: ({ f, m }) => { m.spo2 = lerp(94, 88, suave(fw(119), fw(124), f)); m.ritmo = 0.4; m.camaVacia = true; } },
@@ -263,7 +264,7 @@ class Mundo {
     this.h.reloj.dibujar((c, w, h) => dibReloj(c, w, h, this.relojMin));
     this.h.monitor.dibujar((c, w, h) => dibMonitor(c, w, h, this.spo2, f, this.ritmo));
     this.h.bisagra.rotation.y = -1.45 * this.puerta;
-    this.h.tendida.visible = this.camaVacia; this.h.senorCama.cobija.visible = !this.camaVacia;
+    this.h.tendida.visible = this.camaVacia; this.h.senorCama.cobija.visible = this.h.senorCama.almohada.visible = !this.camaVacia;
     if (this.camaVacia) this.cartas.senor.grupo.visible = false;
     this.h.fila.visible = this.filaCamillas;
     this.h.fluorescentes.forEach((l, i) => {
