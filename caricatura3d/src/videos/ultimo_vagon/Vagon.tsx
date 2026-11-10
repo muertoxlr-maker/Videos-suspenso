@@ -318,10 +318,10 @@ class Mundo {
 const PORTADA: Plano = { w: 68, foco: 2.25, cInf: 5, ini: { pos: [-1.3, 1.42, 3.12], mira: [1.4, 1.32, 3.38], fov: 47 }, fin: { pos: [-1.3, 1.42, 3.12], mira: [1.4, 1.32, 3.38], fov: 47 },
   hacer: ({ f, m }) => {
     m.tunel(2);
-    m.ver("tu", [0.9, 0, 3.55], { parpadeo: 0, vista: "frente", mirarX: -0.35, giro: -0.2, cejasMiedo: 1, cejasAlto: 0.4, ojos: 1.18, boca: "o", hombros: 0.5, sostiene: "celularEncendido", brazoIzq: [0.55, -1.25], brazoDer: [2.3, 0.5], luzX: 1 });
+    m.ver("tu", [0.9, 0, 3.55], { parpadeo: false, vista: "frente", mirarX: -0.35, giro: -0.2, cejasMiedo: 1, cejasAlto: 0.4, ojos: 1.18, boca: "o", hombros: 0.5, sostiene: "celularEncendido", brazoIzq: [0.55, -1.25], brazoDer: [2.3, 0.5], luzX: 1 });
     m.celularTu(true);
     m.luzExterior(2.4, 1.7, 2.4, 3.5);
-    m.ver("inf2", [1.7, 0.08, 3.2], { ...MORDIDO, ...golpea(f, 0.5), parpadeo: 0, luzX: -1 });
+    m.ver("inf2", [1.7, 0.08, 3.2], { ...MORDIDO, ...golpea(f, 0.5), parpadeo: false, luzX: -1 });
     m.ver("inf3", [1.75, 0.02, 2.62], { ...MORDIDO, ...golpea(f, 2.1), luzX: -1 });
     m.ver("inf4", [1.85, 0.0, 1.35], { ...MORDIDO, ...golpea(f, 1.1), luzX: -1 });
   } };
