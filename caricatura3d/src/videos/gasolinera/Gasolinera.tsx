@@ -41,7 +41,7 @@ type Plano = { w: number; ini: Cam; fin: Cam; foco: number; cInf: number; cerca?
 const habla = (f: number, desde: number, hasta: number) => (f >= fw(desde) - 1 && f <= Math.round(P[hasta].fin * FPS) ? 0.35 + 0.65 * Math.abs(Math.sin(f * 0.9 + ruido(f) * 0.6)) : 0);
 const VX = VENTANILLA.x;
 const TU_POS: V3 = [VX, 0, -1.05]; // detrás del mostrador, frente a la ventanilla
-const NINO_POS: V3 = [VX, 0.15, 0.32]; // sobre la banqueta, pegado a la ventanilla
+const NINO_POS: V3 = [VX, 0.15, 0.55]; // sobre la banqueta, frente a la ventanilla (a 0.55: la charola no lo atraviesa)
 const TRA_VENT = VX + 1.05; // posición del tráiler con la ventana del chofer frente a la ventanilla
 const c = (pos: V3, mira: V3, fov: number): Cam => ({ pos, mira, fov });
 
@@ -149,7 +149,7 @@ const PLANOS: Plano[] = [
   { w: 165, foco: 0.75, cInf: 9, ini: c([-1.62, 1.5, -0.78], [-1.5, 1.35, 0.3], 40), fin: c([-1.6, 1.48, -0.7], [-1.5, 1.35, 0.3], 40),
     hacer: ({ f, m }) => { m.cerrar(1); m.lejano(f); m.ver("nino", NINO_POS, { ...QUIETO }); m.aliento(f, fw(165)); } },
   // 32 · El suyo no.
-  { w: 173, foco: 1.0, cInf: 9, ini: c([-0.6, 1.95, 1.5], [-1.5, 1.28, 0.3], 44), fin: c([-0.62, 1.92, 1.42], [-1.5, 1.28, 0.3], 42),
+  { w: 173, foco: 1.2, cInf: 9, ini: c([-0.75, 1.95, 1.95], [-1.5, 1.22, 0.55], 44), fin: c([-0.77, 1.92, 1.87], [-1.5, 1.22, 0.55], 42),
     hacer: ({ f, m }) => { m.cerrar(1); m.lejano(f); m.ver("nino", NINO_POS, { ...QUIETO, mirarX: -0.3 }); m.empanado(0.36); } },
   // 33 · El niño pone la mano en el vidrio.
   { w: 176, foco: 0.85, cInf: 9, ini: c([-1.55, 1.4, -0.8], [-1.48, 1.3, 0.3], 50), fin: c([-1.55, 1.4, -0.72], [-1.48, 1.3, 0.3], 48),
@@ -245,7 +245,7 @@ class Mundo {
 const PORTADA: Plano = { w: 176, foco: 1.7, cInf: 7, ini: c([-1.25, 1.55, -2.5], [-1.45, 1.78, 0.32], 42), fin: c([-1.25, 1.55, -2.5], [-1.45, 1.78, 0.32], 42),
   hacer: ({ f, m }) => {
     m.cerrar(1); m.lejano(f); m.empanado(0.3);
-    m.ver("nino", [NINO_POS[0], NINO_POS[1] + 0.24, NINO_POS[2]], { ...QUIETO, brazoDer: [2.35, 0.4] });
+    m.ver("nino", [NINO_POS[0], NINO_POS[1] + 0.24, 0.32], { ...QUIETO, brazoDer: [2.35, 0.4] });
     m.ver("sombra", [0.4, 0, 8.6], { ojosVacios: true, ojos: 0.8, mirarX: -0.3, parpadeo: false, luzX: -1 });
   } };
 

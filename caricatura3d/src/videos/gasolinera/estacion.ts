@@ -171,8 +171,8 @@ export function crearGasolinera() {
   // ventanilla de despacho: marco, vidrio propio (se empaña), charola de metal
   tienda.add(caja(0.98, 0.06, 0.16, mMarco, VX, 0.95, 0), caja(0.98, 0.06, 0.16, mMarco, VX, 1.77, 0));
   const vidrioVent = new THREE.Mesh(new THREE.PlaneGeometry(0.82, 0.76), vidrio(0.13)); vidrioVent.position.set(VX, 1.36, 0); vidrioVent.layers.set(NOINK); tienda.add(vidrioVent);
-  tienda.add(caja(0.6, 0.06, 0.7, lambert({ color: "#a7aaa8" }), VX, 1.0, 0.0)); // charola que atraviesa la pared
-  tienda.add(caja(0.6, 0.12, 0.04, lambert({ color: "#8a8d8c" }), VX, 1.06, 0.34));
+  tienda.add(caja(0.6, 0.06, 0.55, lambert({ color: "#a7aaa8" }), VX, 1.0, -0.075)); // charola que atraviesa la pared (afuera solo sale 20 cm: no choca con el niño)
+  tienda.add(caja(0.6, 0.12, 0.04, lambert({ color: "#8a8d8c" }), VX, 1.06, 0.18)); // borde de la charola
   tienda.add(caja(0.26, 0.26, 0.02, lambert({ map: lienzo((c, w, h) => { c.fillStyle = "#c9c2a8"; c.fillRect(0, 0, w, h); c.fillStyle = "#2a2a2a"; c.font = "bold 20px 'DejaVu Sans', sans-serif"; c.textAlign = "center"; c.fillText("PAGUE", w / 2, 50); c.fillText("AQUÍ", w / 2, 78); c.beginPath(); c.moveTo(w / 2 - 20, 92); c.lineTo(w / 2 + 20, 92); c.lineTo(w / 2, 112); c.fill(); }, 128, 128) }), VX + 0.62, 1.55, 0.07));
   // empañado del vidrio de la ventanilla (lado de adentro) y vaho del aliento
   const empanado = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.74), new THREE.MeshBasicMaterial({ map: resplandor(235, 242, 248), transparent: true, opacity: 0, depthWrite: false, toneMapped: false }));
