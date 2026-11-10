@@ -24,6 +24,7 @@ export type Aspecto = {
   cuello?: "v" | "capucha" | "redondo";
   estampado?: "puntos"; // bata de hospital
   insignia?: { tipo: "gafete" | "etiqueta" };
+  gorra?: string; // color de una gorra con visera («Gasolinera»)
   semilla: number; // para el temblor del trazo
 };
 
@@ -347,6 +348,17 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
   ctx.fillStyle = gs; ctx.fillRect(0, cabezaY - r * 0.57, W, r * 0.34);
   ctx.restore();
 
+  if (a.gorra) {
+    // copa redonda sobre el pelo y visera que se corre hacia donde gira la cabeza
+    contorno(() => {
+      ctx.moveTo(cx - r * 1.1, cabezaY - r * 0.3);
+      ctx.bezierCurveTo(cx - r * 1.2, cabezaY - r * 1.5, cx + r * 1.2, cabezaY - r * 1.5, cx + r * 1.1, cabezaY - r * 0.3);
+      ctx.closePath();
+    }, gradLado(cx - r, cx + r, a.gorra, 0.3));
+    ctx.lineWidth = 4; ctx.strokeStyle = sombra(a.gorra, 0.4);
+    ctx.beginPath(); ctx.moveTo(cx, cabezaY - r * 1.18); ctx.quadraticCurveTo(cx + g * r * 0.3, cabezaY - r * 0.8, cx + g * r * 0.2, cabezaY - r * 0.36); ctx.stroke();
+    contorno(() => ctx.ellipse(cx + g * r * 0.35, cabezaY - r * 0.33, r * 0.9, r * 0.15, 0, 0, Math.PI * 2), sombra(a.gorra, 0.22), 6);
+  }
   // ---------------- cara (se corre hacia el lado del giro: 3/4) ----------------
   const fx = cx + g * r * 0.26;
   const ey = cabezaY + r * 0.08;
