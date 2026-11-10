@@ -25,6 +25,11 @@ export type Aspecto = {
   estampado?: "puntos"; // bata de hospital
   insignia?: { tipo: "gafete" | "etiqueta" };
   gorra?: string; // color de una gorra con visera («Gasolinera»)
+  // ---- mejoras de acabado (comparación con las referencias, noviembre) ----
+  prenda?: "chamarra" | "uniforme" | "camisa"; // detalles de ropa: cierre y solapas · botones y bolsillo · cuello y botones
+  mochila?: string; // color de los tirantes de una mochila que cruzan el pecho
+  barba?: "candado" | "sombra"; // barba de candado o sombra de barba
+  arrugas?: boolean; // líneas de expresión (personajes mayores)
   semilla: number; // para el temblor del trazo
 };
 
@@ -38,7 +43,7 @@ export type Pose = {
   parpadeo: boolean;
   cejasAlto: number;
   cejasMiedo: number;
-  boca: "linea" | "dientes" | "o" | "sonrisa" | "abierta" | "amable";
+  boca: "linea" | "dientes" | "o" | "sonrisa" | "abierta" | "amable" | "grito" | "triste";
   sostiene?: "inhalador" | "celular" | "celularEncendido"; // objeto en la mano derecha del personaje (izquierda de la pantalla)
   bocaAbre?: number; // 0 … 1 con boca "abierta" (hablar)
   ojosVacios?: boolean; // «el otro turno»: pupila mínima y ojeras
@@ -49,6 +54,8 @@ export type Pose = {
   piernas: [number, number]; // cuánto se levanta cada pie (0 … 1)
   respira: number;
   luzX: number; // -1 luz desde la izquierda de la pantalla … 1 desde la derecha
+  borde?: string; // color de la luz de borde (lámpara, linterna, farola) en el lado iluminado; hace que el personaje resalte de noche
+  lagrimas?: number; // 0 … 1: lágrimas que bajan por las mejillas
   // cuerpo (los pies NO se mueven: la cadera se desplaza y las piernas se inclinan)
   cuerpoX?: number; // desplazamiento lateral de cadera y torso, en diámetros de cabeza
   cabezaX?: number; // desplazamiento extra de la cabeza sobre el torso
@@ -210,6 +217,43 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
     ctx.beginPath(); ctx.moveTo(cx - anchoBajo / 2, torsoBot - 20); ctx.lineTo(cx + anchoBajo / 2, torsoBot - 20); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(cx - D * 0.2, torsoTop + 6); ctx.quadraticCurveTo(cx, torsoTop + 22, cx + D * 0.2, torsoTop + 6); ctx.stroke();
   }
+  if (p.vista === "frente" && a.prenda) {
+    const ot = sombra(a.ropa, 0.55);
+    ctx.lineWidth = 4; ctx.strokeStyle = ot;
+    if (a.prenda === "chamarra") {
+      // cierre al centro con su jalador, solapas del cuello y bolsillos con costura
+      ctx.beginPath(); ctx.moveTo(cx + 1, torsoTop + D * 0.08); ctx.lineTo(cx + 2, torsoBot); ctx.stroke();
+      ctx.fillStyle = "#c9c4b4"; ctx.fillRect(cx - 4, torsoTop + D * 0.22, 9, 16);
+      for (const s2 of [-1, 1]) {
+        contorno(() => { ctx.moveTo(cx + s2 * D * 0.05, torsoTop - 4); ctx.lineTo(cx + s2 * D * 0.3, torsoTop - 6); ctx.lineTo(cx + s2 * D * 0.14, torsoTop + D * 0.2); ctx.closePath(); }, sombra(a.ropa, 0.18), 5);
+        ctx.lineWidth = 4; ctx.strokeStyle = ot;
+        ctx.beginPath(); ctx.moveTo(cx + s2 * D * 0.1, torsoTop + torsoH * 0.6); ctx.lineTo(cx + s2 * D * 0.28, torsoTop + torsoH * 0.56); ctx.stroke();
+      }
+    } else if (a.prenda === "uniforme") {
+      // tapeta con botones y bolsillo de pecho con cartera
+      ctx.beginPath(); ctx.moveTo(cx - 8, torsoTop + D * 0.1); ctx.lineTo(cx - 8, torsoBot); ctx.stroke();
+      ctx.fillStyle = sombra(a.ropa, 0.45);
+      for (const t of [0.3, 0.5, 0.7, 0.88]) { ctx.beginPath(); ctx.arc(cx + 2, torsoTop + torsoH * t, 4.5, 0, 7); ctx.fill(); }
+      const bx = cx - D * 0.22, by = torsoTop + torsoH * 0.26;
+      ctx.strokeRect(bx - D * 0.08, by, D * 0.16, D * 0.15);
+      ctx.beginPath(); ctx.moveTo(bx - D * 0.09, by); ctx.lineTo(bx, by + D * 0.05); ctx.lineTo(bx + D * 0.09, by); ctx.stroke();
+    } else if (a.prenda === "camisa") {
+      for (const s2 of [-1, 1]) contorno(() => { ctx.moveTo(cx, torsoTop + D * 0.06); ctx.lineTo(cx + s2 * D * 0.22, torsoTop - 6); ctx.lineTo(cx + s2 * D * 0.2, torsoTop + D * 0.1); ctx.closePath(); }, luz(a.ropa, 0.08), 5);
+      ctx.fillStyle = sombra(a.ropa, 0.5);
+      for (const t of [0.35, 0.58, 0.81]) { ctx.beginPath(); ctx.arc(cx, torsoTop + torsoH * t, 4, 0, 7); ctx.fill(); }
+    }
+  }
+  if (a.mochila) {
+    // tirantes que bajan de los hombros (de frente) o la mochila entera (de espaldas)
+    if (p.vista === "frente") {
+      for (const s2 of [-1, 1]) linea([[cx + s2 * anchoHombro * 0.34, torsoTop - 2], [cx + s2 * anchoHombro * 0.3, torsoTop + torsoH * 0.55], [cx + s2 * anchoBajo * 0.42, torsoBot - 4]], a.mochila, 8);
+      ctx.fillStyle = "#b9b4a6"; for (const s2 of [-1, 1]) ctx.fillRect(cx + s2 * anchoHombro * 0.3 - 6, torsoTop + torsoH * 0.5, 12, 8);
+    } else {
+      contorno(() => ctx.roundRect(cx - anchoBajo * 0.36, torsoTop + 8, anchoBajo * 0.72, torsoH * 0.78, 16), gradLado(cx - anchoBajo * 0.36, cx + anchoBajo * 0.36, a.mochila, 0.35), 6);
+      ctx.lineWidth = 4; ctx.strokeStyle = sombra(a.mochila, 0.5);
+      ctx.beginPath(); ctx.moveTo(cx - anchoBajo * 0.28, torsoTop + torsoH * 0.5); ctx.lineTo(cx + anchoBajo * 0.28, torsoTop + torsoH * 0.5); ctx.stroke();
+    }
+  }
   if (p.vista === "frente" && a.insignia) {
     // gafete (enfermera) o etiqueta de visitante, sobre el pecho izquierdo del personaje
     const bx = cx + D * 0.2, by = torsoTop + torsoH * 0.3, bw = D * 0.2, bh = D * 0.15;
@@ -221,6 +265,12 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
     for (const k of [0.15, 0.32]) { ctx.beginPath(); ctx.moveTo(bx - bw * 0.05, by + bh * k - 2); ctx.lineTo(bx + bw * 0.4, by + bh * k - 2); ctx.stroke(); }
   }
   ctx.restore();
+  if (p.borde) { // luz de borde sobre el lado iluminado del torso
+    ctx.save(); ctx.beginPath(); torso(); ctx.clip();
+    const gb = ctx.createLinearGradient(cx + L * anchoBajo * 0.5, 0, cx + L * anchoBajo * 0.3, 0);
+    gb.addColorStop(0, p.borde); gb.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.globalAlpha = 0.55; ctx.fillStyle = gb; ctx.fillRect(0, torsoTop, W, torsoH); ctx.globalAlpha = 1; ctx.restore();
+  }
   // objeto en la mano (se dibuja antes de la mano para que los dedos lo tapen)
   if (p.sostiene === "inhalador") {
     const [hx2, hy2] = manos[0];
@@ -267,6 +317,12 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
   const gc = ctx.createRadialGradient(cx + L * r * 0.45, cabezaY - r * 0.35, r * 0.1, cx, cabezaY, r * 1.08);
   gc.addColorStop(0, luz(a.piel, 0.14)); gc.addColorStop(0.55, a.piel); gc.addColorStop(1, sombra(a.piel, 0.32));
   contorno(() => ctx.ellipse(cx, cabezaY, r * 1.02, r, 0, 0, Math.PI * 2), gc);
+  if (p.borde) { // media luna de luz en el borde de la cara del lado de la lámpara
+    ctx.save(); ctx.beginPath(); ctx.ellipse(cx, cabezaY, r * 0.99, r * 0.97, 0, 0, Math.PI * 2); ctx.clip();
+    const gb = ctx.createRadialGradient(cx - L * r * 0.22, cabezaY + r * 0.05, r * 0.9, cx - L * r * 0.22, cabezaY + r * 0.05, r * 1.25);
+    gb.addColorStop(0, "rgba(0,0,0,0)"); gb.addColorStop(0.25, p.borde); gb.addColorStop(1, p.borde);
+    ctx.globalAlpha = 0.5; ctx.fillStyle = gb; ctx.fillRect(cx - r * 1.1, cabezaY - r * 1.1, r * 2.2, r * 2.2); ctx.globalAlpha = 1; ctx.restore();
+  }
 
   if (p.vista === "espalda") {
     // nuca: el pelo cubre casi toda la cabeza (también los lados); solo asoma una franja de piel junto al cuello
@@ -421,6 +477,17 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
   } else if (p.boca === "abierta") {
     const k = Math.max(0.05, p.bocaAbre ?? 0.5);
     contorno(() => ctx.ellipse(mx, my, mw * 0.55, r * (0.03 + 0.11 * k), 0, 0, Math.PI * 2), "#3a0d14", 6);
+  } else if (p.boca === "grito") {
+    // boca muy abierta de susto: fila de dientes arriba y lengua abajo
+    const bw2 = mw * 0.95, bh = r * 0.3;
+    contorno(() => ctx.ellipse(mx, my + r * 0.04, bw2, bh, 0, 0, Math.PI * 2), "#3a0d14", 6);
+    ctx.save(); ctx.beginPath(); ctx.ellipse(mx, my + r * 0.04, bw2 - 3, bh - 3, 0, 0, Math.PI * 2); ctx.clip();
+    ctx.fillStyle = "#f3eee2"; ctx.fillRect(mx - bw2, my + r * 0.04 - bh, bw2 * 2, bh * 0.38);
+    ctx.fillStyle = "#c4505a"; ctx.beginPath(); ctx.ellipse(mx + bw2 * 0.15, my + r * 0.04 + bh * 0.85, bw2 * 0.6, bh * 0.45, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+  } else if (p.boca === "triste") {
+    ctx.lineWidth = 7; ctx.strokeStyle = TINTA;
+    ctx.beginPath(); ctx.moveTo(mx - mw * 0.65, my + r * 0.05); ctx.quadraticCurveTo(mx, my - r * 0.1, mx + mw * 0.65, my + r * 0.05); ctx.stroke();
   } else if (p.boca === "o") {
     contorno(() => ctx.ellipse(mx, my, mw * 0.4, r * 0.12, 0, 0, Math.PI * 2), "#3a0d14", 6);
   } else {
@@ -429,6 +496,24 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
   }
   if (a.bigote) {
     contorno(() => { ctx.moveTo(mx - mw * 1.0, my - r * 0.08); ctx.quadraticCurveTo(mx, my - r * 0.3, mx + mw * 1.0, my - r * 0.08); ctx.quadraticCurveTo(mx, my - r * 0.14, mx - mw * 1.0, my - r * 0.08); }, a.pelo, 5);
+  }
+  if (a.barba === "candado") {
+    contorno(() => { ctx.moveTo(mx - mw * 0.55, my + r * 0.14); ctx.quadraticCurveTo(mx, my + r * 0.12, mx + mw * 0.55, my + r * 0.14); ctx.lineTo(mx + mw * 0.3, my + r * 0.36); ctx.quadraticCurveTo(mx, my + r * 0.44, mx - mw * 0.3, my + r * 0.36); ctx.closePath(); }, a.pelo, 5);
+  } else if (a.barba === "sombra") {
+    ctx.save(); ctx.beginPath(); ctx.ellipse(cx, cabezaY, r * 0.99, r * 0.97, 0, 0, Math.PI * 2); ctx.clip();
+    ctx.fillStyle = "rgba(40,36,44,0.22)"; ctx.beginPath(); ctx.ellipse(mx, my + r * 0.2, r * 0.62, r * 0.36, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+  }
+  if (a.arrugas) {
+    ctx.lineWidth = 3.5; ctx.strokeStyle = sombra(a.piel, 0.5);
+    for (const s2 of [-1, 1]) { ctx.beginPath(); ctx.moveTo(mx + s2 * mw * 0.95, my - r * 0.22); ctx.quadraticCurveTo(mx + s2 * mw * 1.15, my - r * 0.05, mx + s2 * mw * 0.95, my + r * 0.08); ctx.stroke(); }
+    ctx.beginPath(); ctx.moveTo(fx - r * 0.22, ey - er * 2.35); ctx.lineTo(fx + r * 0.22, ey - er * 2.35); ctx.stroke();
+  }
+  if ((p.lagrimas ?? 0) > 0) {
+    ctx.fillStyle = "rgba(170,215,240,0.85)";
+    for (const s2 of [-1, 1]) {
+      const lx = fx + s2 * sep - s2 * er * 0.2, ly = ey + er * 1.0;
+      ctx.beginPath(); ctx.roundRect(lx - 4, ly, 8, r * 0.45 * (p.lagrimas ?? 0), 4); ctx.fill();
+    }
   }
   // gota de sudor
   if (p.sudor > 0) {

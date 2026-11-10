@@ -5,6 +5,7 @@ import { TOTAL, FPS } from "./videos/alejandro/story";
 import { PruebaPasillo, PRUEBA_CUADROS } from "./videos/prueba_pasillo/Prueba";
 import { TurnoDeLas3, TURNO_CUADROS } from "./videos/turno3/Turno";
 import { UltimoVagon, UltimoVagonPortada, VAGON_CUADROS } from "./videos/ultimo_vagon/Vagon";
+import { HojaPersonajes } from "./videos/hoja/HojaPersonajes";
 import { GASO_CUADROS, Gasolinera, GasolineraPortada } from "./videos/gasolinera/Gasolinera";
 
 // Registra cada short aquí, con su propio id (ver tutorial-caricatura/plantillas/alejandro/Root_ejemplo.tsx).
@@ -16,6 +17,7 @@ export const Raiz: React.FC = () => (
     <Composition id="UltimoVagon" component={UltimoVagon} durationInFrames={VAGON_CUADROS} fps={30} width={1080} height={1920} />
     <Composition id="Gasolinera" component={Gasolinera} durationInFrames={GASO_CUADROS} fps={30} width={1080} height={1920} />
     <Composition id="GasolineraPortada" component={GasolineraPortada} durationInFrames={GASO_CUADROS} fps={30} width={1080} height={1920} />
+    <Composition id="HojaPersonajes" component={HojaPersonajes} durationInFrames={1} fps={30} width={1080} height={1080} />
     <Composition id="UltimoVagonPortada" component={UltimoVagonPortada} durationInFrames={VAGON_CUADROS} fps={30} width={1080} height={1920} />
     {/* Historia 1: «El turno de las 3:00» (75.7 s) */}
     <Composition id="TurnoDeLas3" component={TurnoDeLas3} durationInFrames={TURNO_CUADROS} fps={30} width={1080} height={1920} />
