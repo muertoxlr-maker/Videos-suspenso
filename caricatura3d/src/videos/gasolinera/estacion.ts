@@ -16,6 +16,11 @@ export const CARRETERA = { z0: 14, z1: 21 };
 
 const vidrio = (op = 0.1) => new THREE.MeshBasicMaterial({ color: "#a9c7d6", transparent: true, opacity: op, depthWrite: false, side: THREE.DoubleSide });
 const brillo = (color: string) => new THREE.MeshBasicMaterial({ color, toneMapped: false });
+/** resplandor que siempre mira a la cámara (las referencias tienen halos grandes y suaves en cada lámpara) */
+export const destello = (r: number, g: number, b: number, tam: number, op = 0.5) => {
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: resplandor(r, g, b), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false, opacity: op }));
+  sp.scale.set(tam, tam, 1); sp.layers.set(NOINK); return sp;
+};
 export const halo = (r: number, g: number, b: number, w: number, h: number, op = 0.5, niebla = true) => {
   const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: resplandor(r, g, b), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false, opacity: op, fog: niebla }));
   m.layers.set(NOINK); return m;
@@ -217,9 +222,9 @@ export function crearGasolinera() {
   const refri = new THREE.Mesh(new THREE.PlaneGeometry(4.5, 2.1), new THREE.MeshLambertMaterial({ map: texRefri(), emissive: "#ffffff", emissiveMap: texRefri(), emissiveIntensity: 0.55 }));
   refri.position.set(1.8, 1.15, z0 + 0.4); tienda.add(refri); tienda.add(caja(4.6, 2.4, 0.4, lambert({ color: "#c9ccc6" }), 1.8, 1.2, z0 + 0.15));
   // lámparas del plafón
-  const tubos: THREE.Mesh[] = [];
-  for (const [x, z] of [[-2.2, -1.2], [1.6, -1.6], [-2.2, -4.2], [1.6, -4.8]]) { const t = caja(1.3, 0.04, 0.18, brillo("#fbf6e8"), x, alto - 0.04, z); t.layers.set(NOINK); tienda.add(t); tubos.push(t); }
-  const lucesTienda = [new THREE.PointLight("#fbf2dc", 2.2, 9, 1.4), new THREE.PointLight("#fbf2dc", 1.8, 9, 1.4)];
+  const tubos: THREE.Mesh[] = []; const halosTienda: THREE.Sprite[] = [];
+  for (const [x, z] of [[-2.2, -1.2], [1.6, -1.6], [-2.2, -4.2], [1.6, -4.8]]) { const t = caja(1.3, 0.04, 0.18, brillo("#fff1d6"), x, alto - 0.04, z); t.layers.set(NOINK); tienda.add(t); tubos.push(t); const d = destello(255, 225, 170, 1.6, 0.35); d.position.set(x, alto - 0.12, z); tienda.add(d); halosTienda.push(d); }
+  const lucesTienda = [new THREE.PointLight("#ffdcaa", 2.4, 9, 1.4), new THREE.PointLight("#ffdcaa", 2.0, 9, 1.4)];
   lucesTienda[0].position.set(-2.0, 2.8, -1.4); lucesTienda[1].position.set(1.6, 2.8, -3.5); lucesTienda.forEach((l) => tienda.add(l));
   const luzRefri = new THREE.PointLight("#bfe4ff", 0.8, 4, 1.5); luzRefri.position.set(1.8, 1.4, z0 + 1.3); tienda.add(luzRefri);
   // por fuera: botes de basura, máquina de hielo, cubeta con limpiavidrios
@@ -233,9 +238,9 @@ export function crearGasolinera() {
   const franjaTex = texFranjaTecho();
   for (const s of [-1, 1]) { const fr = new THREE.Mesh(new THREE.PlaneGeometry(2 * TECHO.x, 0.55), new THREE.MeshLambertMaterial({ map: franjaTex, emissive: "#ffffff", emissiveMap: franjaTex, emissiveIntensity: 0.35 })); fr.position.set(0, TECHO.alto + 0.25, s > 0 ? TECHO.z1 + 0.01 : TECHO.z0 - 0.01); if (s < 0) fr.rotation.y = Math.PI; techo.add(fr); }
   for (const x of [-3.6, 3.6]) for (const z of [3.6, 8.4]) techo.add(caja(0.4, TECHO.alto, 0.4, lambert({ color: "#e6e2d6" }), x, TECHO.alto / 2, z));
-  const paneles: THREE.Mesh[] = [];
-  for (const x of [-4, 0, 4]) for (const z of [3.5, 6, 8.5]) { const p = caja(1.4, 0.03, 0.8, brillo("#f4f8ff"), x, TECHO.alto - 0.01, z); p.layers.set(NOINK); techo.add(p); paneles.push(p); }
-  const lucesTecho = [[-3.5, 4], [3.5, 4], [-3.5, 8], [3.5, 8]].map(([x, z]) => { const l = new THREE.PointLight("#eef4ff", 3.6, 15, 1.2); l.position.set(x, TECHO.alto - 0.4, z); techo.add(l); return l; });
+  const paneles: THREE.Mesh[] = []; const halosTecho: THREE.Sprite[] = [];
+  for (const x of [-4, 0, 4]) for (const z of [3.5, 6, 8.5]) { const p = caja(1.4, 0.03, 0.8, brillo("#fff0d8"), x, TECHO.alto - 0.01, z); p.layers.set(NOINK); techo.add(p); paneles.push(p); const d = destello(255, 214, 150, 2.8, 0.4); d.position.set(x, TECHO.alto - 0.15, z); techo.add(d); halosTecho.push(d); }
+  const lucesTecho = [[-3.5, 4], [3.5, 4], [-3.5, 8], [3.5, 8]].map(([x, z]) => { const l = new THREE.PointLight("#ffd29a", 3.6, 15, 1.2); l.position.set(x, TECHO.alto - 0.4, z); techo.add(l); return l; });
   // bombas
   const bombas = new THREE.Group(); raiz.add(bombas);
   for (const x of BOMBAS_X) {
@@ -311,5 +316,11 @@ export function crearGasolinera() {
   const luzLuna = new THREE.DirectionalLight("#8aa2c4", 1.1); luzLuna.position.set(-20, 30, -30); raiz.add(luzLuna);
   const luzExtra = new THREE.PointLight("#eef4ff", 0, 10, 1.4); raiz.add(luzExtra);
 
-  return { raiz, tienda, techo, paneles, lucesTecho, bombas, puerta, pestillo, abierto, cerrado, empanado, vaho, vidrioVent, vidrios, tubos, lucesTienda, registradora, libreta, camioneta, tra, lejano, intermitentes, luzIntermitente, luzExtra, senal, poste };
+  // farola de sodio junto a la carretera: charco de luz naranja contra la noche azul (contraste cálido/frío de las referencias)
+  const farola = new THREE.Group(); farola.position.set(-6.5, 0, 12.6); raiz.add(farola);
+  farola.add(caja(0.14, 5.2, 0.14, lambert({ color: "#4a4c50" }), 0, 2.6, 0), caja(1.3, 0.1, 0.1, lambert({ color: "#4a4c50" }), 0.6, 5.15, 0));
+  const focoF = caja(0.5, 0.08, 0.26, brillo("#ffcf8a"), 1.15, 5.06, 0); focoF.layers.set(NOINK); farola.add(focoF);
+  const dF = destello(255, 170, 80, 3.4, 0.55); dF.position.set(1.15, 4.95, 0); farola.add(dF);
+  const lF = new THREE.PointLight("#ffa857", 6, 13, 1.3); lF.position.set(1.15, 4.8, 0); farola.add(lF);
+  return { raiz, tienda, techo, paneles, lucesTecho, halosTecho, halosTienda, farola, bombas, puerta, pestillo, abierto, cerrado, empanado, vaho, vidrioVent, vidrios, tubos, lucesTienda, registradora, libreta, camioneta, tra, lejano, intermitentes, luzIntermitente, luzExtra, senal, poste };
 }

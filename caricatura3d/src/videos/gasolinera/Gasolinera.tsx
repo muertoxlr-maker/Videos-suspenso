@@ -234,7 +234,8 @@ class Mundo {
   aplicar(f: number) {
     const k = this.luzTecho;
     this.h.lucesTecho.forEach((l) => { l.intensity = 3.6 * k; });
-    this.h.paneles.forEach((p) => (p.material as THREE.MeshBasicMaterial).color.setRGB(0.96 * k + 0.05, 0.97 * k + 0.05, k + 0.06));
+    this.h.paneles.forEach((p) => (p.material as THREE.MeshBasicMaterial).color.setRGB(1.0 * k + 0.05, 0.94 * k + 0.05, 0.85 * k + 0.06));
+    this.h.halosTecho.forEach((d) => { d.material.opacity = 0.4 * k; });
     void f;
   }
 }
@@ -257,10 +258,10 @@ const Escena: React.FC<{ portada?: boolean }> = ({ portada }) => {
   const fx = useMemo(() => ({
     ink: new InkPass(scene, cam, { widthNear: 3.6, widthFar: 2.2, distNear: 1.5, distFar: 14 }),
     lens: new LensBlur({ maxCoC: 22, nearScale: 1.0 }),
-    bloom: new BloomEffect({ blendFunction: BlendFunction.ADD, intensity: 0.7, luminanceThreshold: 0.72, luminanceSmoothing: 0.25, mipmapBlur: true, radius: 0.7 }),
+    bloom: new BloomEffect({ blendFunction: BlendFunction.ADD, intensity: 1.0, luminanceThreshold: 0.62, luminanceSmoothing: 0.25, mipmapBlur: true, radius: 0.7 }),
     tone: new ToneMappingEffect({ mode: ToneMappingMode.NEUTRAL }),
     sat: new HueSaturationEffect({ saturation: -0.18 }),
-    luz: new BrightnessContrastEffect({ brightness: -0.01, contrast: 0.06 }),
+    luz: new BrightnessContrastEffect({ brightness: -0.01, contrast: 0.16 }),
     vin: new VignetteEffect({ offset: 0.3, darkness: 0.7 }),
   }), [scene, cam]);
   useEffect(() => () => fx.ink.dispose(), [fx]);
@@ -285,7 +286,7 @@ const Escena: React.FC<{ portada?: boolean }> = ({ portada }) => {
   fx.lens.focus = pl.foco; fx.lens.cInf = pl.cInf;
   fx.lens.pre.uniforms.get("nearScale")!.value = pl.cerca ?? 1.0; fx.lens.main.uniforms.get("nearScale")!.value = pl.cerca ?? 1.0;
   scene.background = new THREE.Color("#05080d");
-  scene.fog = new THREE.Fog("#0c1422", 16, 85);
+  scene.fog = new THREE.Fog("#080d18", 16, 85);
   mundo.f = f;
   mundo.reiniciar(cam);
   pl.hacer({ f, t: f / FPS, k, m: mundo });
