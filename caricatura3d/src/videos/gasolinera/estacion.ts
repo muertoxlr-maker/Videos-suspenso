@@ -135,11 +135,11 @@ export function crearGasolinera() {
   const raiz = new THREE.Group();
 
   // ---- suelo: asfalto, losas de concreto bajo el techo, carretera ----
-  const suelo = new THREE.Mesh(new THREE.PlaneGeometry(240, 240), lambert({ map: texAsfalto([60, 60]) })); suelo.rotation.x = -Math.PI / 2; suelo.position.set(0, -0.01, 0); raiz.add(suelo);
-  const losas = new THREE.Mesh(new THREE.PlaneGeometry(18, 13), lambert({ map: texConcreto([6, 4.3]) })); losas.rotation.x = -Math.PI / 2; losas.position.set(0, 0.0, 6.0); raiz.add(losas);
-  const camino = new THREE.Mesh(new THREE.PlaneGeometry(240, CARRETERA.z1 - CARRETERA.z0), lambert({ map: texCarretera([40, 1]) })); camino.rotation.x = -Math.PI / 2; camino.position.set(0, 0.004, (CARRETERA.z0 + CARRETERA.z1) / 2); raiz.add(camino);
+  const suelo = new THREE.Mesh(new THREE.PlaneGeometry(240, 240), lambert({ map: texAsfalto([60, 60]) })); suelo.rotation.x = -Math.PI / 2; suelo.position.set(0, -0.02, 0); raiz.add(suelo);
+  const losas = new THREE.Mesh(new THREE.PlaneGeometry(18, 12.5), lambert({ map: texConcreto([6, 4.15]) })); losas.rotation.x = -Math.PI / 2; losas.position.set(0, 0.0, 6.25); raiz.add(losas);
+  const camino = new THREE.Mesh(new THREE.PlaneGeometry(240, CARRETERA.z1 - CARRETERA.z0), lambert({ map: texCarretera([40, 1]) })); camino.rotation.x = -Math.PI / 2; camino.position.set(0, 0.016, (CARRETERA.z0 + CARRETERA.z1) / 2); raiz.add(camino);
   const tierra = lambert({ color: "#3a3226" });
-  for (const z of [CARRETERA.z0 - 0.6, CARRETERA.z1 + 0.6]) { const t = new THREE.Mesh(new THREE.PlaneGeometry(240, 1.2), tierra); t.rotation.x = -Math.PI / 2; t.position.set(0, 0.003, z); raiz.add(t); }
+  for (const z of [CARRETERA.z0 - 0.6, CARRETERA.z1 + 0.6]) { const t = new THREE.Mesh(new THREE.PlaneGeometry(240, 1.2), tierra); t.rotation.x = -Math.PI / 2; t.position.set(0, 0.008, z); raiz.add(t); }
   // banqueta de la tienda
   raiz.add(caja(10, 0.15, 0.4, lambert({ color: "#9b988e" }), 0, 0.075, 0.2));
 
@@ -147,7 +147,7 @@ export function crearGasolinera() {
   const tienda = new THREE.Group(); raiz.add(tienda);
   const { x0, x1, z0, alto } = TIENDA, ancho = x1 - x0, fondo = -z0;
   const mPared = lambert({ map: texPared([3, 1]) }), mExt = lambert({ color: "#e6e0d0" }), mMarco = lambert({ color: "#3a3e44" });
-  const piso = new THREE.Mesh(new THREE.PlaneGeometry(ancho, fondo), lambert({ map: texAzulejo([ancho / 0.5, fondo / 0.5]) })); piso.rotation.x = -Math.PI / 2; piso.position.set(0, 0.002, z0 / 2); tienda.add(piso);
+  const piso = new THREE.Mesh(new THREE.PlaneGeometry(ancho, fondo), lambert({ map: texAzulejo([ancho / 0.5, fondo / 0.5]) })); piso.rotation.x = -Math.PI / 2; piso.position.set(0, 0.01, z0 / 2); tienda.add(piso);
   tienda.add(caja(ancho, 0.1, fondo, lambert({ color: "#e2ddd0" }), 0, alto, z0 / 2)); // plafón
   tienda.add(caja(0.15, alto, fondo, mPared, x0, alto / 2, z0 / 2), caja(0.15, alto, fondo, mPared, x1, alto / 2, z0 / 2), caja(ancho, alto, 0.15, mPared, 0, alto / 2, z0));
   // fachada: murete, vidrio, marquesina con letrero
@@ -167,12 +167,12 @@ export function crearGasolinera() {
   for (const x of [x0, -3.2, VX - 0.45, VX + 0.45, 0.4, PX - pa - 0.05, PX + pa + 0.05, x1]) tienda.add(caja(0.08, 1.85, 0.12, mMarco, x, 1.825, 0));
   tienda.add(caja(ancho, 0.08, 0.12, mMarco, 0, 2.75, 0));
   for (const [a, b] of tramos) tienda.add(caja(b - a, 0.06, 0.14, mMarco, (a + b) / 2, 0.92, 0));
-  for (const x of [hueco[0], hueco[1]]) tienda.add(caja(0.08, 0.92, 0.12, mMarco, x, 0.46, 0)); // montantes de la puerta hasta el piso
+  for (const x of [hueco[0], hueco[1]]) tienda.add(caja(0.1, 0.92, 0.15, mMarco, x, 0.46, 0)); // montantes de la puerta hasta el piso
   // ventanilla de despacho: marco, vidrio propio (se empaña), charola de metal
   tienda.add(caja(0.98, 0.06, 0.16, mMarco, VX, 0.95, 0), caja(0.98, 0.06, 0.16, mMarco, VX, 1.77, 0));
   const vidrioVent = new THREE.Mesh(new THREE.PlaneGeometry(0.82, 0.76), vidrio(0.13)); vidrioVent.position.set(VX, 1.36, 0); vidrioVent.layers.set(NOINK); tienda.add(vidrioVent);
-  tienda.add(caja(0.6, 0.06, 0.55, lambert({ color: "#a7aaa8" }), VX, 1.0, -0.075)); // charola que atraviesa la pared (afuera solo sale 20 cm: no choca con el niño)
-  tienda.add(caja(0.6, 0.12, 0.04, lambert({ color: "#8a8d8c" }), VX, 1.06, 0.18)); // borde de la charola
+  tienda.add(caja(0.6, 0.04, 0.55, lambert({ color: "#a7aaa8" }), VX, 1.075, -0.075)); // charola que atraviesa la pared (afuera solo sale 20 cm: no choca con el niño)
+  tienda.add(caja(0.6, 0.08, 0.04, lambert({ color: "#8a8d8c" }), VX, 1.12, 0.18)); // borde de la charola
   tienda.add(caja(0.26, 0.26, 0.02, lambert({ map: lienzo((c, w, h) => { c.fillStyle = "#c9c2a8"; c.fillRect(0, 0, w, h); c.fillStyle = "#2a2a2a"; c.font = "bold 20px 'DejaVu Sans', sans-serif"; c.textAlign = "center"; c.fillText("PAGUE", w / 2, 50); c.fillText("AQUÍ", w / 2, 78); c.beginPath(); c.moveTo(w / 2 - 20, 92); c.lineTo(w / 2 + 20, 92); c.lineTo(w / 2, 112); c.fill(); }, 128, 128) }), VX + 0.62, 1.55, 0.07));
   // empañado del vidrio de la ventanilla (lado de adentro) y vaho del aliento
   const empanado = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.74), new THREE.MeshBasicMaterial({ map: resplandor(235, 242, 248), transparent: true, opacity: 0, depthWrite: false, toneMapped: false }));
@@ -204,8 +204,8 @@ export function crearGasolinera() {
   const foco = caja(0.04, 0.04, 0.01, brillo("#ff3a26"), 0.12, 0.45, 0.185); foco.layers.set(NOINK); cafetera.add(foco);
   for (let i = 0; i < 4; i++) tienda.add(caja(0.08, 0.1, 0.08, lambert({ color: "#e8e2d0" }), -3.75 + i * 0.1, 1.1, -1.2)); // vasos
   const libreta = new THREE.Mesh(new THREE.PlaneGeometry(0.5, 0.2), lambert({ map: texLibreta() }));
-  libreta.rotation.x = -Math.PI / 2; libreta.rotation.z = Math.PI + 0.12; libreta.position.set(-1.75, 1.048, -0.5); tienda.add(libreta);
-  tienda.add(caja(0.52, 0.01, 0.22, lambert({ color: "#24365e" }), -1.75, 1.043, -0.5)); // pasta azul
+  libreta.rotation.x = -Math.PI / 2; libreta.rotation.z = Math.PI + 0.12; libreta.position.set(-1.75, 1.062, -0.5); tienda.add(libreta);
+  tienda.add(caja(0.52, 0.01, 0.22, lambert({ color: "#24365e" }), -1.75, 1.05, -0.5)); // pasta azul
   const pluma = caja(0.14, 0.012, 0.012, lambert({ color: "#1d2a5a" }), -1.42, 1.055, -0.42); pluma.rotation.y = 0.5; tienda.add(pluma);
   // repisa detrás del mostrador (cigarros, aceites), anaqueles y refrigeradores
   tienda.add(caja(2.4, 1.6, 0.35, lambert({ color: "#5a4030" }), -2.0, 1.4, -2.3));
