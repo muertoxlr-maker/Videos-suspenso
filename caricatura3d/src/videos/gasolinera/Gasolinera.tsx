@@ -57,7 +57,7 @@ const PLANOS: Plano[] = [
     hacer: ({ m }) => { m.luz(-8.2, 3.2, 15.0, 2.2); } },
   // 4 · El encargado se va a las diez
   { w: 21, foco: 3.3, cInf: 8, ini: c([-0.05, 1.6, -1.75], [2.2, 1.2, -0.3], 46), fin: c([0.1, 1.6, -1.65], [2.5, 1.2, 0.6], 46),
-    hacer: ({ f, k, m }) => { m.ver("encargado", [lerp(2.0, 2.6, k), 0, lerp(-1.4, 1.4, k)], { vista: "espalda", ...camina(f), luzX: -1 }); } },
+    hacer: ({ f, k, m }) => { m.abrir(suave(0.12, 0.32, k) * (1 - suave(0.78, 0.95, k))); m.ver("encargado", [lerp(2.5, 2.6, k), 0, lerp(-1.4, 1.4, k)], { vista: "espalda", ...camina(f), luzX: -1 }); } },
   // 5 · y te deja una libreta:
   { w: 28, foco: 0.8, cInf: 9, ini: c([-1.75, 1.6, -0.98], [-1.75, 1.04, -0.45], 52), fin: c([-1.75, 1.56, -0.92], [-1.75, 1.04, -0.45], 50),
     hacer: () => {} },
@@ -186,7 +186,7 @@ class Mundo {
     this.h.tra.g.position.x = -200; this.h.tra.g.visible = false;
     this.h.lejano.g.visible = false; this.h.luzIntermitente.intensity = 0;
     this.h.camioneta.g.visible = this.f < fw(36);
-    this.cerrar(0); this.empanado(0);
+    this.cerrar(0); this.empanado(0); this.abrir(0);
     (this.h.vaho.material as THREE.MeshBasicMaterial).opacity = 0;
     this.luzTecho = 1; this.h.luzExtra.intensity = 0;
   }
@@ -200,6 +200,11 @@ class Mundo {
   cerrar(a: number) {
     this.h.pestillo.rotation.z = a * Math.PI / 2;
     this.h.abierto.visible = a < 0.5; this.h.cerrado.visible = a >= 0.5;
+  }
+  /** abre la puerta hacia afuera girando sobre su bisagra (lado derecho); a = 0 cerrada … 1 abierta 80° */
+  abrir(a: number) {
+    const th = a * 1.4, pa = PUERTA.ancho / 2, p = this.h.puerta;
+    p.rotation.y = th; p.position.set(PUERTA.x + pa - pa * Math.cos(th), 0, pa * Math.sin(th));
   }
   luz(x: number, y: number, z: number, i: number) { const l = this.h.luzExtra; l.position.set(x, y, z); l.intensity = i; }
   empanado(op: number) { (this.h.empanado.material as THREE.MeshBasicMaterial).opacity = op; }
@@ -233,10 +238,18 @@ class Mundo {
     void f;
   }
 }
-void PUERTA;
 
 // ------------------------------------------------------------------ escena 3D
-const Escena: React.FC = () => {
+// Portada (miniatura de TikTok): desde dentro de la tienda, por encima de tu hombro; el niño con la mano en el
+// vidrio empañado y, al fondo junto a las bombas, la sombra. Sin subtítulos; el título lo pone GasolineraPortada.
+const PORTADA: Plano = { w: 176, foco: 1.7, cInf: 7, ini: c([-1.25, 1.55, -2.5], [-1.45, 1.78, 0.32], 42), fin: c([-1.25, 1.55, -2.5], [-1.45, 1.78, 0.32], 42),
+  hacer: ({ f, m }) => {
+    m.cerrar(1); m.lejano(f); m.empanado(0.3);
+    m.ver("nino", [NINO_POS[0], NINO_POS[1] + 0.24, NINO_POS[2]], { ...QUIETO, brazoDer: [2.35, 0.4] });
+    m.ver("sombra", [0.4, 0, 8.6], { ojosVacios: true, ojos: 0.8, mirarX: -0.3, parpadeo: false, luzX: -1 });
+  } };
+
+const Escena: React.FC<{ portada?: boolean }> = ({ portada }) => {
   const f = useCurrentFrame();
   const { camera, scene, gl, size } = useThree();
   const cam = camera as THREE.PerspectiveCamera;
@@ -262,9 +275,9 @@ const Escena: React.FC = () => {
   useFrame(() => { composer.render(); }, 1);
 
   const i = planoEn(f);
-  const pl = PLANOS[i];
+  const pl = portada ? PORTADA : PLANOS[i];
   const a = inicioPlano(i), b = i + 1 < PLANOS.length ? inicioPlano(i + 1) : GASO_CUADROS;
-  const k = (f - a) / Math.max(1, b - a);
+  const k = portada ? 0 : (f - a) / Math.max(1, b - a);
   cam.position.set(...(pl.ini.pos.map((v, j) => lerp(v, pl.fin.pos[j], k)) as V3));
   cam.fov = lerp(pl.ini.fov, pl.fin.fov, k); cam.near = 0.05; cam.far = 220; cam.updateProjectionMatrix();
   cam.lookAt(...(pl.ini.mira.map((v, j) => lerp(v, pl.fin.mira[j], k)) as V3));
@@ -359,6 +372,28 @@ export const Gasolinera: React.FC = () => {
       <Titulo f={f} />
       <Botones f={f} />
       <Subtitulos f={f} />
+    </AbsoluteFill>
+  );
+};
+// Portada: 1080×1920, título arriba como en las demás portadas del canal (blanco + palabra clave en amarillo).
+export const GasolineraPortada: React.FC = () => {
+  useFuentes();
+  const linea = (txt: string, color: string, tam: number) => (
+    <div style={{ fontFamily: "Titulo", fontSize: tam, lineHeight: 0.98, color, letterSpacing: -1, textShadow: [...Array(24)].map((_, j) => `${(Math.cos(j / 24 * 6.283) * 11).toFixed(1)}px ${(Math.sin(j / 24 * 6.283) * 11).toFixed(1)}px 0 #0d0a0c`).join(",") + ", 0 14px 0 #0d0a0c, 0 22px 34px rgba(0,0,0,0.7)" }}>{txt}</div>
+  );
+  return (
+    <AbsoluteFill style={{ background: "#05080d" }}>
+      <ThreeCanvas width={1080} height={1920} gl={{ antialias: false, stencil: false, toneMappingExposure: 1.0 }} camera={{ fov: 40, near: 0.05, far: 220 }}>
+        <ambientLight intensity={0.3} color="#7a8a9a" />
+        <hemisphereLight args={["#5a6f88", "#1a120c", 0.4]} />
+        <Escena portada />
+      </ThreeCanvas>
+      <div style={{ position: "absolute", top: 0, width: "100%", height: 760, background: "linear-gradient(#05080dee 55%, #05080d00)" }} />
+      <div style={{ position: "absolute", top: 90, width: "100%", textAlign: "center" }}>
+        {linea("NUNCA LE ABRAS", "#ffffff", 118)}
+        {linea("AL NIÑO DE LAS", "#ffffff", 124)}
+        {linea("3:00 AM", "#ffd23a", 230)}
+      </div>
     </AbsoluteFill>
   );
 };

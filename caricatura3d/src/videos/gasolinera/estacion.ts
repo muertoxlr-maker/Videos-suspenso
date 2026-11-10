@@ -151,7 +151,10 @@ export function crearGasolinera() {
   tienda.add(caja(ancho, 0.1, fondo, lambert({ color: "#e2ddd0" }), 0, alto, z0 / 2)); // plafón
   tienda.add(caja(0.15, alto, fondo, mPared, x0, alto / 2, z0 / 2), caja(0.15, alto, fondo, mPared, x1, alto / 2, z0 / 2), caja(ancho, alto, 0.15, mPared, 0, alto / 2, z0));
   // fachada: murete, vidrio, marquesina con letrero
-  tienda.add(caja(ancho, 0.9, 0.12, mExt, 0, 0.45, 0));
+  // murete y riel bajo el vidrio, en dos tramos: el hueco de la puerta llega hasta el piso
+  const hueco = [PUERTA.x - PUERTA.ancho / 2 - 0.05, PUERTA.x + PUERTA.ancho / 2 + 0.05];
+  const tramos: [number, number][] = [[x0, hueco[0]], [hueco[1], x1]];
+  for (const [a, b] of tramos) tienda.add(caja(b - a, 0.9, 0.12, mExt, (a + b) / 2, 0.45, 0));
   tienda.add(caja(ancho + 0.4, 0.6, 0.3, lambert({ color: "#b83a2c" }), 0, alto - 0.1, 0.1));
   const letrero = new THREE.Mesh(new THREE.PlaneGeometry(3.4, 0.42), new THREE.MeshLambertMaterial({ map: texTexto("TIENDA · 24 H", "#b83a2c", "#ffffff", 768, 96), emissive: "#ffffff", emissiveMap: texTexto("TIENDA · 24 H", "#b83a2c", "#ffffff", 768, 96), emissiveIntensity: 0.6 }));
   letrero.position.set(-0.8, alto - 0.1, 0.26); tienda.add(letrero);
@@ -162,7 +165,9 @@ export function crearGasolinera() {
   pano(x0, VX - 0.45, 0.9, 2.75); pano(VX + 0.45, PX - pa - 0.05, 0.9, 2.75); pano(PX + pa + 0.05, x1, 0.9, 2.75);
   pano(VX - 0.45, VX + 0.45, 1.8, 2.75); // sobre la ventanilla
   for (const x of [x0, -3.2, VX - 0.45, VX + 0.45, 0.4, PX - pa - 0.05, PX + pa + 0.05, x1]) tienda.add(caja(0.08, 1.85, 0.12, mMarco, x, 1.825, 0));
-  tienda.add(caja(ancho, 0.08, 0.12, mMarco, 0, 2.75, 0), caja(ancho, 0.06, 0.14, mMarco, 0, 0.92, 0));
+  tienda.add(caja(ancho, 0.08, 0.12, mMarco, 0, 2.75, 0));
+  for (const [a, b] of tramos) tienda.add(caja(b - a, 0.06, 0.14, mMarco, (a + b) / 2, 0.92, 0));
+  for (const x of [hueco[0], hueco[1]]) tienda.add(caja(0.08, 0.92, 0.12, mMarco, x, 0.46, 0)); // montantes de la puerta hasta el piso
   // ventanilla de despacho: marco, vidrio propio (se empaña), charola de metal
   tienda.add(caja(0.98, 0.06, 0.16, mMarco, VX, 0.95, 0), caja(0.98, 0.06, 0.16, mMarco, VX, 1.77, 0));
   const vidrioVent = new THREE.Mesh(new THREE.PlaneGeometry(0.82, 0.76), vidrio(0.13)); vidrioVent.position.set(VX, 1.36, 0); vidrioVent.layers.set(NOINK); tienda.add(vidrioVent);
