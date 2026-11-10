@@ -314,7 +314,19 @@ class Mundo {
 }
 
 // ------------------------------------------------------------------ escena 3D
-const Escena: React.FC = () => {
+// Portada (miniatura de TikTok): un plano propio, sin subtítulos; el título lo pone Portada.
+const PORTADA: Plano = { w: 68, foco: 2.25, cInf: 5, ini: { pos: [-1.3, 1.42, 3.12], mira: [1.4, 1.32, 3.38], fov: 47 }, fin: { pos: [-1.3, 1.42, 3.12], mira: [1.4, 1.32, 3.38], fov: 47 },
+  hacer: ({ f, m }) => {
+    m.tunel(2);
+    m.ver("tu", [0.9, 0, 3.55], { parpadeo: 0, vista: "frente", mirarX: -0.35, giro: -0.2, cejasMiedo: 1, cejasAlto: 0.4, ojos: 1.18, boca: "o", hombros: 0.5, sostiene: "celularEncendido", brazoIzq: [0.55, -1.25], brazoDer: [2.3, 0.5], luzX: 1 });
+    m.celularTu(true);
+    m.luzExterior(2.4, 1.7, 2.4, 3.5);
+    m.ver("inf2", [1.7, 0.08, 3.2], { ...MORDIDO, ...golpea(f, 0.5), parpadeo: 0, luzX: -1 });
+    m.ver("inf3", [1.75, 0.02, 2.62], { ...MORDIDO, ...golpea(f, 2.1), luzX: -1 });
+    m.ver("inf4", [1.85, 0.0, 1.35], { ...MORDIDO, ...golpea(f, 1.1), luzX: -1 });
+  } };
+
+const Escena: React.FC<{ portada?: boolean }> = ({ portada }) => {
   const f = useCurrentFrame();
   const { camera, scene, gl, size } = useThree();
   const cam = camera as THREE.PerspectiveCamera;
@@ -340,9 +352,9 @@ const Escena: React.FC = () => {
   useFrame(() => { composer.render(); }, 1);
 
   const i = planoEn(f);
-  const pl = PLANOS[i];
+  const pl = portada ? PORTADA : PLANOS[i];
   const a = inicioPlano(i), b = i + 1 < PLANOS.length ? inicioPlano(i + 1) : VAGON_CUADROS;
-  const k = (f - a) / Math.max(1, b - a);
+  const k = portada ? 0 : (f - a) / Math.max(1, b - a);
   cam.position.set(...(pl.ini.pos.map((v, j) => lerp(v, pl.fin.pos[j], k)) as V3));
   cam.fov = lerp(pl.ini.fov, pl.fin.fov, k); cam.near = 0.05; cam.far = 80; cam.updateProjectionMatrix();
   cam.lookAt(...(pl.ini.mira.map((v, j) => lerp(v, pl.fin.mira[j], k)) as V3));
@@ -437,6 +449,28 @@ export const UltimoVagon: React.FC = () => {
       <Titulo f={f} />
       <Botones f={f} />
       <Subtitulos f={f} />
+    </AbsoluteFill>
+  );
+};
+// Portada: 1080×1920, título arriba como en las demás portadas del canal (blanco + palabra clave en amarillo).
+export const UltimoVagonPortada: React.FC = () => {
+  useFuentes();
+  const linea = (txt: string, color: string, tam: number) => (
+    <div style={{ fontFamily: "Titulo", fontSize: tam, lineHeight: 0.98, color, letterSpacing: -1, textShadow: [...Array(24)].map((_, j) => `${(Math.cos(j / 24 * 6.283) * 11).toFixed(1)}px ${(Math.sin(j / 24 * 6.283) * 11).toFixed(1)}px 0 #0d0a0c`).join(",") + ", 0 14px 0 #0d0a0c, 0 22px 34px rgba(0,0,0,0.7)" }}>{txt}</div>
+  );
+  return (
+    <AbsoluteFill style={{ background: "#04070b" }}>
+      <ThreeCanvas width={1080} height={1920} gl={{ antialias: false, stencil: false, toneMappingExposure: 1.0 }} camera={{ fov: 40, near: 0.05, far: 80 }}>
+        <ambientLight intensity={0.3} color="#7a8a9a" />
+        <hemisphereLight args={["#5a6f88", "#1a120c", 0.4]} />
+        <Escena portada />
+      </ThreeCanvas>
+      <div style={{ position: "absolute", top: 0, width: "100%", height: 760, background: "linear-gradient(#04070bee 55%, #04070b00)" }} />
+      <div style={{ position: "absolute", top: 90, width: "100%", textAlign: "center" }}>
+        {linea("NUNCA TE SUBAS", "#ffffff", 112)}
+        {linea("AL ÚLTIMO", "#ffffff", 156)}
+        {linea("VAGÓN", "#ffd23a", 240)}
+      </div>
     </AbsoluteFill>
   );
 };
