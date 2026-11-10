@@ -1,4 +1,4 @@
-# «No contestes» — guion v1
+# «No contestes» — guion v1 (idea guardada, no elegida)
 
 Historia original. Formato y ritmo según `GUIA_DE_ESTILO_SUSPENSO.md` (§1 historia, §2 cámara, §3 textos, §5 voz) y
 el estándar visual aprobado (§8).
