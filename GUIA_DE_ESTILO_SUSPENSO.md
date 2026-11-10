@@ -341,6 +341,26 @@ pelo distinta, altura distinta (1.72 m y 1.84 m en la prueba) y colores de ropa 
   ≈ 55 %), personajes de espaldas con más detalle (de lejos se ven como manchas negras) y más movimiento corporal
   en los planos de diálogo.
 
+### 8.6c Errores del tercer video («Gasolinera») — revisar SIEMPRE antes de entregar
+El usuario encontró tres errores en el video ya entregado. Para que no se repitan:
+- **Nada atraviesa paredes, puertas ni vidrios.** Si un personaje entra o sale, la puerta **se abre** (gira sobre su
+  bisagra) y el hueco llega **hasta el piso**: ni murete, ni riel, ni vidrio cruzando la puerta. El camino pasa por el
+  **centro** del hueco, con la mitad del ancho de la tarjeta (≈ 0.35 m) libre a cada lado.
+- **Las tarjetas giran hacia la cámara**: un personaje pegado a un mueble lo «atraviesa» cuando la cámara está de lado.
+  Dejar **≥ 0.2 m** entre la tarjeta y cualquier objeto (charolas, mostradores, mesas, ventanas) y comprobarlo en el
+  plano con la cámara más de lado. Ningún objeto debe tapar la boca de quien habla.
+- **Nada de superficies encimadas (parpadeo / z-fighting).** Dos piezas en el mismo plano o a menos de ~5 mm se pelean
+  cuadro a cuadro. Separar pisos por capas (suelo −0.02, losas 0, tierra 0.008, carretera 0.016, piso interior 0.01),
+  que una losa no se meta bajo otro piso, objetos sobre mesas ≥ 5 mm arriba (papel sobre su pasta, etc.), y cajas
+  que se tocan con distinto grueso (un marco de 0.15 contra una pared de 0.12, no 0.12 contra 0.12).
+- **Comprobación obligatoria**:
+  1. Antes del render largo: clips cortos (`npx remotion render <Comp> clip.mp4 --frames=A-B --scale=0.5`) de cada
+     plano con puertas, ventanillas, mostradores o pisos a la vista, y
+     `python3 herramientas/revisar_parpadeo.py clip.mp4 mapa.jpg 0` → no debe haber rojo sobre objetos quietos.
+  2. En las fotos de revisión, buscar a propósito: personajes cruzando muros/puertas/vidrios y objetos encima de caras.
+  3. Con el video terminado: `python3 herramientas/revisar_parpadeo.py video.mp4` y mirar el mapa de los segundos
+     más sospechosos antes de mandarlo.
+
 ### 8.7 Pendientes conocidos de esta versión
 - La sombra alargada casi no se nota sobre alfombras oscuras.
 - El escenario tiene menos objetos y gente al fondo que las referencias.
@@ -350,5 +370,6 @@ pelo distinta, altura distinta (1.72 m y 1.84 m en la prueba) y colores de ropa 
 ## Herramientas y archivos
 - `herramientas/medir_referencia.py` — mide todos los cuadros (cámara, cortes, transiciones, color, tiras por plano).
 - `herramientas/medir_sincronia.py` — sincronía de la palabra amarilla con la voz.
+- `herramientas/revisar_parpadeo.py` — busca parpadeos (superficies encimadas) en un video o clip y dibuja el mapa.
 - `herramientas/transcribir.py` — transcripción con tiempos por palabra (necesita acceso a huggingface.co).
 - `referencias/medidas/` — resultados numéricos por video (`videoN_camara_y_color.json`, `voz_y_sincronia.json`).
