@@ -134,12 +134,13 @@ for d, v in ((0, -3), (9, -9), (20, -5)):
 # la rueda gira sola: el mismo crujido, más fuerte, y el organillo vuelve lento y desafinado
 rueda2 = tramo(sfx("rueda_gira"), t(143), DUR, 2.0, 1.0)
 lenta = tramo(sfx("organillo_lento"), t(146), DUR, 3.0, 1.0)
+# (el usuario pidió quitar la canción de feria: musica y lenta ya no entran en la mezcla)
 # frío final: dron y latidos
 dron_f = tramo(sfx("dron"), t(172), t(194) + 1.0, 4.0, 0.8)
 poner(golpe("golpe_titulo", -6), t(194) - 0.07)
 latidos = tramo(sfx("latidos"), t(188), DUR, 1.0, 0.6)
 
-fondo_crudo = (gente * db(0) + musica * db(-2) + noche * db(-8) + rueda1 * db(-7) + rueda2 * db(-3) + lenta * db(-3)
+fondo_crudo = (gente * db(0) + noche * db(-8) + rueda1 * db(-7) + rueda2 * db(-3)
                + dron_f * db(-5) + latidos * db(-2) + pista * db(-14))
 
 # ------------------------------------------------------------------ voz y mezcla
