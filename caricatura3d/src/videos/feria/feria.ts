@@ -95,8 +95,8 @@ export function crearFeria() {
   }
   for (const z of [-1.62, 1.62]) raiz.add(barra(new THREE.Vector3(-2.6, 4.6, z), new THREE.Vector3(2.6, 4.6, z), 0.16, mBlanco));
 
-  // canastillas: cuelgan del travesaño y siempre quedan derechas; la caja es cerrada (las piernas de quien va
-  // sentado quedan dentro y no se ven); el número va al frente
+  // canastillas: cuelgan del travesaño y siempre quedan derechas; la tina es abierta, con orilla, piso
+  // y respaldo (las piernas de quien va sentado quedan dentro); el número va al frente
   const canastillas: THREE.Group[] = [];
   for (let n = 1; n <= RUEDA.n; n++) {
     const g = new THREE.Group(); raiz.add(g); canastillas.push(g);
@@ -105,9 +105,16 @@ export function crearFeria() {
     g.add(caja(0.08, 0.3, 0.08, mGris, 0, -0.15, 0));
     g.add(caja(1.7, 0.08, 1.3, lambert({ color: "#f1ead8" }), 0, -0.34, 0)); // techito
     const ton = new THREE.Mesh(new THREE.ConeGeometry(0.95, 0.35, 4), mC); ton.rotation.y = Math.PI / 4; ton.position.y = -0.12; g.add(ton);
-    for (const sx of [-0.75, 0.75]) for (const sz of [-0.5, 0.5]) g.add(caja(0.05, 0.78, 0.05, mGris, sx, -0.77, sz));
-    g.add(caja(1.6, 1.2, 1.12, mC, 0, -1.76, 0)); // tina
-    g.add(caja(1.66, 0.08, 1.18, mBlanco, 0, -1.19, 0)); // borde (1 cm sobre la tina: no se encima)
+    for (const sx of [-0.78, 0.78]) for (const sz of [-0.54, 0.54]) g.add(caja(0.05, 0.9, 0.05, mGris, sx, -0.83, sz));
+    // tina ABIERTA (paredes, piso y respaldo; sin tapa), más baja para que se vea medio cuerpo de quien va adentro
+    const mDentro = lambert({ color: "#2a2024" });
+    g.add(caja(1.6, 1.05, 0.06, mC, 0, -1.835, 0.53)); // frente
+    g.add(caja(1.6, 1.05, 0.06, mC, 0, -1.835, -0.53)); // atrás
+    for (const sx of [-0.77, 0.77]) g.add(caja(0.06, 1.05, 0.98, mC, sx, -1.835, 0)); // lados (2 mm antes del frente: no se enciman)
+    g.add(caja(1.46, 0.06, 0.98, mDentro, 0, -2.3, 0)); // piso
+    g.add(caja(1.4, 0.55, 0.05, mDentro, 0, -1.6, -0.46)); // respaldo del asiento
+    for (const sz of [-0.54, 0.54]) g.add(caja(1.68, 0.06, 0.1, mBlanco, 0, -1.275, sz)); // orilla redonda (marco, no tapa)
+    for (const sx of [-0.79, 0.79]) g.add(caja(0.1, 0.06, 0.98, mBlanco, sx, -1.285, 0));
     const num = new THREE.Mesh(new THREE.PlaneGeometry(0.62, 0.31), new THREE.MeshLambertMaterial({ map: texNumero(n, col), emissive: "#ffffff", emissiveMap: texNumero(n, col), emissiveIntensity: 0.35 }));
     num.position.set(0, -1.66, 0.57); g.add(num);
     const num2 = num.clone(); num2.rotation.y = Math.PI; num2.position.z = -0.57; g.add(num2);
