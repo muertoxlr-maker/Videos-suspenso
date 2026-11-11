@@ -201,8 +201,8 @@ video 6 cuadros 590, 780 y 960. 👁 = observado en esos cuadros · 📏 = medid
 - **Efectos y ambientes: grabados con ElevenLabs, no sintetizados** (`herramientas/sfx_elevenlabs.py`, pedidos en
   `historias/<carpeta>/sfx/pedidos.json`, en inglés, con «no music» cuando no se quiera música). En «La rueda de la
   feria» el usuario se quejó de los sintetizados: el rechinido de la rueda sonaba a **silbido** y los clics de cadena
-  y los golpes de luz seguidos sonaban a **palomitas reventando**. Evitar: tonos agudos puros, **siseos parejos largos** (en «La taquería» el
-  chisporroteo del comal sonaba a fuga de gas: filtrar a ≤4 kHz y dejarlo bajito), clics repetidos de
+  y los golpes de luz seguidos sonaban a **palomitas reventando**. Evitar: tonos agudos puros, **ambientes parejos que suenan todo el video** (en «La taquería» el
+  chisporroteo del comal sonaba a fuga de gas y el ambiente de calle, un retumbo grave, a viento: el usuario pidió quitar los dos), clics repetidos de
   ruido, muchos golpes cortos seguidos (mejor 2–3 golpes grandes). Las funciones de `generador/sonido.py` quedan solo
   para pruebas.
 - ⚠️ No se pudo escuchar: el tipo de música, los efectos y si los diálogos usan otra voz siguen **pendientes**

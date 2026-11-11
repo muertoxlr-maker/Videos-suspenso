@@ -153,8 +153,12 @@ dron_f = tramo(sfx("dron"), fw(177), DUR, 4.0, 0.8)
 poner(golpe("golpe_titulo", -6), t(200) - 0.07)
 latidos = tramo(sfx("latidos"), fw(185), DUR, 1.0, 0.6)
 
-fondo_crudo = (calle * db(-2) + foco * db(-16) + goteo * db(-8) + dron_f * db(-5) + latidos * db(-3)
+# el usuario oía «viento en todo el video»: era el ambiente de calle (retumbo grave, 80 % de su energía bajo 300 Hz).
+# Se quitan la calle y el zumbido del foco (los dos sonaban todo el tiempo). El volumen de los demás efectos se
+# calcula como si siguieran (para que no suban), y luego se quitan.
+sin_ambiente = (goteo * db(-8) + dron_f * db(-5) + latidos * db(-3)
                + pista * db(-14))
+fondo_crudo = sin_ambiente + calle * db(-2) + foco * db(-16)
 
 # ------------------------------------------------------------------ voz y mezcla
 voz = sonido.leer_audio(AQUI / "voz" / "voz_final.mp3")
@@ -163,7 +167,8 @@ envv = np.convolve(np.abs(vz), np.ones(int(0.12 * SR)) / int(0.12 * SR), mode="s
 duck = 1 - 0.75 * np.clip(envv / (np.percentile(envv[envv > 1e-4], 60) + 1e-9), 0, 1)
 fondo = pasa(fondo_crudo, 100, None) * duck
 hab0 = envv > np.percentile(envv, 70)  # el fondo queda 13 dB bajo la voz al hablar (guía §5)
-fondo *= db(-13) / (np.sqrt(np.mean(fondo[hab0] ** 2)) / np.sqrt(np.mean(vz[hab0] ** 2)))
+ganancia = db(-13) / (np.sqrt(np.mean(fondo[hab0] ** 2)) / np.sqrt(np.mean(vz[hab0] ** 2)))
+fondo = pasa(sin_ambiente, 100, None) * duck * ganancia
 mezcla = vz * 1.0 + fondo
 mezcla /= max(1.0, np.max(np.abs(mezcla)) / 0.95)
 salida = AQUI / "audio"
