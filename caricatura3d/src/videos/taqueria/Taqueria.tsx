@@ -310,10 +310,10 @@ class Mundo {
     const foco = off ? null : FOCO;
     for (const [k, s] of Object.entries(this.sombras) as [Quien, SombraSilueta][]) {
       const p = this.pies[k]; if (!p || !this.cartas[k].grupo.visible) continue;
-      s.colocar(p[0], p[2], p[1], foco);
+      s.colocar(p[0], p[2], p[1], foco, 0.9, 1.7, this.cartas[k].grupo.rotation.y);
       this.cartas[k].contacto.visible = !off;
     }
-    if (this.pies.perro) this.sombraPerro.colocar(this.pies.perro[0], this.pies.perro[2], this.pies.perro[1], foco, 0.3, 1.2);
+    if (this.pies.perro) this.sombraPerro.colocar(this.pies.perro[0], this.pies.perro[2], this.pies.perro[1], foco, 0.3, 1.2, this.dog.grupo.rotation.y);
   }
 }
 
