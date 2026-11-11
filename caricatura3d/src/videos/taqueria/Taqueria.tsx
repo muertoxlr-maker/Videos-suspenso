@@ -83,7 +83,7 @@ const PLANOS: Plano[] = [
       m.ver("tu", TU_POS, { ...LUZ, mirarX: -0.6, boca: "linea" });
     } },
   // 5 · «A esta hora, no todos
-  { w: 28, foco: 2.1, cInf: 9, rapido: true, ini: c([-1.0, 1.4, 2.85], [-2.05, 1.25, 0.9], 40), fin: c([-1.15, 1.38, 2.5], [-2.05, 1.25, 0.9], 38),
+  { w: 28, foco: 2.1, cInf: 9, rapido: true, ini: c([-1.0, 1.4, 2.85], [-2.05, 1.25, 0.9], 46), fin: c([-1.15, 1.38, 2.5], [-2.05, 1.25, 0.9], 44),
     hacer: ({ f, m }) => { m.ver("tio", [-2.05, 0, 0.9], { ...LUZ, mirarX: 0.55, giro: 0.35, cejasMiedo: 0.3, cejasAlto: -0.2, boca: "abierta", bocaAbre: habla(f, 28, 36), ...hablaGestos(f, 5, 0.8) }); m.luz(-1.4, 1.9, 2.0, 1.4); } },
   // 6 · los clientes están vivos».
   { w: 33, foco: 14, cInf: 5, ini: c([-4.4, 1.5, 4.3], [-8.6, 1.1, -12], 44), fin: c([-4.8, 1.5, 3.9], [-8.6, 1.1, -12], 42),
@@ -107,7 +107,7 @@ const PLANOS: Plano[] = [
   { w: 79, foco: 1.05, cInf: 9, ini: c([-0.35, 1.45, 1.0], [-0.55, 1.02, -0.05], 42), fin: c([-0.4, 1.4, 0.78], [-0.55, 1.02, -0.05], 40),
     hacer: ({ f, m }) => { m.ver("tu", [-0.4, 0, -1.0], { ...LUZ, mirarY: 0.7, brazoDer: [1.1 + 0.2 * Math.sin(f * 0.6), 1.1] }); m.luz(-0.4, 1.6, 0.8, 0.8); } },
   // 13 · y no digas ni una palabra.
-  { w: 90, foco: 1.0, cInf: 9, rapido: true, ini: c([0.25, 1.38, 0.9], [0.25, 1.27, -1.0], 40), fin: c([0.25, 1.38, 0.62], [0.25, 1.27, -1.0], 38),
+  { w: 90, foco: 1.0, cInf: 9, rapido: true, ini: c([0.25, 1.38, 0.95], [0.25, 1.27, -1.0], 48), fin: c([0.25, 1.38, 0.7], [0.25, 1.27, -1.0], 46),
     hacer: ({ f, m }) => { m.ver("tu", TU_POS, { ...LUZ, mirarX: -0.3, cejasMiedo: 0.5, boca: "linea", hombros: 0.4, ...tiembla(f, 0.3) }); m.luz(0.3, 1.9, 0.6, 1.0); } },
   // 14 · En lo oscuro, te encuentran por la voz.
   { w: 96, foco: 4.0, cInf: 7, ini: c([-2.4, 1.5, 3.0], [-6.0, 1.3, 4.7], 34), fin: c([-2.5, 1.5, 3.1], [-6.0, 1.3, 4.7], 29),
@@ -162,7 +162,7 @@ const PLANOS: Plano[] = [
       m.aliento(f, [-1.05, 1.55, -0.95]);
     } },
   // 25 · No hablas.
-  { w: 159, foco: 0.95, cInf: 9, rapido: true, ini: c([0.15, 1.34, 0.6], [0.15, 1.27, -1.0], 38), fin: c([0.15, 1.34, 0.32], [0.15, 1.27, -1.0], 36),
+  { w: 159, foco: 0.95, cInf: 9, rapido: true, ini: c([0.15, 1.34, 0.7], [0.15, 1.27, -1.0], 46), fin: c([0.15, 1.34, 0.45], [0.15, 1.27, -1.0], 44),
     hacer: ({ f, m }) => { m.ver("tu", [0.15, 0, -1.0], { luzX: 1, mirarX: -0.7, ojos: 1.15, pupila: 0.18, cejasMiedo: 1, boca: "linea", sudor: 1, hombros: 0.7, ...tiembla(f, 0.8) }); m.luz(0.3, 1.8, -0.2, 0.25, "#5a74a8"); } },
   // 26 · Vuelve la luz.
   { w: 161, foco: 4.5, cInf: 7, ini: c([-1.2, 1.6, 4.5], [0.1, 1.3, 0], 46), fin: c([-1.05, 1.6, 4.2], [0.1, 1.3, 0], 46),
@@ -176,7 +176,7 @@ const PLANOS: Plano[] = [
       m.perro(PERRO_CASA, { cabeza: lerp(-0.4, 0.3, suave(0.2, 0.6, k)), orejas: 0.9, cola: 0.5 * Math.sin(f * 0.5), espejo: true }); m.charco(1);
     } },
   // 28 · «¿Ya cerraste, mijo? Dame dos para el camino».
-  { w: 169, foco: 1.35, cInf: 9, ini: c([-0.12, 1.42, -0.6], [0.15, 1.28, 1.15], 40), fin: c([-0.12, 1.4, -0.32], [0.15, 1.28, 1.15], 38),
+  { w: 169, foco: 1.35, cInf: 9, ini: c([-0.12, 1.42, -0.62], [0.15, 1.28, 1.15], 52), fin: c([-0.12, 1.4, -0.4], [0.15, 1.28, 1.15], 50),
     hacer: ({ f, m }) => { m.ver("papa", PAPA_POS, { ...LUZ, mirarX: -0.15, mirarY: 0.1, boca: "abierta", bocaAbre: habla(f, 169, 176), cejasAlto: 0.2, ...hablaGestos(f, 9, 0.7) }); m.luz(0.1, 1.9, 0.5, 1.0); } },
   // 29 · Bajo el foco, tu papá no tiene sombra.
   { w: 177, foco: 3.3, cInf: 8, ini: c([0.5, 1.6, 4.9], [0.5, 0.3, 1.5], 46), fin: c([0.5, 1.55, 4.6], [0.5, 0.3, 1.5], 46),
@@ -188,7 +188,7 @@ const PLANOS: Plano[] = [
   { w: 196, foco: 2.0, cInf: 8, ini: c([1.05, 0.9, 3.5], [0.8, 0.45, 1.5], 44), fin: c([1.0, 0.85, 3.15], [0.8, 0.45, 1.5], 44),
     hacer: ({ f, m }) => { m.perro(PERRO_PAPA, { cabeza: 0.4, orejas: 0.5, cola: Math.sin(f * 0.9) }); m.ver("papa", PAPA_POS, { ...LUZ, mirarY: 0.6, mirarX: 0.4, boca: "amable" }); m.charco(1); } },
   // 32 · ¿Le sirves...
-  { w: 200, foco: 1.0, cInf: 9, rapido: true, ini: c([0.25, 1.38, 0.9], [0.25, 1.27, -1.0], 40), fin: c([0.25, 1.38, 0.62], [0.25, 1.27, -1.0], 38),
+  { w: 200, foco: 1.0, cInf: 9, rapido: true, ini: c([0.25, 1.38, 0.95], [0.25, 1.27, -1.0], 48), fin: c([0.25, 1.38, 0.7], [0.25, 1.27, -1.0], 46),
     hacer: ({ f, m }) => { m.ver("tu", TU_POS, { ...LUZ, mirarX: 0.2, ojos: 1.12, pupila: 0.2, cejasMiedo: 1, boca: "o", sudor: 1, ...tiembla(f, 1) }); m.luz(0.3, 1.9, 0.6, 1.0); } },
   // 33 · o le cierras?
   { w: 202, foco: 6, cInf: 6, ini: c([0.4, 1.5, 6.0], [0.2, 1.25, 0.5], 44), fin: c([0.4, 1.55, 6.6], [0.2, 1.25, 0.5], 44),
