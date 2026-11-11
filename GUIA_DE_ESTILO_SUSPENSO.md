@@ -205,6 +205,12 @@ video 6 cuadros 590, 780 y 960. 👁 = observado en esos cuadros · 📏 = medid
   chisporroteo del comal sonaba a fuga de gas y el ambiente de calle, un retumbo grave, a viento: el usuario pidió quitar los dos), clics repetidos de
   ruido, muchos golpes cortos seguidos (mejor 2–3 golpes grandes). Las funciones de `generador/sonido.py` quedan solo
   para pruebas.
+- **REGLA DEL USUARIO — efectos cortos, nunca un sonido que dure casi todo el video.** Cada efecto suena solo en su
+  momento (un golpe, una puerta, un ladrido, un goteo de unos segundos) y se va. Nada de ambientes, zumbidos,
+  chisporroteos o «aire» de fondo que sigan sonando de principio a fin: el usuario los oye como fuga de gas o viento.
+  Esto manda sobre la medida de «fondo continuo» de la tabla de arriba. Tope práctico: ningún sonido en bucle más de
+  ~10 s seguidos, y en total los bucles no cubren más de un tercio del video. Si hace falta tensión al final
+  (dron, latidos), que entre solo en los últimos segundos.
 - ⚠️ No se pudo escuchar: el tipo de música, los efectos y si los diálogos usan otra voz siguen **pendientes**
   (solo hay medidas de volumen).
 
