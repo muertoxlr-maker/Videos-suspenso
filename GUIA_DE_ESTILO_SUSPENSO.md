@@ -198,6 +198,12 @@ video 6 cuadros 590, 780 y 960. 👁 = observado en esos cuadros · 📏 = medid
   ≤ −2 dB. Sin él, la voz cruda de ElevenLabs «se satura» en el celular. Ya va incluido en `voz_elevenlabs.py`.
 - **Bajo la voz, nada de ruido en la banda de la voz** (respiraciones o «aire» hechos con ruido filtrado suenan a
   estática) y nada por debajo de 100 Hz (las bocinas del celular vibran). Fondo ≈ −14 dB bajo la voz al hablar.
+- **Efectos y ambientes: grabados con ElevenLabs, no sintetizados** (`herramientas/sfx_elevenlabs.py`, pedidos en
+  `historias/<carpeta>/sfx/pedidos.json`, en inglés, con «no music» cuando no se quiera música). En «La rueda de la
+  feria» el usuario se quejó de los sintetizados: el rechinido de la rueda sonaba a **silbido** y los clics de cadena
+  y los golpes de luz seguidos sonaban a **palomitas reventando**. Evitar: tonos agudos puros, clics repetidos de
+  ruido, muchos golpes cortos seguidos (mejor 2–3 golpes grandes). Las funciones de `generador/sonido.py` quedan solo
+  para pruebas.
 - ⚠️ No se pudo escuchar: el tipo de música, los efectos y si los diálogos usan otra voz siguen **pendientes**
   (solo hay medidas de volumen).
 
