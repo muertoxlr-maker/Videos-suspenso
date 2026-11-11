@@ -19,3 +19,6 @@
   siseo). Los originales quedan en `sfx/descartados/`.
 - Revisión §8.6c: sombras de silueta a 6 mm del piso; billete, charco y gotas sin encimarse;
   `revisar_parpadeo.py` solo marca movimiento buscado (personajes hablando y caminando, gotas, temblor de ojos al final).
+- v3: la sombra del perro salía **al revés** (cuando caía hacia la cámara, la cabeza quedaba del lado de la cola).
+  `comun/sombra.ts` ahora la voltea para que conserve la izquierda/derecha del dibujo. Render completo de nuevo,
+  2172 cuadros; `revisar_parpadeo.py` solo marca al perro moviéndose.
