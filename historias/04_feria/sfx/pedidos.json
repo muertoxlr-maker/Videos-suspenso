@@ -1,0 +1,14 @@
+{
+  "gente_feria": {"texto": "Night village fair ambience, crowd of people chatting and laughing at a distance, children, footsteps on dirt, no music", "seg": 22, "loop": true},
+  "organillo": {"texto": "Old mechanical carousel band organ playing a cheerful fairground waltz, recorded from a short distance outdoors", "seg": 22, "loop": true, "influencia": 0.5},
+  "organillo_lento": {"texto": "Creepy slow carousel band organ waltz, warped and out of tune, playing slower and slower like a broken music box, eerie", "seg": 22, "loop": true, "influencia": 0.5},
+  "rueda_gira": {"texto": "Old Ferris wheel turning slowly, deep low metal creaking and groaning, gondolas swaying and rattling softly, big motor hum, no high pitched squeal, no music", "seg": 22, "loop": true, "influencia": 0.5},
+  "noche": {"texto": "Quiet empty field at night, soft wind, faint crickets, no music", "seg": 22, "loop": true},
+  "apagon": {"texto": "Big electrical breaker switch slammed off, heavy clunk, lights powering down with a fading electrical hum", "seg": 1.5},
+  "palanca": {"texto": "Heavy old metal lever pulled, mechanical brake engaging with a loud clunk", "seg": 1.5},
+  "cadena": {"texto": "Metal chain barrier unhooked and dropped, short chain rattle", "seg": 1.5},
+  "golpe_titulo": {"texto": "Deep cinematic impact boom for horror trailer, short", "seg": 2},
+  "whoosh": {"texto": "Short soft cinematic whoosh swoosh", "seg": 1},
+  "dron": {"texto": "Dark low horror drone, slowly rising tension, no melody", "seg": 22},
+  "latidos": {"texto": "Slow deep human heartbeat, close and muffled, steady", "seg": 10, "loop": true}
+}
