@@ -117,7 +117,8 @@ comal_off = fw(151) + 6 / FPS              # «Apagas el comal»
 corte = 1 - rampa(0, 1, apagon[0] - 0.01, apagon[0] + 0.02)
 
 calle = tramo(sfx("calle_noche"), 0, DUR, 1.0, 1.0)
-comal = tramo(sfx("comal"), 0, comal_off + 0.3, 0.8, 0.3)
+# el chisporroteo parejo y agudo sonaba a «fuga de gas» (usuario): se graba de nuevo, se le quitan agudos y va bajito
+comal = pasa(tramo(sfx("comal"), 0, comal_off + 0.3, 0.8, 0.3), 250, 4000)
 foco = tramo(sfx("foco_zumbido"), 0, DUR, 0.5, 0.5) * (1 - (rampa(0, 1, apagon[0] - 0.01, apagon[0] + 0.02) - rampa(0, 1, apagon[1], apagon[1] + 0.05)))
 # en el apagón la calle se oye más lejos (todo se calla)
 calle *= 1 - 0.6 * (rampa(0, 1, apagon[0], apagon[0] + 0.3) - rampa(0, 1, apagon[1], apagon[1] + 0.5))
@@ -152,7 +153,7 @@ dron_f = tramo(sfx("dron"), fw(177), DUR, 4.0, 0.8)
 poner(golpe("golpe_titulo", -6), t(200) - 0.07)
 latidos = tramo(sfx("latidos"), fw(185), DUR, 1.0, 0.6)
 
-fondo_crudo = (calle * db(-2) + comal * db(-4) + foco * db(-16) + goteo * db(-8) + dron_f * db(-5) + latidos * db(-3)
+fondo_crudo = (calle * db(-2) + comal * db(-15) + foco * db(-16) + goteo * db(-8) + dron_f * db(-5) + latidos * db(-3)
                + pista * db(-14))
 
 # ------------------------------------------------------------------ voz y mezcla
@@ -169,9 +170,9 @@ salida = AQUI / "audio"
 salida.mkdir(exist_ok=True)
 crudo = salida / "mezcla_cruda.wav"
 sonido.guardar_wav(crudo, mezcla)
-med = subprocess.run(["ffmpeg", "-i", str(crudo), "-af", "loudnorm=I=-14:TP=-1.5:LRA=7:print_format=json", "-f", "null", "-"], capture_output=True, text=True).stderr
+med = subprocess.run(["ffmpeg", "-i", str(crudo), "-af", "loudnorm=I=-14:TP=-2.5:LRA=7:print_format=json", "-f", "null", "-"], capture_output=True, text=True).stderr
 j = json.loads(med[med.rindex("{"):])
-filtro = (f"loudnorm=I=-14:TP=-1.5:LRA=7:measured_I={j['input_i']}:measured_TP={j['input_tp']}:measured_LRA={j['input_lra']}"
+filtro = (f"loudnorm=I=-14:TP=-2.5:LRA=7:measured_I={j['input_i']}:measured_TP={j['input_tp']}:measured_LRA={j['input_lra']}"
           f":measured_thresh={j['input_thresh']}:offset={j['target_offset']}:linear=true")
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(crudo), "-af", filtro, "-ar", str(SR), str(salida / "mezcla.wav")], check=True)
 crudo.unlink()

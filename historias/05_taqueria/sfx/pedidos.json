@@ -1,21 +1,85 @@
 {
-  "calle_noche": {"texto": "Quiet city street corner at 2 AM after rain, distant traffic hum, light dripping water, no music, no voices", "seg": 22, "loop": true},
-  "comal": {"texto": "Meat sizzling on a hot flat griddle at a street taco stand, steady close sizzle, no music, no voices", "seg": 20, "loop": true},
-  "cuchillo": {"texto": "Knife chopping meat quickly on a wooden cutting board, several fast chops", "seg": 2.5},
-  "foco_zumbido": {"texto": "Faint electrical buzz of a single hanging light bulb, steady, quiet", "seg": 15, "loop": true},
-  "taxi_llega": {"texto": "Old car approaching slowly on a wet street, braking and stopping, engine idling then turned off", "seg": 6},
-  "puertas_auto": {"texto": "Three car doors opening and closing one after another", "seg": 3},
-  "perro_ladra": {"texto": "Medium street dog barking a few times, outdoors at night", "seg": 3},
-  "perro_grune": {"texto": "Dog growling low and whining, then backing away", "seg": 3},
-  "goteo": {"texto": "Water dripping steadily from wet clothes onto pavement, close", "seg": 10, "loop": true},
-  "apagon": {"texto": "Power outage: electrical hum suddenly cuts off with a soft click, then silence", "seg": 2},
-  "perilla_gas": {"texto": "Turning a gas stove knob off, flame goes out with a soft whoosh", "seg": 1.5},
-  "respiracion": {"texto": "Slow heavy breathing of something unseen in the dark, close, wet and raspy, creepy", "seg": 8},
-  "luz_vuelve": {"texto": "Electrical power coming back on, a click and a bulb buzzing back to life", "seg": 2},
-  "pasos": {"texto": "Slow footsteps of one person walking on a wet sidewalk at night", "seg": 6},
-  "cola_perro": {"texto": "Happy dog whimpering softly and tail thumping", "seg": 3},
-  "golpe_titulo": {"texto": "Deep cinematic impact boom for horror trailer, short", "seg": 2},
-  "whoosh": {"texto": "Short soft cinematic whoosh swoosh", "seg": 1},
-  "dron": {"texto": "Dark low horror drone, slowly rising tension, no melody", "seg": 22},
-  "latidos": {"texto": "Slow deep human heartbeat, close and muffled, steady", "seg": 10, "loop": true}
+  "calle_noche": {
+    "texto": "Quiet city street corner at 2 AM after rain, distant traffic hum, light dripping water, no music, no voices",
+    "seg": 22,
+    "loop": true
+  },
+  "comal": {
+    "texto": "Close-up of beef and chorizo frying on a street taco griddle: crackling fat, irregular pops and spatters, a metal spatula scraping now and then, warm and greasy, no steady hiss, no music, no voices",
+    "seg": 20,
+    "loop": true,
+    "influencia": 0.6
+  },
+  "cuchillo": {
+    "texto": "Knife chopping meat quickly on a wooden cutting board, several fast chops",
+    "seg": 2.5
+  },
+  "foco_zumbido": {
+    "texto": "Low 60 hertz electrical hum of an old light bulb, deep and soft, low frequency only, no hiss",
+    "seg": 15,
+    "loop": true,
+    "influencia": 0.6
+  },
+  "taxi_llega": {
+    "texto": "Old car approaching slowly on a wet street, braking and stopping, engine idling then turned off",
+    "seg": 6
+  },
+  "puertas_auto": {
+    "texto": "Three car doors opening and closing one after another",
+    "seg": 3
+  },
+  "perro_ladra": {
+    "texto": "Medium street dog barking a few times, outdoors at night",
+    "seg": 3
+  },
+  "perro_grune": {
+    "texto": "Dog growling low and whining, then backing away",
+    "seg": 3
+  },
+  "goteo": {
+    "texto": "Water dripping steadily from wet clothes onto pavement, close",
+    "seg": 10,
+    "loop": true
+  },
+  "apagon": {
+    "texto": "Power outage: electrical hum suddenly cuts off with a soft click, then silence",
+    "seg": 2
+  },
+  "perilla_gas": {
+    "texto": "Turning a gas stove knob off, flame goes out with a soft whoosh",
+    "seg": 1.5
+  },
+  "respiracion": {
+    "texto": "Slow heavy breathing of something unseen in the dark, close, wet and raspy, creepy",
+    "seg": 8
+  },
+  "luz_vuelve": {
+    "texto": "Electrical power coming back on, a click and a bulb buzzing back to life",
+    "seg": 2
+  },
+  "pasos": {
+    "texto": "Slow footsteps of one person walking on a wet sidewalk at night",
+    "seg": 6
+  },
+  "cola_perro": {
+    "texto": "Happy dog whimpering softly and tail thumping",
+    "seg": 3
+  },
+  "golpe_titulo": {
+    "texto": "Deep cinematic impact boom for horror trailer, short",
+    "seg": 2
+  },
+  "whoosh": {
+    "texto": "Short soft cinematic whoosh swoosh",
+    "seg": 1
+  },
+  "dron": {
+    "texto": "Dark low horror drone, slowly rising tension, no melody",
+    "seg": 22
+  },
+  "latidos": {
+    "texto": "Slow deep human heartbeat, close and muffled, steady",
+    "seg": 10,
+    "loop": true
+  }
 }
