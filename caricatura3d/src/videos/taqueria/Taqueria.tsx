@@ -318,7 +318,7 @@ class Mundo {
 }
 
 // ------------------------------------------------------------------ escena 3D
-const PORTADA: Plano = { w: 177, foco: 2.6, cInf: 8, ini: c([0.6, 1.0, 3.7], [0.4, 0.95, 1.2], 46), fin: c([0.6, 1.0, 3.7], [0.4, 0.95, 1.2], 46),
+const PORTADA: Plano = { w: 177, foco: 4.0, cInf: 8, ini: c([0.55, 1.3, 5.0], [0.55, 1.2, 1.3], 46), fin: c([0.55, 1.3, 5.0], [0.55, 1.2, 1.3], 46),
   hacer: ({ f, m }) => { m.ver("papa", PAPA_POS, { ...LUZ, boca: "amable", mirarY: -0.2 }); m.perro(PERRO_PAPA, { cabeza: 0.4, cola: 0.8 }); m.charco(1); void f; } };
 
 const Escena: React.FC<{ portada?: boolean }> = ({ portada }) => {
