@@ -452,8 +452,8 @@ export const FeriaPortada: React.FC = () => {
   return (
     <AbsoluteFill style={{ background: "#05080d" }}>
       <Lienzo3D portada />
-      <div style={{ position: "absolute", top: 0, width: "100%", height: 760, background: "linear-gradient(#05080dee 55%, #05080d00)" }} />
-      <div style={{ position: "absolute", top: 90, width: "100%", textAlign: "center" }}>
+      <div style={{ position: "absolute", top: 0, width: "100%", height: 1000, background: "linear-gradient(#05080dee 62%, #05080d00)" }} />
+      <div style={{ position: "absolute", top: 330, width: "100%", textAlign: "center" }}>
         {linea("NUNCA SUBAS A LA", "#ffffff", 104)}
         {linea("RUEDA DESPUÉS DE", "#ffffff", 104)}
         {linea("MEDIANOCHE", "#ffd23a", 150)}
