@@ -30,6 +30,7 @@ export type Aspecto = {
   mochila?: string; // color de los tirantes de una mochila que cruzan el pecho
   barba?: "candado" | "sombra"; // barba de candado o sombra de barba
   arrugas?: boolean; // líneas de expresión (personajes mayores)
+  sombrero?: string; // color de un sombrero de ala (copa alta con cinta)
   semilla: number; // para el temblor del trazo
 };
 
@@ -414,6 +415,13 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
     ctx.lineWidth = 4; ctx.strokeStyle = sombra(a.gorra, 0.4);
     ctx.beginPath(); ctx.moveTo(cx, cabezaY - r * 1.18); ctx.quadraticCurveTo(cx + g * r * 0.3, cabezaY - r * 0.8, cx + g * r * 0.2, cabezaY - r * 0.36); ctx.stroke();
     contorno(() => ctx.ellipse(cx + g * r * 0.35, cabezaY - r * 0.33, r * 0.9, r * 0.15, 0, 0, Math.PI * 2), sombra(a.gorra, 0.22), 6);
+  }
+  if (a.sombrero) {
+    // ala ancha y copa con cinta; tapa la parte alta del pelo
+    const ys = cabezaY - r * 0.55;
+    contorno(() => { ctx.moveTo(cx - r * 0.72, ys); ctx.lineTo(cx - r * 0.62, ys - r * 0.78); ctx.quadraticCurveTo(cx, ys - r * 0.95, cx + r * 0.62, ys - r * 0.78); ctx.lineTo(cx + r * 0.72, ys); ctx.closePath(); }, gradLado(cx - r * 0.7, cx + r * 0.7, a.sombrero, 0.35));
+    ctx.fillStyle = sombra(a.sombrero, 0.6); ctx.fillRect(cx - r * 0.7, ys - r * 0.2, r * 1.4, r * 0.16);
+    contorno(() => ctx.ellipse(cx + g * r * 0.1, ys, r * 1.42, r * 0.17, 0, 0, Math.PI * 2), sombra(a.sombrero, 0.15), 6);
   }
   // ---------------- cara (se corre hacia el lado del giro: 3/4) ----------------
   const fx = cx + g * r * 0.26;

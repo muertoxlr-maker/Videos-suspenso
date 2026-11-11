@@ -28,8 +28,8 @@ export const hablaGestos = (f: number, semilla: number, fuerza = 1): Partial<Pos
 
 /** temblor de miedo (cuerpo y brazos), `k` 0 … 1 */
 export const tiembla = (f: number, k = 1): Partial<Pose> => ({
-  cuerpoX: Math.sin(f * 2.3) * 0.012 * k,
-  cabezaX: Math.sin(f * 3.1 + 1) * 0.01 * k,
+  cuerpoX: Math.sin(f * 0.9) * 0.012 * k, // ≈ 4 Hz: tiembla sin vibrar cuadro a cuadro
+  cabezaX: Math.sin(f * 1.3 + 1) * 0.01 * k,
   hombros: 0.35 * k,
 });
 
