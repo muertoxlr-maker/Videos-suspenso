@@ -42,6 +42,15 @@ el estándar visual aprobado (§8) y las mejoras de §8.8 (luz cálida, utilerí
 | Pista ambigua | tu papá sin sombra… pero el perro que le ladra a todos le mueve la cola | La regla dice que no; el perro dice que sí es él (o que el perro también lo conoce de antes) |
 | Cierre | «¿Le sirves... o le cierras?» | Botones LE SIRVES · LE CIERRAS |
 
+## Sombras (importante para que se entienda el final)
+
+- **Todos tienen sombra bien visible** en el piso bajo el foco: tú, el tío, los tres taxistas, la mujer de blanco (lo
+  raro de ella es el agua, no la sombra) y el perro. La sombra se mueve con cada uno cuando caminan.
+- Se muestra a propósito antes del final: plano de los pies de los taxistas con sus sombras («Los tres tienen sombra»)
+  y la sombra de tus manos sobre el comal.
+- **Solo tu papá no tiene sombra**: mismo foco, misma toma de pies que los taxistas, y el piso vacío bajo él. Junto a
+  él, el perro sí tiene sombra, para que la diferencia se note.
+
 ## Personajes
 
 | Personaje | Aspecto | Notas |
