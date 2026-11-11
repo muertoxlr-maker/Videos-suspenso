@@ -6,6 +6,7 @@ import { PruebaPasillo, PRUEBA_CUADROS } from "./videos/prueba_pasillo/Prueba";
 import { TurnoDeLas3, TURNO_CUADROS } from "./videos/turno3/Turno";
 import { UltimoVagon, UltimoVagonPortada, VAGON_CUADROS } from "./videos/ultimo_vagon/Vagon";
 import { FERIA_CUADROS, Feria, FeriaPortada } from "./videos/feria/Feria";
+import { TAQUERIA_CUADROS, Taqueria, TaqueriaPortada } from "./videos/taqueria/Taqueria";
 import { HojaMovimiento, HojaPersonajes } from "./videos/hoja/HojaPersonajes";
 import { GASO_CUADROS, Gasolinera, GasolineraPortada } from "./videos/gasolinera/Gasolinera";
 
@@ -19,6 +20,8 @@ export const Raiz: React.FC = () => (
     <Composition id="Gasolinera" component={Gasolinera} durationInFrames={GASO_CUADROS} fps={30} width={1080} height={1920} />
     <Composition id="GasolineraPortada" component={GasolineraPortada} durationInFrames={GASO_CUADROS} fps={30} width={1080} height={1920} />
     <Composition id="Feria" component={Feria} durationInFrames={FERIA_CUADROS} fps={30} width={1080} height={1920} />
+    <Composition id="Taqueria" component={Taqueria} durationInFrames={TAQUERIA_CUADROS} fps={30} width={1080} height={1920} />
+    <Composition id="TaqueriaPortada" component={TaqueriaPortada} durationInFrames={TAQUERIA_CUADROS} fps={30} width={1080} height={1920} />
     <Composition id="FeriaPortada" component={FeriaPortada} durationInFrames={FERIA_CUADROS} fps={30} width={1080} height={1920} />
     <Composition id="HojaMovimiento" component={HojaMovimiento} durationInFrames={150} fps={30} width={1080} height={600} />
     <Composition id="HojaPersonajes" component={HojaPersonajes} durationInFrames={1} fps={30} width={1080} height={1080} />

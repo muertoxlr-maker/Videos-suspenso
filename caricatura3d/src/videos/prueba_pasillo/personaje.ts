@@ -17,7 +17,7 @@ export type Aspecto = {
   ropaInterior: string; // camisa / cuello que asoma
   pantalon: string;
   zapatos: string;
-  peinado: "revuelto" | "mono" | "rizado" | "trenza" | "recogido";
+  peinado: "revuelto" | "mono" | "rizado" | "trenza" | "recogido" | "largo"; // largo: pelo suelto hasta el pecho («Taquería»)
   lentes?: boolean;
   // ---- opcionales (añadidos para «El turno de las 3:00»; sin ellos el dibujo es el aprobado) ----
   bigote?: boolean;
@@ -31,6 +31,8 @@ export type Aspecto = {
   barba?: "candado" | "sombra"; // barba de candado o sombra de barba
   arrugas?: boolean; // líneas de expresión (personajes mayores)
   sombrero?: string; // color de un sombrero de ala (copa alta con cinta)
+  mandil?: string; // color de un mandil de taquero sobre la ropa («Taquería»)
+  mojado?: boolean; // pelo y ropa empapados: brillos y gotas pegadas («Taquería»)
   semilla: number; // para el temblor del trazo
 };
 
@@ -244,6 +246,23 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
       for (const t of [0.35, 0.58, 0.81]) { ctx.beginPath(); ctx.arc(cx, torsoTop + torsoH * t, 4, 0, 7); ctx.fill(); }
     }
   }
+  if (a.mojado && p.vista === "frente") {
+    // tela empapada: pliegues pegados con brillo frío y gotas en el borde de abajo
+    ctx.lineWidth = 4; ctx.strokeStyle = "rgba(200,220,255,0.5)";
+    for (const dx of [-0.22, -0.05, 0.14, 0.27]) { ctx.beginPath(); ctx.moveTo(cx + dx * D, torsoTop + torsoH * 0.2); ctx.quadraticCurveTo(cx + (dx + 0.04) * D, torsoTop + torsoH * 0.6, cx + dx * D, torsoBot - 6); ctx.stroke(); }
+    ctx.fillStyle = "rgba(190,215,255,0.8)";
+    for (const dx of [-0.28, -0.1, 0.08, 0.24]) { ctx.beginPath(); ctx.ellipse(cx + dx * D, torsoBot + 8, 4, 7, 0, 0, 7); ctx.fill(); }
+  }
+  if (a.mandil && p.vista === "frente") {
+    // mandil: peto con tirantes al cuello y falda hasta abajo del torso, con bolsa al frente
+    const mt = torsoTop + torsoH * 0.22, mw = anchoHombro * 0.62;
+    for (const s2 of [-1, 1]) linea([[cx + s2 * mw * 0.45, mt], [cx + s2 * D * 0.16, torsoTop - 2]], a.mandil, 5);
+    contorno(() => { ctx.moveTo(cx - mw / 2, mt); ctx.lineTo(cx + mw / 2, mt); ctx.lineTo(cx + anchoBajo * 0.44, torsoBot + 2); ctx.lineTo(cx - anchoBajo * 0.44, torsoBot + 2); ctx.closePath(); }, gradLado(cx - mw, cx + mw, a.mandil, 0.22), 6);
+    ctx.lineWidth = 4; ctx.strokeStyle = sombra(a.mandil, 0.35);
+    ctx.strokeRect(cx - D * 0.17, torsoTop + torsoH * 0.62, D * 0.34, torsoH * 0.2);
+    ctx.fillStyle = "rgba(120,60,30,0.25)"; // manchas de salsa
+    for (const [dx, dy, rr] of [[-0.12, 0.45, 7], [0.1, 0.52, 5], [0.04, 0.88, 6]]) { ctx.beginPath(); ctx.arc(cx + dx * D, torsoTop + torsoH * dy, rr, 0, 7); ctx.fill(); }
+  }
   if (a.mochila) {
     // tirantes que bajan de los hombros (de frente) o la mochila entera (de espaldas)
     if (p.vista === "frente") {
@@ -308,6 +327,23 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
       contorno(() => ctx.ellipse(tx, ty, r * 0.16 - i * 2, r * 0.17, 0.3 * (i % 2 ? 1 : -1), 0, Math.PI * 2), gradLado(tx - r * 0.2, tx + r * 0.2, a.pelo, 0.35), 6);
     }
   }
+  if (a.peinado === "largo" && p.vista === "frente") {
+    // pelo suelto que cae a los lados de la cara hasta el pecho
+    for (const s2 of [-1, 1]) {
+      const x0 = cx + s2 * r * 0.95;
+      const gl = gradLado(x0 - r * 0.3, x0 + r * 0.3, a.pelo, 0.35);
+      contorno(() => {
+        ctx.moveTo(x0 - s2 * r * 0.1, cabezaY - r * 0.7);
+        ctx.quadraticCurveTo(x0 + s2 * r * 0.42, cabezaY + r * 0.4, x0 + s2 * r * 0.3, torsoTop + torsoH * 0.62);
+        ctx.lineTo(x0 + s2 * r * 0.12, torsoTop + torsoH * 0.55); ctx.lineTo(x0 - s2 * r * 0.02, torsoTop + torsoH * 0.66);
+        ctx.quadraticCurveTo(x0 - s2 * r * 0.12, cabezaY + r * 0.6, x0 - s2 * r * 0.2, cabezaY);
+        ctx.closePath();
+      }, gl, 6);
+      ctx.lineWidth = 3; ctx.strokeStyle = sombra(a.pelo, 0.5);
+      ctx.beginPath(); ctx.moveTo(x0 + s2 * r * 0.05, cabezaY - r * 0.2); ctx.quadraticCurveTo(x0 + s2 * r * 0.25, cabezaY + r * 0.6, x0 + s2 * r * 0.12, torsoTop + torsoH * 0.5); ctx.stroke();
+      if (a.mojado) { ctx.strokeStyle = "rgba(220,235,255,0.45)"; ctx.beginPath(); ctx.moveTo(x0 + s2 * r * 0.18, cabezaY); ctx.quadraticCurveTo(x0 + s2 * r * 0.3, cabezaY + r * 0.5, x0 + s2 * r * 0.2, torsoTop + torsoH * 0.3); ctx.stroke(); }
+    }
+  }
   // orejas
   for (const s of [-1, 1]) {
     if (p.vista === "frente" && Math.sign(g) === s && Math.abs(g) > 0.35) continue;
@@ -325,6 +361,19 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
     ctx.globalAlpha = 0.38; ctx.fillStyle = gb; ctx.fillRect(cx - r * 1.1, cabezaY - r * 1.1, r * 2.2, r * 2.2); ctx.globalAlpha = 1; ctx.restore();
   }
 
+  if (p.vista === "espalda" && a.peinado === "largo") {
+    // pelo largo suelto que cae por la espalda hasta media espalda
+    const gl = ctx.createLinearGradient(cx - r, 0, cx + r, 0);
+    gl.addColorStop(0, sombra(a.pelo, 0.1)); gl.addColorStop(0.5, luz(a.pelo, 0.08)); gl.addColorStop(1, sombra(a.pelo, 0.2));
+    contorno(() => {
+      ctx.moveTo(cx - r * 1.02, cabezaY);
+      ctx.lineTo(cx - r * 1.1, torsoTop + torsoH * 0.62);
+      for (let i = 0; i <= 8; i++) ctx.lineTo(cx - r * 1.1 + (r * 2.2 * i) / 8, torsoTop + torsoH * (0.66 + (i % 2 ? 0.06 : 0)));
+      ctx.lineTo(cx + r * 1.02, cabezaY); ctx.closePath();
+    }, gl);
+    ctx.lineWidth = 3; ctx.strokeStyle = a.mojado ? "rgba(200,220,255,0.4)" : sombra(a.pelo, 0.45);
+    for (const dx of [-0.6, -0.2, 0.25, 0.6]) { ctx.beginPath(); ctx.moveTo(cx + dx * r, cabezaY + r * 0.5); ctx.lineTo(cx + dx * r * 1.05, torsoTop + torsoH * 0.6); ctx.stroke(); }
+  }
   if (p.vista === "espalda") {
     // nuca: el pelo cubre casi toda la cabeza (también los lados); solo asoma una franja de piel junto al cuello
     const gp = ctx.createLinearGradient(cx - r, cabezaY - r, cx + r, cabezaY + r);
@@ -386,7 +435,7 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
       contorno(() => ctx.arc(bx, by, r * 0.13, 0, Math.PI * 2), luz(a.pelo, 0.06), 5);
     }
   }
-  if (a.peinado === "trenza" || a.peinado === "recogido") {
+  if (a.peinado === "trenza" || a.peinado === "recogido" || a.peinado === "largo") {
     // raya al medio
     ctx.lineWidth = 4; ctx.strokeStyle = sombra(a.pelo, 0.5);
     ctx.beginPath(); ctx.moveTo(px, cabezaY - r * 1.0); ctx.quadraticCurveTo(px + 4, cabezaY - r * 0.8, px - 2, cabezaY - r * 0.62); ctx.stroke();
