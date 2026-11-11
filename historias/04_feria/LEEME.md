@@ -16,3 +16,4 @@
 - v2: canastillas abiertas (sin tapa blanca, que hacía ver a los pasajeros «metidos en algo») y efectos nuevos.
 - Revisión §8.6c: nadie atraviesa paredes ni objetos; `revisar_parpadeo.py` solo marca movimiento buscado
   (focos en cadena, rayos de la rueda girando, temblor y lágrimas).
+- `portada.jpg` — portada para TikTok (composición `FeriaPortada`): Sofi llorando y la niña de blanco en la siete.

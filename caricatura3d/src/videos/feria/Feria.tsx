@@ -305,11 +305,11 @@ class Mundo {
 }
 
 // ------------------------------------------------------------------ escena 3D
-const PORTADA: Plano = { w: 181, foco: 2.3, cInf: 8, ini: c([0.05, 1.75, 2.9], [0.0, 2.0, 0], 46), fin: c([0.05, 1.75, 2.9], [0.0, 2.0, 0], 46), hacer: () => {} };
+const PORTADA: Plano = { w: 181, foco: 3.0, cInf: 8, sigue: 7, ini: c([0.0, -0.3, 3.0], [0.0, -0.5, 0], 44), fin: c([0.0, -0.3, 3.0], [0.0, -0.5, 0], 44), hacer: () => {} };
 
 const Escena: React.FC<{ portada?: boolean }> = ({ portada }) => {
   const f0 = useCurrentFrame();
-  const f = portada ? fw(181) + 10 : f0;
+  const f = portada ? fw(181) + 2 : f0;
   const { camera, scene, gl, size } = useThree();
   const cam = camera as THREE.PerspectiveCamera;
   const mundo = useMemo(() => new Mundo(), []);
