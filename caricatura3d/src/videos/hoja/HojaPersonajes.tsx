@@ -1,6 +1,7 @@
 // Hoja de personajes para revisar el acabado sin render 3D: arriba como estaban, abajo con las mejoras.
 import React, { useEffect, useRef } from "react";
-import { AbsoluteFill } from "remotion";
+import { AbsoluteFill, useCurrentFrame } from "remotion";
+import { hablaGestos, tiembla } from "../comun/movimiento";
 import { Aspecto, LIENZO_H, LIENZO_W, Pose, dibujarPersonaje } from "../prueba_pasillo/personaje";
 import { POSE } from "../turno3/comun";
 
@@ -33,6 +34,26 @@ const Carta: React.FC<{ a: Aspecto; p: Pose }> = ({ a, p }) => {
   const ref = useRef<HTMLCanvasElement>(null);
   useEffect(() => { const c = ref.current!.getContext("2d")!; dibujarPersonaje(c, a, p); }, [a, p]);
   return <canvas ref={ref} width={LIENZO_W} height={LIENZO_H} style={{ width: 250, height: 417 }} />;
+};
+
+/** video corto: a la izquierda hablando como antes (solo la boca), a la derecha con gestos y temblor */
+export const HojaMovimiento: React.FC = () => {
+  const f = useCurrentFrame();
+  const boca = Math.abs(Math.sin(f * 0.55)) * 0.9;
+  const pA: Pose = { ...posesA[1], boca: "abierta", bocaAbre: boca };
+  const pB: Pose = { ...posesB[1], boca: "abierta", bocaAbre: boca, ...hablaGestos(f, 2) };
+  const pC: Pose = { ...posesA[0], cejasMiedo: 1 };
+  const pD: Pose = { ...posesB[0], ...tiembla(f, 1) };
+  return (
+    <AbsoluteFill style={{ background: "radial-gradient(circle at 50% 40%, #2a2420, #0b0d12)", flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 10 }}>
+      {[[base[1], pA, "ANTES"], [mejor[1], pB, "DESPUÉS"], [base[0], pC, "ANTES"], [mejor[0], pD, "DESPUÉS"]].map(([a, p, t], i) => (
+        <div key={i} style={{ textAlign: "center" }}>
+          <div style={{ color: i % 2 ? "#ffd23a" : "#fff", fontFamily: "sans-serif", fontWeight: 900, fontSize: 34 }}>{t as string}</div>
+          <Carta a={a as Aspecto} p={p as Pose} />
+        </div>
+      ))}
+    </AbsoluteFill>
+  );
 };
 
 export const HojaPersonajes: React.FC = () => (

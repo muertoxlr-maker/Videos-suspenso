@@ -321,7 +321,7 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
     ctx.save(); ctx.beginPath(); ctx.ellipse(cx, cabezaY, r * 0.99, r * 0.97, 0, 0, Math.PI * 2); ctx.clip();
     const gb = ctx.createRadialGradient(cx - L * r * 0.22, cabezaY + r * 0.05, r * 0.9, cx - L * r * 0.22, cabezaY + r * 0.05, r * 1.25);
     gb.addColorStop(0, "rgba(0,0,0,0)"); gb.addColorStop(0.25, p.borde); gb.addColorStop(1, p.borde);
-    ctx.globalAlpha = 0.5; ctx.fillStyle = gb; ctx.fillRect(cx - r * 1.1, cabezaY - r * 1.1, r * 2.2, r * 2.2); ctx.globalAlpha = 1; ctx.restore();
+    ctx.globalAlpha = 0.38; ctx.fillStyle = gb; ctx.fillRect(cx - r * 1.1, cabezaY - r * 1.1, r * 2.2, r * 2.2); ctx.globalAlpha = 1; ctx.restore();
   }
 
   if (p.vista === "espalda") {

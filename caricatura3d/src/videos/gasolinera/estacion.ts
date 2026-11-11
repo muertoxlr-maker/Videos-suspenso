@@ -5,6 +5,7 @@
 import * as THREE from "three";
 import { NOINK } from "../alejandro/ink";
 import { caja, lambert, lienzo, resplandor, texTexto } from "../turno3/comun";
+import { cartel as cartelPapel, casa, espectacular, exhibidor, llantas as pilaLlantas } from "../comun/utileria";
 
 export const TIENDA = { x0: -4.5, x1: 4.5, z0: -7, alto: 3.2 };
 export const VENTANILLA = { x: -1.5, y: 1.35 }; // centro del vidrio de la ventanilla (en la fachada, z = 0)
@@ -316,6 +317,21 @@ export function crearGasolinera() {
   const luzLuna = new THREE.DirectionalLight("#8aa2c4", 1.1); luzLuna.position.set(-20, 30, -30); raiz.add(luzLuna);
   const luzExtra = new THREE.PointLight("#eef4ff", 0, 10, 1.4); raiz.add(luzExtra);
 
+  // ---- utilería de fondo (más vida, como en las referencias) ----
+  // carteles pegados por dentro del vidrio de la tienda, mirando hacia afuera
+  const c1 = cartelPapel(["CAFÉ", "CALIENTE $15"], "#f2c94c", "#5a2a14", 0.75, 0.55, 0.25); c1.position.set(-3.55, 1.95, -0.03); raiz.add(c1);
+  const c2 = cartelPapel(["HIELO", "5 kg · $30"], "#2f7bbf", "#ffffff", 0.6, 0.45, 0.25); c2.position.set(-2.55, 1.45, -0.03); raiz.add(c2);
+  const c3 = cartelPapel(["PROMO", "2 x 1"], "#c8263a", "#ffffff", 0.55, 0.45, 0.25); c3.position.set(0.9, 2.15, -0.03); raiz.add(c3);
+  const c4 = cartelPapel(["PROHIBIDO", "FUMAR"], "#f4f1e8", "#c8263a", 0.5, 0.36, 0.15); c4.position.set(-3.6, 2.6, 4.0 - 0.21); c4.rotation.y = Math.PI; raiz.add(c4);
+  // exhibidor de aceites junto a la puerta y llantas viejas al lado de la tienda
+  const ex = exhibidor(0.8, 3); ex.position.set(1.2, 0.15, 0.62); raiz.add(ex);
+  const ll = pilaLlantas(4); ll.position.set(-5.2, 0, 1.0); raiz.add(ll);
+  const ll2 = pilaLlantas(3); ll2.position.set(-5.0, 0, 1.8); raiz.add(ll2);
+  // casas lejanas con ventanas encendidas y un espectacular iluminado al otro lado de la carretera
+  for (const [x, z, ry, v] of [[-22, -27, 0.35, [true, false, true]], [26, -31, -0.3, [false, true]], [-34, 34, Math.PI - 0.2, [true, true, false]]] as [number, number, number, boolean[]][]) {
+    const k = casa(5, 3, 4, v); k.position.set(x, 0, z); k.rotation.y = ry; raiz.add(k);
+  }
+  const esp = espectacular(["MOTEL EL DESCANSO", "3 km · TV · BAÑO"], "#1d3557", "#ffd23a"); esp.position.set(16, 0, 24); esp.rotation.y = Math.PI; raiz.add(esp);
   // farola de sodio junto a la carretera: charco de luz naranja contra la noche azul (contraste cálido/frío de las referencias)
   const farola = new THREE.Group(); farola.position.set(-6.5, 0, 12.6); raiz.add(farola);
   farola.add(caja(0.14, 5.2, 0.14, lambert({ color: "#4a4c50" }), 0, 2.6, 0), caja(1.3, 0.1, 0.1, lambert({ color: "#4a4c50" }), 0.6, 5.15, 0));

@@ -361,6 +361,25 @@ El usuario encontró tres errores en el video ya entregado. Para que no se repit
   3. Con el video terminado: `python3 herramientas/revisar_parpadeo.py video.mp4` y mirar el mapa de los segundos
      más sospechosos antes de mandarlo.
 
+### 8.8 Mejoras aprobadas después de «Gasolinera» (comparación con las 6 referencias) ✅
+Medido en 40 cuadros por video (OpenCV): las referencias tienen **10–50 % de la imagen en color cálido** (lámparas,
+focos, letreros); «Gasolinera» tenía 4 %. El usuario aprobó estas mejoras para **todos los videos siguientes**
+(pruebas en `historias/03_gasolinera/pruebas/`):
+- **Luz**: lámparas cálidas (`#ffd29a`, `#ffdcaa`) con `destello()` (halo que mira a la cámara) en cada foco; una
+  fuente naranja de sodio (`#ffa857`) contra la noche azul; bloom 1.0 / umbral 0.62; contraste 0.16; niebla más
+  oscura. Meta: cálido ≥ 15 %, saturación 0.40–0.50.
+- **Personajes** (opcionales en `personaje.ts`): `prenda` (chamarra/uniforme/camisa), `mochila`, `barba`, `arrugas`;
+  en la pose `borde` (luz de borde del color de la lámpara más cercana: naranja foco, azul luna/celular),
+  `lagrimas`, bocas `grito` y `triste`. Usar `borde` en casi todos los planos de noche. Revisar en `HojaPersonajes`.
+- **Fondos** (`src/videos/comun/utileria.ts`): `cartel`, `casa` con ventanas encendidas, `espectacular`,
+  `exhibidor`, `llantas`. Cada escenario lleva carteles y objetos de colores, ventanas o anuncios encendidos al fondo
+  y, si la historia lo permite, gente o carros. Planear **planos medios y generales** donde se vea el lugar (las
+  referencias casi nunca llenan el cuadro con una cara detrás de un vidrio).
+- **Movimiento** (`src/videos/comun/movimiento.ts`): `hablaGestos` en todo personaje que habla, `tiembla` cuando tiene
+  miedo, `empuje` para acercamientos rápidos al inicio del plano (meta: cámara en movimiento ≈ 55 % de los cuadros).
+- Cuidado: con más contraste, una figura oscura (la sombra) se pierde si detrás no hay algo claro; ponerle detrás
+  una luz, un anuncio o el cielo.
+
 ### 8.7 Pendientes conocidos de esta versión
 - La sombra alargada casi no se nota sobre alfombras oscuras.
 - El escenario tiene menos objetos y gente al fondo que las referencias.
