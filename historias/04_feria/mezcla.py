@@ -140,7 +140,8 @@ dron_f = tramo(sfx("dron"), t(172), t(194) + 1.0, 4.0, 0.8)
 poner(golpe("golpe_titulo", -6), t(194) - 0.07)
 latidos = tramo(sfx("latidos"), t(188), DUR, 1.0, 0.6)
 
-fondo_crudo = (gente * db(0) + noche * db(-8) + rueda1 * db(-7) + rueda2 * db(-3)
+GENTE_DB = -9  # el usuario pidió bajar la gente (antes 0)
+fondo_crudo = (gente * db(GENTE_DB) + noche * db(-8) + rueda1 * db(-7) + rueda2 * db(-3)
                + dron_f * db(-5) + latidos * db(-2) + pista * db(-14))
 
 # ------------------------------------------------------------------ voz y mezcla
@@ -149,8 +150,11 @@ vz = np.zeros(N); vz[: min(N, len(voz))] = voz[:N]
 envv = np.convolve(np.abs(vz), np.ones(int(0.12 * SR)) / int(0.12 * SR), mode="same")
 duck = 1 - 0.75 * np.clip(envv / (np.percentile(envv[envv > 1e-4], 60) + 1e-9), 0, 1)
 fondo = pasa(fondo_crudo, 100, None) * duck
-hab0 = envv > np.percentile(envv, 70)  # el fondo queda 13 dB bajo la voz al hablar (guía §5)
-fondo *= db(-13) / (np.sqrt(np.mean(fondo[hab0] ** 2)) / np.sqrt(np.mean(vz[hab0] ** 2)))
+# nivel: el fondo CON la gente a 0 dB quedaría 13 dB bajo la voz (guía §5); con la gente más baja, todo lo demás
+# se queda igual y solo la gente baja
+hab0 = envv > np.percentile(envv, 70)
+ref = pasa(fondo_crudo + gente * (1 - db(GENTE_DB)), 100, None) * duck
+fondo *= db(-13) / (np.sqrt(np.mean(ref[hab0] ** 2)) / np.sqrt(np.mean(vz[hab0] ** 2)))
 mezcla = vz * 1.0 + fondo
 mezcla /= max(1.0, np.max(np.abs(mezcla)) / 0.95)
 salida = AQUI / "audio"
