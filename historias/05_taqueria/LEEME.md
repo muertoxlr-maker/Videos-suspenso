@@ -22,3 +22,4 @@
 - v3: la sombra del perro salía **al revés** (cuando caía hacia la cámara, la cabeza quedaba del lado de la cola).
   `comun/sombra.ts` ahora la voltea para que conserve la izquierda/derecha del dibujo. Render completo de nuevo,
   2172 cuadros; `revisar_parpadeo.py` solo marca al perro moviéndose.
+- v4: se quitó el sonido del comal por completo (pedido del usuario). Audio −14.0 LUFS, pico −2.3 dBFS.

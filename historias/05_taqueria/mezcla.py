@@ -2,7 +2,7 @@
 
 Guía §5: voz al frente; fondo continuo; nada por debajo de 100 Hz; fondo ≈ −13 dB bajo la voz al hablar; −14 LUFS.
 Efectos: grabados con ElevenLabs (herramientas/sfx_elevenlabs.py, pedidos en sfx/pedidos.json), no sintetizados.
-Detalles de la historia: sin música. La calle de noche y el comal chisporroteando todo el tiempo; el zumbido del foco
+Detalles de la historia: sin música. La calle de noche (el chisporroteo del comal se quitó a pedido del usuario); el zumbido del foco
 se corta en el apagón (los mismos cuadros que el video) y en lo oscuro solo se oye algo que respira; al volver la luz
 el comal ya está apagado.
 """
@@ -118,7 +118,7 @@ corte = 1 - rampa(0, 1, apagon[0] - 0.01, apagon[0] + 0.02)
 
 calle = tramo(sfx("calle_noche"), 0, DUR, 1.0, 1.0)
 # el chisporroteo parejo y agudo sonaba a «fuga de gas» (usuario): se graba de nuevo, se le quitan agudos y va bajito
-comal = pasa(tramo(sfx("comal"), 0, comal_off + 0.3, 0.8, 0.3), 250, 4000)
+# sin chisporroteo del comal: aun filtrado y bajito el usuario lo prefirió quitar (sonaba a fuga de gas)
 foco = tramo(sfx("foco_zumbido"), 0, DUR, 0.5, 0.5) * (1 - (rampa(0, 1, apagon[0] - 0.01, apagon[0] + 0.02) - rampa(0, 1, apagon[1], apagon[1] + 0.05)))
 # en el apagón la calle se oye más lejos (todo se calla)
 calle *= 1 - 0.6 * (rampa(0, 1, apagon[0], apagon[0] + 0.3) - rampa(0, 1, apagon[1], apagon[1] + 0.5))
@@ -153,7 +153,7 @@ dron_f = tramo(sfx("dron"), fw(177), DUR, 4.0, 0.8)
 poner(golpe("golpe_titulo", -6), t(200) - 0.07)
 latidos = tramo(sfx("latidos"), fw(185), DUR, 1.0, 0.6)
 
-fondo_crudo = (calle * db(-2) + comal * db(-15) + foco * db(-16) + goteo * db(-8) + dron_f * db(-5) + latidos * db(-3)
+fondo_crudo = (calle * db(-2) + foco * db(-16) + goteo * db(-8) + dron_f * db(-5) + latidos * db(-3)
                + pista * db(-14))
 
 # ------------------------------------------------------------------ voz y mezcla
