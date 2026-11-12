@@ -29,3 +29,4 @@
   tapaba entera). Ahora `personaje.ts` dibuja la silla en la tarjeta (`pose.silla`: respaldo que asoma a los lados,
   asiento bajo la cadera, patas) y `Velorio.tsx` esconde la silla 3D de ese lugar. Render completo de nuevo: 2319
   cuadros, −14.1 LUFS, pico −2.2 dBFS; `revisar_parpadeo.py` sin parpadeos en las sillas.
+- `portada.jpg` — portada para TikTok (composición `VelorioPortada`): tú sentado y sudando; detrás, la figura del sombrero sentada en el ataúd entre las velas; título a 300 px en una línea por renglón.

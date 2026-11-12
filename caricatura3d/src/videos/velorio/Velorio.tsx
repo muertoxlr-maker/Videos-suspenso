@@ -265,7 +265,7 @@ class Mundo {
 }
 
 // ------------------------------------------------------------------ escena 3D
-const PORTADA: Plano = { w: 194, foco: 3.2, cInf: 7, ini: c([3.28, 1.45, 2.3], [1.0, 1.15, -1.3], 50), fin: c([3.28, 1.45, 2.3], [1.0, 1.15, -1.3], 50),
+const PORTADA: Plano = { w: 194, foco: 3.2, cInf: 7, ini: c([3.28, 1.5, 2.3], [1.0, 1.6, -1.3], 50), fin: c([3.28, 1.5, 2.3], [1.0, 1.6, -1.3], 50),
   hacer: ({ f, m }) => { m.ver("tu", TU_POS, { ...VELA, sentado: 1, mirarX: 0.5, ojos: 1.15, pupila: 0.18, cejasMiedo: 1, boca: "linea", hombros: 0.8, sudor: 1 }); m.rebozoDejado(); m.muerto(f); } };
 
 const Escena: React.FC<{ portada?: boolean }> = ({ portada }) => {
@@ -415,11 +415,11 @@ export const VelorioPortada: React.FC = () => {
   return (
     <AbsoluteFill style={{ background: "#0a0806" }}>
       <Lienzo3D portada />
-      <div style={{ position: "absolute", top: 0, width: "100%", height: 1000, background: "linear-gradient(#0a0806ee 62%, #0a080600)" }} />
-      <div style={{ position: "absolute", top: 330, width: "100%", textAlign: "center" }}>
-        {linea("SI TE LLAMAN POR", "#ffffff", 104)}
-        {linea("TU NOMBRE COMPLETO,", "#ffffff", 92)}
-        {linea("NO RESPONDAS", "#ffd23a", 150)}
+      <div style={{ position: "absolute", top: 0, width: "100%", height: 760, background: "linear-gradient(#0a0806ee 55%, #0a080600)" }} />
+      <div style={{ position: "absolute", top: 300, width: "100%", textAlign: "center" }}>
+        {linea("SI TE LLAMAN POR", "#ffffff", 96)}
+        {linea("TU NOMBRE COMPLETO,", "#ffffff", 80)}
+        {linea("NO RESPONDAS", "#ffd23a", 118)}
       </div>
     </AbsoluteFill>
   );
