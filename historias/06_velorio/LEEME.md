@@ -19,3 +19,9 @@
   que no se peleen con las paredes.
 - `revisar_parpadeo.py` en clips de prueba (0–90, 1180–1270, 2170–2260): solo movimiento buscado (cámara, temblor
   de la tapa, ojos temblando, la figura levantándose).
+
+## Video final
+- Render completo: 2319 cuadros, 1080×1920, 77.3 s (`caricatura3d/salida/velorio/velorio.mp4`, no se sube a git).
+- Audio: −14.1 LUFS, pico −2.2 dBFS.
+- `revisar_parpadeo.py` en el video completo: los segundos marcados son movimiento buscado (cámara que avanza,
+  ojos y sudor temblando, flamas de las velas, la tapa y la figura al final). Sin parpadeos de superficies.
