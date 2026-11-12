@@ -13,7 +13,7 @@ import {
 } from "postprocessing";
 import { InkPass, NOINK } from "../alejandro/ink";
 import { LensBlur } from "../alejandro/lensblur";
-import { Aspecto, Pose } from "../prueba_pasillo/personaje";
+import { Aspecto, LIENZO_H, Pose } from "../prueba_pasillo/personaje";
 import { POSE, Tarjeta, lerp, parpadea, ruido, suave } from "../turno3/comun";
 import { empuje, hablaGestos, tiembla } from "../comun/movimiento";
 import { ATAUD, PUERTA_COCINA, VELAS, crearVelorio } from "./velorio";
@@ -50,7 +50,7 @@ const habla = (f: number, desde: number, hasta: number) => (f >= fw(desde) - 1 &
 const reza = (f: number, s: number) => 0.2 + 0.25 * Math.abs(Math.sin(f * 0.6 + s)); // labios que se mueven bajito
 
 // asientos: la tarjeta va 2 cm delante de la orilla del asiento (pies en el piso, cadera sobre la silla)
-const ASIENTO = (x: number, zSilla: number, haciaMas: boolean): V3 => [x, 0, zSilla + (haciaMas ? 0.22 : -0.22)];
+const ASIENTO = (x: number, zSilla: number, haciaMas: boolean): V3 => [x, 0, zSilla + (haciaMas ? 0.22 : -0.22)]; // la silla 3D se esconde y se dibuja en la tarjeta
 const TU_POS = ASIENTO(2.05, -1.0, true);
 const ABUELA_POS = ASIENTO(2.6, -1.0, true);
 const ABUELA_PUERTA_POS: V3 = [PUERTA_COCINA.x, 0, PUERTA_COCINA.z - 0.35];
@@ -190,6 +190,7 @@ class Mundo {
   reiniciar(cam: THREE.Camera) {
     this.camPos.copy(cam.position);
     for (const c of Object.values(this.cartas)) c.grupo.visible = false;
+    for (const s of [...this.h.sillas, this.h.sillaTu, this.h.sillaAbuela]) s.visible = true;
     this.h.luzExtra.intensity = 0;
     this.h.cerillo.visible = false;
     this.h.rebozoSilla.visible = false; this.h.rebozoCuelga.visible = false;
@@ -200,7 +201,12 @@ class Mundo {
     c.grupo.visible = true; c.grupo.position.set(...pos);
     c.grupo.rotation.y = Math.atan2(this.camPos.x - pos[0], this.camPos.z - pos[2]);
     const espalda = (this.camPos.z - pos[2]) * MIRA[quien] < 0; // la cámara está detrás de quien mira hacia ±z
-    c.dibujar({ ...POSE, parpadeo: parpadea(this.f, quien.length * 7 + pos[0] * 3), ...pose, ...(espalda ? { vista: "espalda" as const } : {}) });
+    let silla: Pose["silla"];
+    if (pose.sentado) { // la silla se dibuja en la tarjeta y se esconde la de 3D (si no, la persona la tapa entera)
+      const s3 = [...this.h.sillas, this.h.sillaTu, this.h.sillaAbuela].find((s) => Math.abs(s.position.x - pos[0]) < 0.1 && Math.abs(s.position.z - pos[2]) < 0.3);
+      if (s3) { s3.visible = false; silla = { color: "#" + ((s3.children[0] as THREE.Mesh).material as THREE.MeshLambertMaterial).color.getHexString(), k: LIENZO_H / CARTAS[quien][1] }; }
+    }
+    c.dibujar({ ...POSE, parpadeo: parpadea(this.f, quien.length * 7 + pos[0] * 3), ...pose, ...(silla ? { silla } : {}), ...(espalda ? { vista: "espalda" as const } : {}) });
   }
   invitados(f: number, rezando: boolean, pose?: Partial<Pose>, duermen = false) {
     INVITADOS.forEach(([q, p], i) => {

@@ -66,6 +66,7 @@ export type Pose = {
   hombros?: number; // 0 … 1: hombros encogidos (la cabeza se hunde entre ellos)
   agacha?: number; // 0 … 1: flexiona las rodillas (baja la cadera)
   sentado?: number; // 0 … 1: sentado en una silla, visto de frente (la cadera baja; muslo corto hacia la cámara y espinilla vertical) («Velorio»)
+  silla?: { color: string; k: number }; // con `sentado`: dibuja la silla en la tarjeta (k = píxeles por metro); se ve el respaldo a los lados y el asiento bajo la cadera
 };
 
 const TINTA = "#141012";
@@ -133,6 +134,24 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
     g.addColorStop(1, L < 0 ? osc : claro);
     return g;
   };
+
+  // ---------------- silla (si va sentado): más ancha que el torso para que asome a los lados ----------------
+  const si = sen > 0 && p.silla ? p.silla : null;
+  const sillaRespaldo = () => {
+    if (!si) return;
+    const k = si.k, hw = 0.33 * k, topY = torsoTop + D * 0.02;
+    for (const s of [-1, 1]) contorno(() => ctx.rect(cxPies + s * (hw - 0.03 * k) - 0.018 * k, topY + 0.05 * k, 0.036 * k, PIES - 6 - topY - 0.05 * k), sombra(si.color, 0.3), 6);
+    contorno(() => ctx.roundRect(cxPies - hw, topY, hw * 2, 0.2 * k, 0.04 * k), gradLado(cxPies - hw, cxPies + hw, si.color, 0.3), 7);
+  };
+  const sillaAsiento = () => {
+    if (!si) return;
+    const k = si.k, hw = 0.35 * k, y = torsoBot - 14;
+    for (const s of [-1, 1]) contorno(() => ctx.rect(cxPies + s * (hw - 0.04 * k) - 0.018 * k, y, 0.036 * k, PIES - 2 - y), sombra(si.color, 0.2), 6);
+    contorno(() => ctx.rect(cxPies - hw, y, hw * 2, 0.05 * k), luz(si.color, 0.1), 7); // tabla del asiento
+    contorno(() => ctx.rect(cxPies - hw, y + 0.05 * k, hw * 2, 0.03 * k), sombra(si.color, 0.35), 6); // canto
+  };
+  if (p.vista !== "espalda") sillaRespaldo();
+  sillaAsiento();
 
   // ---------------- piernas (línea fina) y pies diminutos ----------------
   const cxCadera = cx + (p.cuerpoX ?? 0) * D;
@@ -337,6 +356,8 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
     g.addColorStop(0, luz(a.piel, 0.08)); g.addColorStop(1, sombra(a.piel, 0.28));
     contorno(() => ctx.arc(mx, my, 15, 0, Math.PI * 2), g, 6);
   }
+
+  if (p.vista === "espalda") sillaRespaldo(); // de espaldas, el respaldo queda entre la cámara y la persona
 
   // ---------------- cabeza ----------------
   cx += (p.cabezaX ?? 0) * D;
