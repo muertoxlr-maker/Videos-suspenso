@@ -1,0 +1,14 @@
+{
+  "golpe_titulo": {"texto": "Deep cinematic impact boom for horror trailer, short", "seg": 2},
+  "whoosh": {"texto": "Short soft cinematic whoosh swoosh", "seg": 1},
+  "dron": {"texto": "Dark low horror drone, slowly rising tension, no melody", "seg": 22},
+  "latidos": {"texto": "Slow deep human heartbeat, close and muffled, steady", "seg": 10, "loop": true},
+  "camion_pasa": {"texto": "Old school bus driving past on a small town road, diesel engine rumble passing by, short", "seg": 3},
+  "puerta_neumatica": {"texto": "School bus folding door opening with a short pneumatic air hiss and a metal clunk", "seg": 2},
+  "papel": {"texto": "Folded paper being handed over and unfolded, crisp short rustle", "seg": 1.5},
+  "lluvia_empieza": {"texto": "First heavy raindrops starting to hit a metal bus roof and windshield, short burst", "seg": 3},
+  "limpias": {"texto": "Windshield wiper rubber squeak on wet glass, two slow swipes", "seg": 2.5},
+  "freno_aire": {"texto": "Big bus air brakes hiss as it stops", "seg": 2},
+  "vaho": {"texto": "Faint eerie cold breath fogging glass, soft airy hiss, quiet", "seg": 2},
+  "luz_parpadea": {"texto": "Fluorescent bus ceiling light flickering with an electric buzz, short", "seg": 1.5}
+}

@@ -33,6 +33,7 @@ export type Aspecto = {
   sombrero?: string; // color de un sombrero de ala (copa alta con cinta)
   mandil?: string; // color de un mandil de taquero sobre la ropa («Taquería»)
   mojado?: boolean; // pelo y ropa empapados: brillos y gotas pegadas («Taquería»)
+  coletas?: string; // dos coletas a los lados de la cabeza, con liga de este color («Camión escolar»)
   rebozo?: string; // color de un rebozo sobre los hombros, con flecos («Velorio»)
   semilla: number; // para el temblor del trazo
 };
@@ -48,7 +49,7 @@ export type Pose = {
   cejasAlto: number;
   cejasMiedo: number;
   boca: "linea" | "dientes" | "o" | "sonrisa" | "abierta" | "amable" | "grito" | "triste";
-  sostiene?: "inhalador" | "celular" | "celularEncendido"; // objeto en la mano derecha del personaje (izquierda de la pantalla)
+  sostiene?: "inhalador" | "celular" | "celularEncendido" | "hoja"; // hoja: papel doblado en cuatro («Camión escolar») // objeto en la mano derecha del personaje (izquierda de la pantalla)
   bocaAbre?: number; // 0 … 1 con boca "abierta" (hablar)
   ojosVacios?: boolean; // «el otro turno»: pupila mínima y ojeras
   sudor: number;
@@ -66,6 +67,7 @@ export type Pose = {
   hombros?: number; // 0 … 1: hombros encogidos (la cabeza se hunde entre ellos)
   agacha?: number; // 0 … 1: flexiona las rodillas (baja la cadera)
   sentado?: number; // 0 … 1: sentado en una silla, visto de frente (la cadera baja; muslo corto hacia la cámara y espinilla vertical) («Velorio»)
+  abraza?: string; // color de una mochila abrazada contra el pecho (de frente; nunca llega a la boca) («Camión escolar»)
   silla?: { color: string; k: number }; // con `sentado`: dibuja la silla en la tarjeta (k = píxeles por metro); se ve el respaldo a los lados y el asiento bajo la cadera
 };
 
@@ -350,6 +352,12 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
     contorno(() => ctx.roundRect(hx2 - 17, hy2 - 62, 34, 62, 7), "#1d2126", 5);
     ctx.fillStyle = p.sostiene === "celularEncendido" ? "#d8f0ff" : "#2c333b"; ctx.fillRect(hx2 - 12, hy2 - 56, 24, 46);
   }
+  if (p.sostiene === "hoja") {
+    const [hx2, hy2] = manos[0];
+    contorno(() => { ctx.moveTo(hx2 - 26, hy2 - 58); ctx.lineTo(hx2 + 20, hy2 - 64); ctx.lineTo(hx2 + 26, hy2 + 4); ctx.lineTo(hx2 - 20, hy2 + 8); ctx.closePath(); }, "#f2efe4", 5);
+    ctx.lineWidth = 3; ctx.strokeStyle = "#b8b2a2"; ctx.beginPath(); ctx.moveTo(hx2 - 23, hy2 - 25); ctx.lineTo(hx2 + 23, hy2 - 30); ctx.stroke(); // doblez
+    ctx.strokeStyle = "#5a6a8a"; ctx.lineWidth = 2; for (let k = 0; k < 3; k++) { ctx.beginPath(); ctx.moveTo(hx2 - 16, hy2 - 50 + k * 8); ctx.lineTo(hx2 + 12, hy2 - 54 + k * 8); ctx.stroke(); } // letra que se transparenta
+  }
   // manos pequeñas y redondas, con su lado de sombra
   for (const [mx, my] of manos) {
     const g = ctx.createRadialGradient(mx - L * -6, my - 6, 2, mx, my, 17);
@@ -357,6 +365,19 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
     contorno(() => ctx.arc(mx, my, 15, 0, Math.PI * 2), g, 6);
   }
 
+  if (p.abraza && p.vista === "frente") { // mochila abrazada: bolsa con tapa, cierre, bolsillo y dos manos encima
+    const mw = anchoBajo * 0.78, mh = torsoH * 0.62, mx0 = cx - mw / 2, my0 = torsoTop + torsoH * 0.36;
+    contorno(() => ctx.roundRect(mx0, my0, mw, mh, 22), gradLado(mx0, mx0 + mw, p.abraza!, 0.3), 7);
+    contorno(() => ctx.roundRect(mx0 + 6, my0 - 4, mw - 12, mh * 0.34, [22, 22, 10, 10]), gradLado(mx0, mx0 + mw, p.abraza!, 0.5), 6); // tapa
+    contorno(() => ctx.roundRect(cx - mw * 0.28, my0 + mh * 0.52, mw * 0.56, mh * 0.36, 10), sombra(p.abraza!, 0.08), 5); // bolsillo
+    ctx.lineWidth = 4; ctx.strokeStyle = sombra(p.abraza!, 0.55);
+    ctx.beginPath(); ctx.moveTo(cx - mw * 0.24, my0 + mh * 0.6); ctx.lineTo(cx + mw * 0.24, my0 + mh * 0.6); ctx.stroke(); // cierre
+    ctx.fillStyle = "#c9ccd2"; ctx.fillRect(cx + mw * 0.18, my0 + mh * 0.57, 8, 14);
+    for (const s2 of [-1, 1]) { // manos que la sostienen
+      const hx = cx + s2 * mw * 0.47, hy = my0 + mh * 0.55;
+      contorno(() => ctx.arc(hx, hy, 15, 0, Math.PI * 2), luz(a.piel, 0.05), 6);
+    }
+  }
   if (p.vista === "espalda") sillaRespaldo(); // de espaldas, el respaldo queda entre la cámara y la persona
 
   // ---------------- cabeza ----------------
@@ -364,6 +385,13 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
   const g = p.vista === "frente" ? p.giro : 0;
   if (a.peinado === "mono") {
     contorno(() => ctx.arc(cx - g * r * 0.3 + (p.vista === "espalda" ? 0 : 0), cabezaY - r * 0.95, r * 0.3, 0, Math.PI * 2), gradLado(cx - r * 0.3, cx + r * 0.3, a.pelo, 0.4));
+  }
+  if (a.coletas) { // dos coletas que salen a los lados, por detrás de la cabeza, con su liga
+    for (const s2 of [-1, 1]) {
+      const bx = cx + s2 * r * 1.02, by = cabezaY - r * 0.15;
+      contorno(() => ctx.ellipse(bx + s2 * r * 0.22, by + r * 0.42, r * 0.2, r * 0.42, s2 * -0.35, 0, Math.PI * 2), gradLado(bx - r * 0.2, bx + r * 0.4, a.pelo, 0.35), 6);
+      contorno(() => ctx.arc(bx + s2 * r * 0.04, by + r * 0.02, r * 0.1, 0, Math.PI * 2), a.coletas, 5);
+    }
   }
   if (a.peinado === "trenza" && p.vista === "frente") {
     // trenza que cae por detrás del hombro derecho del personaje (izquierda de la pantalla)
