@@ -137,7 +137,7 @@ export function crearVelorio() {
   const W = SALA.x1 - SALA.x0, D = SALA.z1 - SALA.z0, cxS = (SALA.x0 + SALA.x1) / 2, czS = (SALA.z0 + SALA.z1) / 2;
   const piso = new THREE.Mesh(new THREE.PlaneGeometry(W, D), lambert({ map: texMosaico() })); piso.rotation.x = -Math.PI / 2; piso.position.set(cxS, 0, czS); raiz.add(piso);
   const techo = new THREE.Mesh(new THREE.PlaneGeometry(W, D), lambert({ color: "#5a4a3a", side: THREE.DoubleSide })); techo.rotation.x = Math.PI / 2; techo.position.set(cxS, SALA.alto, czS); raiz.add(techo);
-  for (let i = 0; i < 6; i++) raiz.add(caja(W, 0.12, 0.1, lambert({ color: "#3a2a1c" }), cxS, SALA.alto - 0.07, SALA.z0 + 0.6 + i * 1.1)); // vigas
+  for (let i = 0; i < 6; i++) raiz.add(caja(W - 0.02, 0.12, 0.1, lambert({ color: "#3a2a1c" }), cxS, SALA.alto - 0.07, SALA.z0 + 0.6 + i * 1.1)); // vigas
   const mPared = lambert({ map: texPared() });
   raiz.add(plano(W, SALA.alto, mPared, cxS, SALA.alto / 2, SALA.z0)); // fondo
   raiz.add(plano(D, SALA.alto, mPared, SALA.x0, SALA.alto / 2, czS, Math.PI / 2)); // izquierda
