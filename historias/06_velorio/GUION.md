@@ -51,4 +51,4 @@ el estándar visual aprobado (§8) y las mejoras de §8.8.
 | **Tú (Rodrigo)** | Muchacho, camisa negra de velorio | Sentado junto a tu abuela, frente al ataúd |
 | **Tu abuela** | Señora bajita, rebozo negro, pelo blanco en chongo, rosario | Da las reglas; al final, en la puerta de la cocina con la luz detrás |
 | **Dolientes** | Señoras con rebozo, señores con sombrero, un niño | Rezan, toman café; a las 12:30 se duermen en sus sillas |
-| **Don Chuy** | Solo en el retrato con moño negro | Nunca se ve dentro del ataúd; al final, solo una silueta que se sienta, de espaldas a cámara |
+| **Don Chuy** | Solo en el retrato con moño negro | Nunca se ve dentro del ataúd; al final, solo una silueta negra con sombrero y ojos vacíos que se sienta |

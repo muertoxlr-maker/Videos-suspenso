@@ -1,0 +1,15 @@
+{
+  "golpe_titulo": {"texto": "Deep cinematic impact boom for horror trailer, short", "seg": 2},
+  "whoosh": {"texto": "Short soft cinematic whoosh swoosh", "seg": 1},
+  "dron": {"texto": "Dark low horror drone, slowly rising tension, no melody", "seg": 22},
+  "latidos": {"texto": "Slow deep human heartbeat, close and muffled, steady", "seg": 10, "loop": true},
+  "taza": {"texto": "Clay mug set down on a wooden table, then a spoon stirring coffee briefly", "seg": 2},
+  "reloj_tic": {"texto": "Old wooden wall clock ticking loudly, four slow ticks, indoors, quiet room", "seg": 3},
+  "campanada": {"texto": "Old wall clock striking once, single deep warm chime fading out", "seg": 3},
+  "madera_cruje": {"texto": "Old wooden coffin lid creaking once, slow low creak, close, short", "seg": 2},
+  "vela_apaga": {"texto": "Candle flame suddenly blown out by a draft, soft short puff, quiet room", "seg": 1},
+  "cerillo": {"texto": "Striking a wooden match on the box and it igniting", "seg": 1.5},
+  "tapa_abre": {"texto": "Heavy wooden coffin lid creaking open slowly, long low creak, ending with a soft wooden thud", "seg": 3},
+  "se_sienta": {"texto": "Something stiff slowly sitting up inside a wooden coffin: fabric rustle and old wood creaking", "seg": 3},
+  "puerta_cocina": {"texto": "Old wooden kitchen door creaking open a little", "seg": 2}
+}

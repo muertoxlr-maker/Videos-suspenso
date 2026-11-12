@@ -33,6 +33,7 @@ export type Aspecto = {
   sombrero?: string; // color de un sombrero de ala (copa alta con cinta)
   mandil?: string; // color de un mandil de taquero sobre la ropa («Taquería»)
   mojado?: boolean; // pelo y ropa empapados: brillos y gotas pegadas («Taquería»)
+  rebozo?: string; // color de un rebozo sobre los hombros, con flecos («Velorio»)
   semilla: number; // para el temblor del trazo
 };
 
@@ -64,6 +65,7 @@ export type Pose = {
   cabezaX?: number; // desplazamiento extra de la cabeza sobre el torso
   hombros?: number; // 0 … 1: hombros encogidos (la cabeza se hunde entre ellos)
   agacha?: number; // 0 … 1: flexiona las rodillas (baja la cadera)
+  sentado?: number; // 0 … 1: sentado en una silla, visto de frente (la cadera baja; muslo corto hacia la cámara y espinilla vertical) («Velorio»)
 };
 
 const TINTA = "#141012";
@@ -101,7 +103,8 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
   const D = alto / 2.55; // diámetro de la cabeza (sin pelo)
   const r = D / 2;
   const resp = p.respira * 3;
-  const baja = (p.agacha ?? 0) * D * 0.07;
+  const sen = p.sentado ?? 0;
+  const baja = (p.agacha ?? 0) * D * 0.07 + sen * D * 0.65 * 0.2; // sentado: la cadera queda a la altura de una silla baja (0.36 m)
   const encoge = (p.hombros ?? 0);
   const cabezaY = TOPE + 0.12 * D + r + resp * 0.5 + baja + encoge * D * 0.06;
   const torsoTop = TOPE + 0.12 * D + r + r * 0.86 + resp * 0.8 + baja;
@@ -137,7 +140,10 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
     const x = cxPies + s * anchoBajo * 0.2; // el pie se queda donde está
     const xc = cxCadera + s * anchoBajo * 0.2;
     const pieY = PIES - 9 - p.piernas[i] * 40;
-    linea([[xc, torsoBot - 6], [x, pieY - 4]], sombra(a.pantalon, 0.15), 9);
+    if (sen > 0) { // rodilla un poco abierta y apenas abajo de la cadera (muslo hacia la cámara, se ve corto)
+      const kx = xc + s * D * 0.1 * sen, ky = torsoBot - 6 + D * 0.08 * sen;
+      linea([[xc, torsoBot - 10], [kx, ky], [x + s * D * 0.06 * sen, pieY - 4]], sombra(a.pantalon, 0.15), 9 + 6 * sen);
+    } else linea([[xc, torsoBot - 6], [x, pieY - 4]], sombra(a.pantalon, 0.15), 9);
     contorno(() => ctx.ellipse(x + s * 9, pieY, 25, 10, 0, 0, Math.PI * 2), a.zapatos, 5);
   }
 
@@ -290,6 +296,24 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
     const gb = ctx.createLinearGradient(cx + L * anchoBajo * 0.5, 0, cx + L * anchoBajo * 0.3, 0);
     gb.addColorStop(0, p.borde); gb.addColorStop(1, "rgba(0,0,0,0)");
     ctx.globalAlpha = 0.55; ctx.fillStyle = gb; ctx.fillRect(0, torsoTop, W, torsoH); ctx.globalAlpha = 1; ctx.restore();
+  }
+  if (a.rebozo) {
+    // rebozo: tela sobre los hombros que cae en pico al frente (abierto al centro) o cubre la espalda; flecos abajo
+    const ry = torsoTop - D * 0.04, rb = torsoTop + torsoH * 0.62, rw = anchoHombro * 0.6 + 10;
+    const tela = () => {
+      ctx.moveTo(cx - rw, ry + 14); ctx.quadraticCurveTo(cx - rw, ry - 4, cx - rw + 18, ry - 4);
+      ctx.lineTo(cx + rw - 18, ry - 4); ctx.quadraticCurveTo(cx + rw, ry - 4, cx + rw, ry + 14);
+      ctx.lineTo(cx + anchoBajo * 0.5 + 6, rb);
+      if (p.vista === "frente") { ctx.lineTo(cx + D * 0.08, rb - D * 0.06); ctx.lineTo(cx, torsoTop + torsoH * 0.18); ctx.lineTo(cx - D * 0.08, rb - D * 0.06); }
+      ctx.lineTo(cx - anchoBajo * 0.5 - 6, rb); ctx.closePath();
+    };
+    contorno(tela, gradLado(cx - rw, cx + rw, a.rebozo, 0.3), 6);
+    ctx.save(); ctx.beginPath(); tela(); ctx.clip(); // rayas finas del rebozo
+    ctx.strokeStyle = luz(a.rebozo, 0.12); ctx.lineWidth = 3;
+    for (let k = 0; k < 4; k++) { const yy = ry + 18 + k * 22; ctx.beginPath(); ctx.moveTo(cx - rw, yy); ctx.lineTo(cx + rw, yy); ctx.stroke(); }
+    ctx.restore();
+    ctx.strokeStyle = sombra(a.rebozo, 0.2); ctx.lineWidth = 3; // flecos
+    for (const s2 of [-1, 1]) for (let k = 0; k < 6; k++) { const fx = cx + s2 * (anchoBajo * 0.5 + 4 - k * 9); ctx.beginPath(); ctx.moveTo(fx, rb - 2); ctx.lineTo(fx + s2 * 2, rb + 16); ctx.stroke(); }
   }
   // objeto en la mano (se dibuja antes de la mano para que los dedos lo tapen)
   if (p.sostiene === "inhalador") {
