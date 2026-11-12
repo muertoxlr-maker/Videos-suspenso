@@ -25,3 +25,7 @@
 - Audio: −14.1 LUFS, pico −2.2 dBFS.
 - `revisar_parpadeo.py` en el video completo: los segundos marcados son movimiento buscado (cámara que avanza,
   ojos y sudor temblando, flamas de las velas, la tapa y la figura al final). Sin parpadeos de superficies.
+- v2: el usuario notó que **no se veía que estuvieran sentados** (la tarjeta quedaba delante de la silla 3D y la
+  tapaba entera). Ahora `personaje.ts` dibuja la silla en la tarjeta (`pose.silla`: respaldo que asoma a los lados,
+  asiento bajo la cadera, patas) y `Velorio.tsx` esconde la silla 3D de ese lugar. Render completo de nuevo: 2319
+  cuadros, −14.1 LUFS, pico −2.2 dBFS; `revisar_parpadeo.py` sin parpadeos en las sillas.
