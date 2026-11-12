@@ -411,6 +411,26 @@ focos, letreros); «Gasolinera» tenía 4 %. El usuario aprobó estas mejoras pa
 - Cuidado: con más contraste, una figura oscura (la sombra) se pierde si detrás no hay algo claro; ponerle detrás
   una luz, un anuncio o el cielo.
 
+### 8.9 Referencia 7 (video que mandó el usuario antes de «La niñera»): cómo anima el miedo 👁
+Solo estilo; la historia, frases y personajes de ese video **no se copian** (está en `referencias_privadas/ref_gota/`,
+ignorada por git). Medido con `medir_referencia.py` (83 s, 39 planos):
+- **Ritmo**: plano mediano **2.0 s** (0.8–4.3 s); cámara moviéndose **62 %** de los cuadros y **49 % con zoom lento**
+  hacia adentro (≈ 0.1 % por cuadro): casi todo plano «respira» acercándose despacio.
+- **Color de noche**: brillo medio 0.22, contraste 0.15, **saturación 0.32** (más apagado que nuestros últimos
+  videos, ≈ 0.45). Paredes gris azulado, piso de madera oscura, techo casi negro, ventana con luna azul y cortina,
+  una sola lamparita cálida. Viñeta fuerte.
+- **Tipos de toma** (de 36 cuadros muestreados): ≈ 35 % **caras grandes** de frente (la cabeza llena el ancho,
+  cámara un poco abajo y techo oscuro arriba; ojeras y sudor cuando hay miedo); ≈ 25 % **insertos de objetos** que
+  llenan el cuadro (radio, foto clavada, mancha del techo con grietas, llaves con etiqueta); ≈ 25 % **cuarto
+  completo y vacío**, con el personaje chiquito o sin nadie, cámara quieta o casi (la espera que da miedo); el resto,
+  calle o lugares de afuera.
+- **Primera persona**: varias tomas con **tus manos** entrando desde las esquinas de abajo (tapando una rendija,
+  sosteniendo una escoba), y una **mirilla** redonda tipo ojo de pez con tinte de color.
+- **Lo que da miedo casi no se ve**: se oye (golpes) y se adivina (mancha que crece, polvo que cae del techo, una
+  silueta al fondo de un cuarto oscuro). Partículas (polvo) cayendo en los cuartos.
+- Aplicar en «La niñera»: más insertos y tomas en primera persona (manos con el bebé, la hoja del refri, el monitor
+  lleno de cuadro), cuartos vacíos con cámara casi quieta, empuje lento en casi todos los planos, saturación ≈ 0.32.
+
 ### 8.7 Pendientes conocidos de esta versión
 - La sombra alargada casi no se nota sobre alfombras oscuras.
 - El escenario tiene menos objetos y gente al fondo que las referencias.
