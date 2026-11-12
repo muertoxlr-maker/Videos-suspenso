@@ -26,3 +26,6 @@
 ## Video final
 - 2319 cuadros, 1080×1920, 77.3 s (`caricatura3d/salida/camion/camion.mp4`, no se sube a git).
 - Audio: −14.1 LUFS, pico −2.3 dBFS.
+- `portada.jpg` — portada para TikTok (composición `CamionPortada`): el chofer aterrado visto por el parabrisas y, al
+  fondo del pasillo, el niño 23 con sus ojos vacíos; Sofi dormida a la orilla. Título abajo, sobre el cofre (arriba
+  está el techo del camión). Casi sin gotas en el parabrisas y sin el espejo (por fuera solo se veía su espalda negra).

@@ -262,7 +262,8 @@ class Mundo {
 }
 
 // ------------------------------------------------------------------ escena 3D
-const PORTADA: Plano = { ...PLANOS[35], ini: PLANOS[35].fin };
+const PORTADA_C = c([-0.5, 1.47, 6.5], [-0.3, 0.92, 1.5], 44); // por fuera del parabrisas: el chofer arriba y, al fondo del pasillo, el niño 23; el título va sobre el cofre
+const PORTADA: Plano = { ...PLANOS[35], foco: 2.5, cInf: 6, ini: PORTADA_C, fin: PORTADA_C };
 
 const Escena: React.FC<{ portada?: boolean }> = ({ portada }) => {
   const f0 = useCurrentFrame();
@@ -324,6 +325,8 @@ const Escena: React.FC<{ portada?: boolean }> = ({ portada }) => {
   pl.hacer({ f, k: k0, m: mundo });
   const s = pl.ruta[0] + pl.ruta[1] * (f - a) / FPS;
   mundo.ambiente(f, pl.clima, s, pl.ruta[1], scene);
+  if (portada) mundo.h.bus.mGotasPara.opacity = 0.04; // casi sin gotas: la cara del chofer limpia
+  mundo.h.bus.cristal.parent!.visible = !portada; // desde fuera solo se vería la espalda negra del espejo
   return <primitive object={mundo.h.raiz} dispose={null} />;
 };
 
@@ -428,13 +431,13 @@ export const Camion: React.FC = () => {
 export const CamionPortada: React.FC = () => {
   useFuentes();
   const linea = (txt: string, color: string, tam: number) => (
-    <div style={{ fontFamily: "Titulo", fontSize: tam, lineHeight: 0.98, color, letterSpacing: -1, textShadow: [...Array(24)].map((_, j) => `${(Math.cos(j / 24 * 6.283) * 11).toFixed(1)}px ${(Math.sin(j / 24 * 6.283) * 11).toFixed(1)}px 0 #0d0a0c`).join(",") + ", 0 14px 0 #0d0a0c, 0 22px 34px rgba(0,0,0,0.7)" }}>{txt}</div>
+    <div style={{ fontFamily: "Titulo", fontSize: tam, lineHeight: 1.1, color, letterSpacing: -1, textShadow: [...Array(24)].map((_, j) => `${(Math.cos(j / 24 * 6.283) * 11).toFixed(1)}px ${(Math.sin(j / 24 * 6.283) * 11).toFixed(1)}px 0 #0d0a0c`).join(",") + ", 0 14px 0 #0d0a0c, 0 22px 34px rgba(0,0,0,0.7)" }}>{txt}</div>
   );
   return (
     <AbsoluteFill style={{ background: "#0a0806" }}>
       <Lienzo3D portada />
-      <div style={{ position: "absolute", top: 0, width: "100%", height: 760, background: "linear-gradient(#0a0806ee 55%, #0a080600)" }} />
-      <div style={{ position: "absolute", top: 300, width: "100%", textAlign: "center" }}>
+      <div style={{ position: "absolute", top: 1060, width: "100%", height: 860, background: "linear-gradient(#0a080600, #0a0806ee 40%)" }} />
+      <div style={{ position: "absolute", top: 1190, width: "100%", textAlign: "center" }}>
         {linea("SI SOBRA UN NIÑO", "#ffffff", 100)}
         {linea("EN EL CAMIÓN,", "#ffffff", 100)}
         {linea("NO LO DIGAS", "#ffd23a", 130)}
