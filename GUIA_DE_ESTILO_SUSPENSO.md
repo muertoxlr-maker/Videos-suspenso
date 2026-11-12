@@ -374,6 +374,24 @@ El usuario encontró tres errores en el video ya entregado. Para que no se repit
   3. Con el video terminado: `python3 herramientas/revisar_parpadeo.py video.mp4` y mirar el mapa de los segundos
      más sospechosos antes de mandarlo.
 
+### 8.6d Objetos y estructuras que se entiendan, con detalle (regla del usuario, después de «Velorio») — SIEMPRE
+En «Velorio» la gente no parecía sentada: la tarjeta tapaba la silla entera (el cuerpo es más ancho que una silla real).
+El usuario pidió que en los siguientes videos **cada estructura y objeto se entienda a la primera y tenga más detalle**:
+- **Prueba de «¿qué es esto?»**: en las fotos de revisión, mirar cada objeto importante (muebles, vehículos, puertas,
+  aparatos, comida, lo que la voz nombra) al tamaño del celular y preguntarse si alguien que no conoce la historia
+  sabría qué es. Si no, se arregla antes del render largo.
+- **Silueta reconocible**: cada objeto lleva sus piezas típicas (silla = respaldo + asiento + 4 patas; mesa = cubierta
+  con canto + patas; puerta = marco + hoja + perilla + bisagras; ventana = marco + travesaños + vidrio; vela = cera +
+  mecha + flama + escurridos). Nada de cajas lisas que «podrían ser cualquier cosa».
+- **Escala de caricatura**: los personajes tienen cabeza grande, así que lo que tocan (sillas, mesas, mostradores,
+  volantes) se hace un poco más grande o se dibuja en la tarjeta para que **asome alrededor del cuerpo**.
+- **Postura que se lea**: sentado, acostado, recargado, agachado… se debe notar el mueble que lo sostiene (sillas de
+  quien va sentado: `pose.silla` en `personaje.ts`).
+- **Más detalle**: textura o dibujo en superficies grandes (vetas de madera, azulejos, ladrillos, manchas, carteles,
+  cables, enchufes, marcos), 2–3 objetos de utilería por rincón que cuenten dónde estamos, letreros con texto legible.
+  El detalle no debe tapar caras ni competir con la acción.
+- Al entregar, decir qué objetos se revisaron con esta prueba.
+
 ### 8.8 Mejoras aprobadas después de «Gasolinera» (comparación con las 6 referencias) ✅
 Medido en 40 cuadros por video (OpenCV): las referencias tienen **10–50 % de la imagen en color cálido** (lámparas,
 focos, letreros); «Gasolinera» tenía 4 %. El usuario aprobó estas mejoras para **todos los videos siguientes**

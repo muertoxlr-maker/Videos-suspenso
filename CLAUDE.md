@@ -10,6 +10,9 @@
 - **Antes de entregar cualquier video, cumple la lista de §8.6c de la guía**: nada atraviesa paredes/puertas/vidrios
   (las puertas se abren), ningún objeto se mete en un personaje ni le tapa la boca, y nada parpadea
   (`herramientas/revisar_parpadeo.py` en clips de prueba antes del render largo y en el video final).
+- **Objetos y estructuras que se entiendan y con detalle** (guía §8.6d): en las fotos de revisión, cada mueble u objeto
+  importante debe reconocerse a la primera al tamaño del celular, con sus piezas típicas y más detalle; las posturas
+  (sentado, recargado…) deben mostrar el mueble que las sostiene.
 - **Sonido: efectos cortos, solo en su momento.** Nada de ambientes o bucles que suenen casi todo el video (guía §5).
 - La base técnica de caricatura (Three.js + Remotion) está en `caricatura3d/`; su origen y licencia, en
   `tutorial-caricatura/ORIGEN.md` y `tutorial-caricatura/LICENSE` (MIT: conserva los avisos de copyright).
