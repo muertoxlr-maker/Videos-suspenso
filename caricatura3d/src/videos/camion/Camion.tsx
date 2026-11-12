@@ -255,7 +255,8 @@ class Mundo {
     // la carretera corre; las llantas giran
     h.carretera.g.position.z = -s;
     h.bus.llantas.forEach((ll) => (ll.rotation.x = s / 0.5));
-    h.bus.g.position.y = v > 0 ? 0.008 * Math.sin(f * 0.9) : 0; // vibra un poquito al andar
+    const fuera = Math.abs(this.camPos.x) > 2.3 || this.camPos.z > BUS.nariz + 1.1 || this.camPos.z < BUS.atras - 1; // la cámara va en la calle, no en el camión
+    h.bus.g.position.y = v > 0 && fuera ? 0.006 * Math.sin(f * 0.35) : 0; // se mece un poquito al andar (visto desde fuera)
     for (const t of this.cartas.values()) if (t.grupo.visible && t.grupo.position.x < 1.6) t.grupo.position.y += h.bus.g.position.y;
   }
 }
