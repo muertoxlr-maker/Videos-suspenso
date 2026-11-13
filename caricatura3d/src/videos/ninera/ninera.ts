@@ -139,6 +139,29 @@ const texCajon = () => lienzo((c, w, h) => { // frente de cómoda con tres cajon
   for (let i = 0; i < 3; i++) { c.strokeStyle = "#8a7a62"; c.lineWidth = 5; c.strokeRect(12, 10 + i * h / 3, w - 24, h / 3 - 18); c.fillStyle = "#c8a24a"; c.beginPath(); c.arc(w / 2, 10 + i * h / 3 + (h / 3 - 18) / 2, 8, 0, 7); c.fill(); }
 }, 256, 256);
 
+const texTecho = () => lienzo((c, w, h) => { // plafón de paneles (como la referencia 7): gris oscuro con juntas y manchas
+  c.fillStyle = "#4a4e56"; c.fillRect(0, 0, w, h);
+  for (let k = 0; k < 4; k++) { const g = c.createRadialGradient((k * 89) % w, (k * 53) % h, 3, (k * 89) % w, (k * 53) % h, 60); g.addColorStop(0, "rgba(60,50,36,0.35)"); g.addColorStop(1, "rgba(60,50,36,0)"); c.fillStyle = g; c.fillRect(0, 0, w, h); }
+  c.fillStyle = "#24262c"; for (let x = 0; x < w; x += w / 2) c.fillRect(x, 0, 4, h); for (let y = 0; y < h; y += h / 2) c.fillRect(0, y, w, 4);
+}, 256, 256, [6, 6]);
+/** desgaste para muebles (referencia 7): el color con manchas oscuras, rayones claros y orillas sucias */
+const texGastado = (base: string, rep: [number, number] = [1, 1]) => lienzo((c, w, h) => {
+  c.fillStyle = base; c.fillRect(0, 0, w, h);
+  for (let k = 0; k < 7; k++) { const x = (k * 71) % w, y = (k * 113) % h, g = c.createRadialGradient(x, y, 2, x, y, 30 + (k % 3) * 14); g.addColorStop(0, "rgba(18,16,14,0.28)"); g.addColorStop(1, "rgba(18,16,14,0)"); c.fillStyle = g; c.fillRect(0, 0, w, h); }
+  c.strokeStyle = "rgba(230,225,215,0.16)"; c.lineWidth = 1.5;
+  for (let k = 0; k < 16; k++) { const x = (k * 37) % w, y = (k * 59) % h; c.beginPath(); c.moveTo(x, y); c.lineTo(x + 10 + (k % 5) * 6, y + 3 - (k % 3) * 3); c.stroke(); }
+  for (let k = 0; k < 400; k++) { c.fillStyle = k % 2 ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.05)"; c.fillRect((k * 53) % w, (k * 29) % h, 2, 2); }
+  const g = c.createLinearGradient(0, 0, 0, h); g.addColorStop(0, "rgba(0,0,0,0)"); g.addColorStop(0.8, "rgba(0,0,0,0)"); g.addColorStop(1, "rgba(10,10,12,0.3)"); c.fillStyle = g; c.fillRect(0, 0, w, h);
+}, 128, 128, rep);
+/** la ventana dibujada con luz de luna sobre el piso (cuatro vidrios) */
+const texLunaPiso = () => lienzo((c, w, h) => {
+  c.clearRect(0, 0, w, h);
+  const g = c.createLinearGradient(0, 0, 0, h); g.addColorStop(0, "rgba(150,185,255,0.55)"); g.addColorStop(1, "rgba(150,185,255,0.05)");
+  c.fillStyle = g; c.fillRect(w * 0.08, h * 0.04, w * 0.84, h * 0.92);
+  c.clearRect(w * 0.47, 0, w * 0.06, h); c.clearRect(0, h * 0.47, w, h * 0.06); // la cruz de la ventana
+  c.filter = "blur(6px)";
+}, 128, 128);
+
 /** Puerta con marco, tableros y perilla. abre: ángulo de la hoja (gira sobre la orilla izquierda, hacia adentro). */
 const puerta = (ancho: number, alto: number, color: string, abre = 0) => {
   const g = new THREE.Group(), mMarco = lambert({ color: "#d8d2c4" });
@@ -156,7 +179,7 @@ export function crearCasa() {
   const amb = new THREE.AmbientLight("#7a8cae", 0.32); raiz.add(amb);
   const hemi = new THREE.HemisphereLight("#6a7ca8", "#1a140e", 0.36); raiz.add(hemi);
   const mDuela = lambert({ map: texDuela() });
-  const mTecho = lambert({ color: "#3a3e46" });
+  const mTecho = lambert({ map: texTecho() });
   const mPared = lambert({ map: texPared("#7a8696", "#4f5a6a") });
   const mParedCuarto = lambert({ map: texPared("#8a96a6", "#c8d0dc") }); // cuarto del bebé: azul clarito con lambrín blanco
   const mCocina = lambert({ map: texPared("#8a8e88", "#5a6a62") });
@@ -191,12 +214,14 @@ export function crearCasa() {
     return { g, luna };
   };
   const vSala = ventana(S.x0 + 0.012, 1.55, 1.3, Math.PI / 2);
+  const lunaPiso = (x: number, z: number, w: number, d: number) => { const m = suelo(w, d, new THREE.MeshBasicMaterial({ map: texLunaPiso(), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false, opacity: 0.55 }), x, 0.014, z); m.layers.set(NOINK); m.rotation.z = Math.PI / 2; // 8 mm sobre los tapetes (§8.6c) raiz.add(m); return m; };
+  lunaPiso(S.x0 + 1.0, 1.3, 1.0, 1.4);
   // puerta de la calle (pared izquierda, cerca del sillón)
   const pCalle = puerta(0.92, 2.05, "#5a3a2a"); pCalle.g.position.set(PUERTA_CALLE.x + 0.075, 0, PUERTA_CALLE.z); pCalle.g.rotation.y = Math.PI / 2; raiz.add(pCalle.g);
   raiz.add(plano(0.92, 2.05, lambert({ color: "#141820" }), PUERTA_CALLE.x - 0.02, 1.025, PUERTA_CALLE.z, Math.PI / 2)); // hueco oscuro detrás de la hoja
 
   // ---- sillón (mira hacia −z): base, asiento con dos cojines, respaldo con dos cojines, brazos, patas ----
-  const So = SILLON, mTela = lambert({ color: "#6f8f86" }), mTelaOsc = lambert({ color: "#587870" }); // verde agua gastado: se distingue del piso y la pared
+  const So = SILLON, mTela = lambert({ map: texGastado("#6f8f86") }), mTelaOsc = lambert({ map: texGastado("#587870") }); // verde agua gastado: se distingue del piso y la pared
   const sillon = new THREE.Group(); sillon.position.set(So.x, 0, So.z); raiz.add(sillon);
   sillon.add(caja(So.ancho, 0.22, So.fondo, mTelaOsc, 0, 0.17, 0)); // base
   for (const s of [-0.5, 0.5]) { sillon.add(caja(So.ancho / 2 - 0.2, 0.12, So.fondo - 0.2, mTela, s * (So.ancho / 2 - 0.12), 0.32, -0.08)); } // cojines del asiento (arriba a 0.38)
@@ -206,7 +231,7 @@ export function crearCasa() {
   for (const [sx, sz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) sillon.add(cil(0.025, 0.02, 0.06, lambert({ color: "#2a1e16" }), sx * (So.ancho / 2 - 0.08), 0.03, sz * (So.fondo / 2 - 0.08)));
   const cobijaSillon = caja(0.5, 0.02, 0.45, lambert({ color: "#8a4a4a" }), 0.62, 0.395, -0.06); sillon.add(cobijaSillon); // cobija doblada a un lado
   // ---- mesita de centro con el monitor del bebé, una taza y un libro ----
-  const M = MESITA, mMadera = lambert({ color: "#5a3e2c" });
+  const M = MESITA, mMadera = lambert({ map: texGastado("#5a3e2c") });
   raiz.add(caja(1.0, 0.04, 0.55, mMadera, M.x, M.alto - 0.02, M.z));
   for (const [sx, sz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) raiz.add(caja(0.04, M.alto - 0.04, 0.04, mMadera, M.x + sx * 0.45, (M.alto - 0.04) / 2, M.z + sz * 0.23));
   raiz.add(caja(0.92, 0.02, 0.47, mMadera, M.x, 0.12, M.z)); // repisa de abajo
@@ -246,7 +271,7 @@ export function crearCasa() {
   raiz.add(plano(0.3, 0.24, lambert({ map: texFoto() }), S.x0 + 0.012, 1.75, 2.6, Math.PI / 2));
 
   // ---- cocina: refri, barra con estufa y fregadero, alacenas, reloj, frutero, foco ----
-  const R = REFRI, mRefri = lambert({ color: "#dfe2e0" });
+  const R = REFRI, mRefri = lambert({ map: texGastado("#dfe2e0") });
   const refri = new THREE.Group(); refri.position.set(R.x, 0, R.z); raiz.add(refri);
   refri.add(caja(R.fondo, R.alto, R.ancho, mRefri, 0, R.alto / 2, 0));
   const xf = -R.fondo / 2; // frente del refri
@@ -257,7 +282,7 @@ export function crearCasa() {
   hoja.add(plano(0.24, 0.21, lambert({ map: texHoja(), emissive: "#ffffff", emissiveMap: texHoja(), emissiveIntensity: 0.1 }), 0, 0, 0));
   hoja.add(cil(0.018, 0.018, 0.012, lambert({ color: "#e04a7a" }), -0.105, 0.095, 0.008).rotateX(Math.PI / 2)); // imán en la esquina (no tapa el texto)
   hoja.visible = false; // aparece cuando la mamá la pega
-  const mBarra = lambert({ color: "#c8c0b0" }), mMueble = lambert({ color: "#6a4a3a" });
+  const mBarra = lambert({ map: texGastado("#c8c0b0") }), mMueble = lambert({ map: texGastado("#6a4a3a") });
   raiz.add(caja(2.3, 0.86, 0.6, mMueble, 2.15, 0.43, 0.3), caja(2.36, 0.04, 0.64, mBarra, 2.15, 0.88, 0.32));
   for (let i = 0; i < 4; i++) raiz.add(caja(0.5, 0.7, 0.012, lambert({ color: "#5a3e30" }), 1.3 + i * 0.57, 0.42, 0.606), caja(0.012, 0.012, 0.012, lambert({ color: "#c8a24a" }), 1.5 + i * 0.57, 0.7, 0.616)); // puertas y jaladeras
   raiz.add(caja(0.6, 0.02, 0.5, lambert({ color: "#2a2a2e" }), 2.7, 0.91, 0.3)); // parrilla de la estufa
@@ -317,6 +342,7 @@ export function crearCasa() {
   // tapa la franja entre el marco y el techo (el pasillo es más bajo que la pared)
   raiz.add(plano(P.x1 - P.x0, C.alto - 2.12, mParedCuarto, 0, (C.alto + 2.12) / 2, C.z1 - 0.008, Math.PI));
   const vCuarto = ventana(C.x0 + 0.012, 1.45, -6.6, Math.PI / 2, 0.8, 0.95, "#e8c8d0");
+  lunaPiso(C.x0 + 0.9, -6.6, 0.9, 1.2);
   // ---- cuna de barrotes: cuatro postes con perilla, barandales, barrotes, colchón, sábana, cobija, almohadita ----
   const K = CUNA, mCuna = lambert({ color: "#e8e2d6" }), mCunaOsc = lambert({ color: "#d4ccbc" });
   const cuna = new THREE.Group(); cuna.position.set(K.x, 0, K.z); raiz.add(cuna);
@@ -352,7 +378,7 @@ export function crearCasa() {
   });
   // ---- cómoda con lamparita de noche y la cámara del monitor ----
   const Co = COMODA;
-  raiz.add(caja(0.9, 0.85, 0.48, lambert({ color: "#e6dccb" }), Co.x, 0.425, Co.z));
+  raiz.add(caja(0.9, 0.85, 0.48, lambert({ map: texGastado("#e6dccb") }), Co.x, 0.425, Co.z));
   raiz.add(plano(0.88, 0.8, lambert({ map: texCajon() }), Co.x, 0.425, Co.z + 0.246));
   raiz.add(caja(0.94, 0.03, 0.52, lambert({ color: "#d4c8b2" }), Co.x, 0.865, Co.z));
   const LN = new THREE.Vector3(Co.x - 0.22, 0.88, Co.z - 0.02);
@@ -365,7 +391,7 @@ export function crearCasa() {
   const ledCam = new THREE.Mesh(new THREE.SphereGeometry(0.006, 8, 6), brillo("#6af07a")); ledCam.position.set(0.025, 0.03, 0.031); ledCam.layers.set(NOINK); camara.add(ledCam);
   camara.add(cil(0.005, 0.005, 0.1, lambert({ color: "#2a2a30" }), -0.03, 0.15, 0));
   // ---- mecedora: dos patines curvos, asiento, respaldo de tablas, brazos ----
-  const Me = MECEDORA, mMece = lambert({ color: "#7a5a3e" });
+  const Me = MECEDORA, mMece = lambert({ map: texGastado("#7a5a3e") });
   const mece = new THREE.Group(); mece.position.set(Me.x, 0, Me.z); mece.rotation.y = 0.6; raiz.add(mece);
   for (const s of [-1, 1]) { const t = new THREE.Mesh(new THREE.TorusGeometry(1.1, 0.02, 6, 30, 0.75), mMece); t.rotation.set(0, Math.PI / 2, Math.PI / 2 + Math.PI - 0.375 + Math.PI); t.position.set(s * 0.22, 1.125, 0); mece.add(t); }
   mece.add(caja(0.5, 0.04, 0.46, mMece, 0, 0.42, 0));

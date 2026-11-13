@@ -428,6 +428,13 @@ ignorada por git). Medido con `medir_referencia.py` (83 s, 39 planos):
   sosteniendo una escoba), y una **mirilla** redonda tipo ojo de pez con tinte de color.
 - **Lo que da miedo casi no se ve**: se oye (golpes) y se adivina (mancha que crece, polvo que cae del techo, una
   silueta al fondo de un cuarto oscuro). Partículas (polvo) cayendo en los cuartos.
+- **Acabado gráfico** (el usuario pidió copiar «lo visual»: personajes, cuartos, color y luz): LUT frío
+  (`lutFrio` en `ninera/Ninera.tsx`: saturación ×0.6–0.7, gamma 0.7, menos rojo, sombras azul oscuro en vez de negro),
+  textura fija de manchas y polvo encima de todo (`public/texturas/grunge_ninera.png`, multiplicar), neblina azul
+  adentro (`Fog #141a24, 3.5–15 m`), paredes con humedad que baja del techo, chorreados, raspones y orillas sucias,
+  techo de paneles, muebles con `texGastado`, la ventana dibujada con luz de luna en el piso. Personajes con
+  `estilo: "ref7"`: torso angosto de cápsula (0.5–0.58 de la cabeza), boca de susto grande con lengua rosa, `ojeras`.
+  Medido en 8 fotos: brillo 50 (referencia 57), saturación 121 (referencia 81: el azul oscuro sube la cifra).
 - Aplicar en «La niñera»: más insertos y tomas en primera persona (manos con el bebé, la hoja del refri, el monitor
   lleno de cuadro), cuartos vacíos con cámara casi quieta, empuje lento en casi todos los planos, saturación ≈ 0.32.
 

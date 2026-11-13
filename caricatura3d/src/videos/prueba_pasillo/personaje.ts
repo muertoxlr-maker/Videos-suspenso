@@ -37,6 +37,7 @@ export type Aspecto = {
   mojado?: boolean; // pelo y ropa empapados: brillos y gotas pegadas («Taquería»)
   coletas?: string; // dos coletas a los lados de la cabeza, con liga de este color («Camión escolar»)
   rebozo?: string; // color de un rebozo sobre los hombros, con flecos («Velorio»)
+  estilo?: "ref7"; // cuerpo de cápsula angosta y boca abierta grande, como el video de referencia 7 («La niñera»)
   semilla: number; // para el temblor del trazo
 };
 
@@ -117,7 +118,8 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
   const torsoTop = TOPE + 0.12 * D + r + r * 0.86 + resp * 0.8 + baja;
   const torsoH = D * 0.85;
   const torsoBot = torsoTop + torsoH;
-  const anchoHombro = D * 0.66, anchoBajo = D * 0.72;
+  const ref7 = a.estilo === "ref7";
+  const anchoHombro = ref7 ? D * 0.5 : D * 0.66, anchoBajo = ref7 ? D * 0.58 : D * 0.72; // ref7: torso angosto (cápsula)
   const L = p.luzX; // dirección de la luz
 
   // trazo con contorno: primero tinta, luego relleno
@@ -193,6 +195,7 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
   }
   // ---------------- torso rectangular ----------------
   const torso = () => {
+    if (ref7) { ctx.roundRect(cx - anchoBajo / 2, torsoTop - D * 0.06, anchoBajo, torsoH + D * 0.06, [D * 0.24, D * 0.24, D * 0.1, D * 0.1]); return; }
     ctx.moveTo(cx - anchoHombro / 2 + 6, torsoTop);
     ctx.lineTo(cx + anchoHombro / 2 - 6, torsoTop);
     ctx.quadraticCurveTo(cx + anchoHombro / 2, torsoTop, cx + anchoHombro / 2 + 1, torsoTop + 8);
@@ -632,6 +635,12 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
   } else if (p.boca === "triste") {
     ctx.lineWidth = 7; ctx.strokeStyle = TINTA;
     ctx.beginPath(); ctx.moveTo(mx - mw * 0.65, my + r * 0.05); ctx.quadraticCurveTo(mx, my - r * 0.1, mx + mw * 0.65, my + r * 0.05); ctx.stroke();
+  } else if (p.boca === "o" && a.estilo === "ref7") { // boca de susto grande, ovalada, con lengua rosa (referencia 7)
+    const bw2 = mw * 0.62, bh = r * 0.2;
+    contorno(() => ctx.ellipse(mx, my + r * 0.03, bw2, bh, 0, 0, Math.PI * 2), "#4a0e1a", 6);
+    ctx.save(); ctx.beginPath(); ctx.ellipse(mx, my + r * 0.03, bw2 - 3, bh - 3, 0, 0, Math.PI * 2); ctx.clip();
+    ctx.fillStyle = "#d86a82"; ctx.beginPath(); ctx.ellipse(mx + bw2 * 0.1, my + r * 0.03 + bh * 0.8, bw2 * 0.75, bh * 0.5, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
   } else if (p.boca === "o") {
     contorno(() => ctx.ellipse(mx, my, mw * 0.4, r * 0.12, 0, 0, Math.PI * 2), "#3a0d14", 6);
   } else {
