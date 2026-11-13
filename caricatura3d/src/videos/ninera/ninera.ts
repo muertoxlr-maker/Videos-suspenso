@@ -214,7 +214,7 @@ export function crearCasa() {
     return { g, luna };
   };
   const vSala = ventana(S.x0 + 0.012, 1.55, 1.3, Math.PI / 2);
-  const lunaPiso = (x: number, z: number, w: number, d: number) => { const m = suelo(w, d, new THREE.MeshBasicMaterial({ map: texLunaPiso(), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false, opacity: 0.55 }), x, 0.014, z); m.layers.set(NOINK); m.rotation.z = Math.PI / 2; // 8 mm sobre los tapetes (§8.6c) raiz.add(m); return m; };
+  const lunaPiso = (x: number, z: number, w: number, d: number) => { const m = suelo(w, d, new THREE.MeshBasicMaterial({ map: texLunaPiso(), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false, opacity: 0.55 }), x, 0.014, z); m.layers.set(NOINK); m.rotation.z = Math.PI / 2; raiz.add(m); return m; }; // 8 mm sobre los tapetes (§8.6c)
   lunaPiso(S.x0 + 1.0, 1.3, 1.0, 1.4);
   // puerta de la calle (pared izquierda, cerca del sillón)
   const pCalle = puerta(0.92, 2.05, "#5a3a2a"); pCalle.g.position.set(PUERTA_CALLE.x + 0.075, 0, PUERTA_CALLE.z); pCalle.g.rotation.y = Math.PI / 2; raiz.add(pCalle.g);
