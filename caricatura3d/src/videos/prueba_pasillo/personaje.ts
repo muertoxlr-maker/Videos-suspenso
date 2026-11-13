@@ -5,6 +5,8 @@
 //   Sombreado suave: lado de la luz más claro, lado contrario y parte baja más oscuros, sombra bajo la barbilla.
 // El lienzo es de 600 x 1000 y las suelas caen EXACTAMENTE en y = PIES (el plano 3D se ancla ahí al suelo).
 
+import { Bebe, dibujarBebe } from "./bebe";
+
 export const LIENZO_W = 600;
 export const LIENZO_H = 1000;
 export const PIES = 994;
@@ -68,7 +70,8 @@ export type Pose = {
   agacha?: number; // 0 … 1: flexiona las rodillas (baja la cadera)
   sentado?: number; // 0 … 1: sentado en una silla, visto de frente (la cadera baja; muslo corto hacia la cámara y espinilla vertical) («Velorio»)
   abraza?: string; // color de una mochila abrazada contra el pecho (de frente; nunca llega a la boca) («Camión escolar»)
-  silla?: { color: string; k: number }; // con `sentado`: dibuja la silla en la tarjeta (k = píxeles por metro); se ve el respaldo a los lados y el asiento bajo la cadera
+  silla?: { color: string; k: number };
+  bebe?: Bebe; // bebé envuelto en su cobija, cargado contra el pecho (cabeza a la izquierda de la pantalla, bajo la barbilla) («La niñera») // con `sentado`: dibuja la silla en la tarjeta (k = píxeles por metro); se ve el respaldo a los lados y el asiento bajo la cadera
 };
 
 const TINTA = "#141012";
@@ -377,6 +380,11 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
       const hx = cx + s2 * mw * 0.47, hy = my0 + mh * 0.55;
       contorno(() => ctx.arc(hx, hy, 15, 0, Math.PI * 2), luz(a.piel, 0.05), 6);
     }
+  }
+  if (p.bebe && p.vista === "frente") { // el bebé en brazos: un brazo bajo la nuca, el otro rodea la cobija
+    const r0 = D * 0.2, bcx = cx - D * 0.36, bcy = torsoTop + torsoH * 0.4;
+    dibujarBebe(ctx, bcx, bcy, r0, p.bebe, 1, L);
+    for (const [hx, hy] of [[bcx - r0 * 0.6, bcy + r0 * 0.75], [cx + D * 0.27, bcy + r0 * 0.95]]) contorno(() => ctx.arc(hx, hy, 15, 0, Math.PI * 2), luz(a.piel, 0.05), 6);
   }
   if (p.vista === "espalda") sillaRespaldo(); // de espaldas, el respaldo queda entre la cámara y la persona
 

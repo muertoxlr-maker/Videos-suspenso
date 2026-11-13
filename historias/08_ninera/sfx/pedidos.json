@@ -1,0 +1,17 @@
+{
+  "golpe_titulo": {"texto": "Deep cinematic impact boom for horror trailer, short", "seg": 2},
+  "whoosh": {"texto": "Short soft cinematic whoosh swoosh", "seg": 1},
+  "dron": {"texto": "Dark low horror drone, slowly rising tension, no melody", "seg": 22},
+  "latidos": {"texto": "Slow deep human heartbeat, close and muffled, steady", "seg": 10, "loop": true},
+  "grillos": {"texto": "A few crickets chirping at night in an empty field, quiet, short", "seg": 3},
+  "puerta_cierra": {"texto": "Wooden front door of a house closing with a latch click, short", "seg": 1.5},
+  "iman_refri": {"texto": "Paper sheet being placed on a fridge door and a small magnet clicking onto it, short", "seg": 1},
+  "foco_parpadea": {"texto": "Old incandescent light bulb flickering with faint electric crackles, short", "seg": 2},
+  "foco_apaga": {"texto": "Light bulb filament popping and going out with a small tick, very short", "seg": 0.8},
+  "bebe_llora": {"texto": "Baby crying in a crib in another room, a few short sobs, slightly distant", "seg": 3},
+  "pasos_corre": {"texto": "Quick footsteps running down a wooden hallway in socks, short", "seg": 1.5},
+  "monitor_estatica": {"texto": "Baby monitor speaker turning on with a soft static crackle, short", "seg": 1.2},
+  "cancion_cuna": {"texto": "A woman softly humming a slow lullaby heard through a small baby monitor speaker, lo-fi, no words, no instruments", "seg": 5},
+  "monitor_corte": {"texto": "Baby monitor static abruptly cutting to silence, short click", "seg": 0.8},
+  "cuna_cruje": {"texto": "Wooden baby crib slowly creaking as weight leans on it, heard through a baby monitor speaker", "seg": 2}
+}
