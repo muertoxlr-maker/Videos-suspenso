@@ -7,6 +7,8 @@
   `caricatura3d/src/videos/prueba_pasillo/`). Todo video nuevo parte de ese código y esos valores: se adaptan
   escenario y personajes a la historia, pero se mantienen proporciones, contorno, iluminación, color medido y forma de
   animar. Compara siempre con `referencias/aprobado/` y con las medidas antes de entregar.
+- **Acabado gráfico aprobado: §8.9 de la guía** («La niñera», `caricatura3d/src/videos/ninera/`): personajes
+  `estilo: "ref7"`, cuartos gastados, LUT frío, neblina, textura de polvo y luna en el piso. Úsalo en todo video nuevo.
 - **Antes de entregar cualquier video, cumple la lista de §8.6c de la guía**: nada atraviesa paredes/puertas/vidrios
   (las puertas se abren), ningún objeto se mete en un personaje ni le tapa la boca, y nada parpadea
   (`herramientas/revisar_parpadeo.py` en clips de prueba antes del render largo y en el video final).

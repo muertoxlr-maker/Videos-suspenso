@@ -411,7 +411,13 @@ focos, letreros); «Gasolinera» tenía 4 %. El usuario aprobó estas mejoras pa
 - Cuidado: con más contraste, una figura oscura (la sombra) se pierde si detrás no hay algo claro; ponerle detrás
   una luz, un anuncio o el cielo.
 
-### 8.9 Referencia 7 (video que mandó el usuario antes de «La niñera»): cómo anima el miedo 👁
+### 8.9 Referencia 7 (video que mandó el usuario antes de «La niñera»): cómo anima el miedo ✅
+
+**Aprobado por el usuario después de «La niñera»** («realmente sí mejoraste los gráficos… ojalá lo mantengas así»).
+Desde ahora el **acabado gráfico de abajo es el estándar de todos los videos nuevos**, encima de §8: se parte del
+código de `caricatura3d/src/videos/ninera/` (personajes `estilo: "ref7"`, texturas gastadas, LUT frío, neblina,
+textura de polvo encima, luz de luna en el piso). Video de comparación: `caricatura3d/salida/ninera/ninera.mp4`
+(no está en git; las fotos de revisión van en `referencias/aprobado/`).
 Solo estilo; la historia, frases y personajes de ese video **no se copian** (está en `referencias_privadas/ref_gota/`,
 ignorada por git). Medido con `medir_referencia.py` (83 s, 39 planos):
 - **Ritmo**: plano mediano **2.0 s** (0.8–4.3 s); cámara moviéndose **62 %** de los cuadros y **49 % con zoom lento**
