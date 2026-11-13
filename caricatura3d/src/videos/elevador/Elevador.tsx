@@ -266,7 +266,7 @@ class Mundo {
     // luz de la cabina: normal; titila al caer; apagada desde «se apaga» hasta que empieza la historia; y desde la regla 3 (ya a oscuras) solo la roja
     let on = 1;
     if (f < STORY()) {
-      if (f >= CAE && f < APAGON()) on = ruido(Math.floor(f / 2)) > 0.35 ? 1 : 0.15;
+      if (f >= CAE && f < APAGON()) on = ruido(Math.floor(f / 4)) > 0.35 ? 1 : 0.3; // titila (cada 4 cuadros: no estroboscópico)
       if (f >= APAGON()) on = 0;
     } else if (f >= fw(103) - 2) on = 0;
     h.luzTecho.intensity = 3.2 * on; (h.difusor.material as THREE.MeshBasicMaterial).color.set(on > 0.5 ? "#f2f6ff" : on > 0 ? "#6a6e78" : "#1e2026");
@@ -348,7 +348,7 @@ const Escena: React.FC<{ portada?: boolean }> = ({ portada }) => {
   const mira = pl.ini.mira.map((v, j) => lerp(v, pl.fin.mira[j], k)) as V3;
   mundo.f = f;
     const s = pl.sacude ? pl.sacude(f) : 0;
-  if (s) { pos[0] += s * Math.sin(f * 2.1); pos[1] += s * Math.sin(f * 2.7 + 1); mira[0] += s * 1.5 * Math.sin(f * 1.9 + 2); }
+  if (s) { pos[0] += s * Math.sin(f * 1.3); pos[1] += s * Math.sin(f * 1.7 + 1); mira[0] += s * 1.5 * Math.sin(f * 1.1 + 2); } // ≈ 6 Hz: sacude sin vibrar cuadro a cuadro
   cam.position.set(...pos);
   cam.fov = lerp(pl.ini.fov, pl.fin.fov, k); cam.near = 0.03; cam.far = 320; cam.updateProjectionMatrix();
   cam.lookAt(...mira);
