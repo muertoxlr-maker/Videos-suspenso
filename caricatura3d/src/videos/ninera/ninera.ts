@@ -48,6 +48,7 @@ const texDuela = () => lienzo((c, w, h) => { // duela de madera oscura con vetas
     for (let k = 0; k < 6; k++) { c.fillStyle = "rgba(20,10,6,0.18)"; c.fillRect(0, i * h / 8 + 4 + k * 5, w, 1); }
     c.fillStyle = "#1e140e"; c.fillRect(0, i * h / 8, w, 2); c.fillRect(((i * 97) % w), i * h / 8, 2, h / 8);
   }
+  for (let k = 0; k < 6; k++) { const g = c.createRadialGradient((k * 83) % w, (k * 47) % h, 2, (k * 83) % w, (k * 47) % h, 50); g.addColorStop(0, "rgba(140,120,100,0.12)"); g.addColorStop(1, "rgba(140,120,100,0)"); c.fillStyle = g; c.fillRect(0, 0, w, h); } // barniz gastado
 }, 256, 256, [4, 4]);
 const texPared = (base: string, zoclo: string) => lienzo((c, w, h) => { // pintura gris azulada, lambrín abajo con moldura
   c.fillStyle = base; c.fillRect(0, 0, w, h);
@@ -55,6 +56,16 @@ const texPared = (base: string, zoclo: string) => lienzo((c, w, h) => { // pintu
   c.fillStyle = zoclo; c.fillRect(0, h * 0.66, w, h * 0.34);
   for (let x = 0; x < w; x += 32) { c.fillStyle = "rgba(10,14,20,0.25)"; c.fillRect(x, h * 0.66, 3, h * 0.34); }
   c.fillStyle = "#2a2622"; c.fillRect(0, h * 0.655, w, 7); c.fillRect(0, h - 10, w, 10);
+  // desgaste (referencia 7): manchas de humedad que bajan del techo, chorreados, raspones en el lambrín y orillas sucias
+  for (let k = 0; k < 5; k++) {
+    const x = ((k * 97 + 31) % w), r0 = 30 + (k % 3) * 18;
+    const g = c.createRadialGradient(x, 0, 4, x, 0, r0 * 2.2); g.addColorStop(0, "rgba(70,62,48,0.32)"); g.addColorStop(0.6, "rgba(70,62,48,0.14)"); g.addColorStop(1, "rgba(70,62,48,0)");
+    c.fillStyle = g; c.fillRect(x - r0 * 2.2, 0, r0 * 4.4, r0 * 2.2);
+    c.strokeStyle = "rgba(60,54,44,0.18)"; c.lineWidth = 2 + (k % 2); c.beginPath(); c.moveTo(x + 6, r0); c.lineTo(x + 8, r0 + 40 + k * 14); c.stroke(); // chorreado
+  }
+  for (let k = 0; k < 14; k++) { c.fillStyle = "rgba(20,22,28,0.22)"; c.fillRect((k * 71) % w, h * 0.72 + ((k * 23) % (h * 0.2)), 8 + (k % 4) * 6, 2); } // raspones
+  const go = c.createLinearGradient(0, h, 0, h * 0.55); go.addColorStop(0, "rgba(16,18,24,0.35)"); go.addColorStop(1, "rgba(16,18,24,0)"); c.fillStyle = go; c.fillRect(0, h * 0.55, w, h * 0.45); // suciedad abajo
+  const gt = c.createLinearGradient(0, 0, 0, h * 0.25); gt.addColorStop(0, "rgba(16,18,24,0.35)"); gt.addColorStop(1, "rgba(16,18,24,0)"); c.fillStyle = gt; c.fillRect(0, 0, w, h * 0.25); // y arriba, junto al techo
 }, 256, 256, [3, 1]);
 const texTapete = () => lienzo((c, w, h) => { // tapete redondo de colores apagados
   c.fillStyle = "rgba(0,0,0,0)"; c.fillRect(0, 0, w, h);

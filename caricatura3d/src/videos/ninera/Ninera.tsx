@@ -7,11 +7,11 @@
 // Cada plano empieza 2 cuadros antes de su palabra.
 import React, { useEffect, useMemo } from "react";
 import * as THREE from "three";
-import { AbsoluteFill, continueRender, delayRender, staticFile, useCurrentFrame } from "remotion";
+import { AbsoluteFill, Img, continueRender, delayRender, staticFile, useCurrentFrame } from "remotion";
 import { ThreeCanvas } from "@remotion/three";
 import { useFrame, useThree } from "@react-three/fiber";
 import {
-  BlendFunction, BloomEffect, BrightnessContrastEffect, EffectComposer, EffectPass, HueSaturationEffect, RenderPass,
+  BlendFunction, BloomEffect, BrightnessContrastEffect, EffectComposer, EffectPass, HueSaturationEffect, LUT3DEffect, LookupTexture, RenderPass,
   ToneMappingEffect, ToneMappingMode, VignetteEffect,
 } from "postprocessing";
 import { InkPass, NOINK } from "../alejandro/ink";
@@ -97,17 +97,17 @@ const PLANOS: Plano[] = [
   // 17 · El bebé llora.
   { w: 102, foco: 1.75, cInf: 8, rapido: true, ini: c([0.3, 1.38, -6.15], [0.42, 0.6, -7.75], 46), fin: c([0.33, 1.32, -6.4], [0.42, 0.6, -7.75], 42), hacer: ({ f, m }) => { m.bebeCuna({ ojos: "llora", boca: 0.6 + 0.4 * Math.abs(Math.sin(f * 0.5)) }); m.luz(0.5, 1.3, -6.9, 0.5, "#ffb070"); } },
   // 18 · En su cuarto, al otro lado del pasillo.  (desde el pasillo oscuro: tú en la entrada, mirando hacia acá)
-  { w: 105, foco: 1.9, cInf: 8, ini: c([0.08, 1.22, -0.95], [0.0, 1.12, 1.0], 46), fin: c([0.07, 1.21, -0.75], [0.0, 1.12, 1.0], 44), hacer: ({ f, m }) => { m.ver("tu", [0.0, 0, 1.0], { ...LAMPARA, mirarY: 0.1, ojos: 1.1, pupila: 0.22, cejasMiedo: 0.8, boca: "linea", hombros: 0.4, ...tiembla(f, 0.3) }); m.luz(0.1, 1.4, -0.2, 0.6, "#8fb0ff"); } },
+  { w: 105, foco: 1.9, cInf: 8, ini: c([0.08, 1.22, -0.95], [0.0, 1.12, 1.0], 46), fin: c([0.07, 1.21, -0.75], [0.0, 1.12, 1.0], 44), hacer: ({ f, m }) => { m.ver("tu", [0.0, 0, 1.0], { ...LAMPARA, mirarY: 0.1, ojos: 1.1, pupila: 0.22, ojeras: 0.8, cejasMiedo: 0.8, boca: "linea", hombros: 0.4, ...tiembla(f, 0.3) }); m.luz(0.1, 1.4, -0.2, 0.6, "#8fb0ff"); } },
   // 19 · Corres y lo cargas.
   { w: 113, foco: 0.75, cInf: 8, rapido: true, ini: c([0.42, 1.78, -7.0], [0.36, 0.45, -7.85], 54), fin: c([0.4, 1.62, -7.3], [0.36, 0.45, -7.85], 52), hacer: ({ f, k, m }) => { m.bebeCuna({ ojos: "llora", boca: 0.8 }); m.pov("alcanza", DUERME, "#a8a4b0", 0.45 + 0.1 * (1 - k), 1.25, 0.3, f); m.luz(0.5, 1.3, -6.9, 0.6, "#ffb070"); } },
   // 20 · Rompiste la primera regla.
-  { w: 117, foco: 1.9, cInf: 8, ini: c([0.05, 1.2, -5.2], [0.3, 1.12, -7.0], 46), fin: c([0.08, 1.19, -5.35], [0.3, 1.12, -7.0], 44), hacer: ({ f, m }) => { m.ver("tu", [0.3, 0, -7.0], { ...NOCHE, bebe: DUERME, ojos: 1.08, pupila: 0.24, cejasMiedo: 0.7, boca: "o", sudor: 0.5, brazoIzq: [0.45, 1.3], brazoDer: [0.45, 1.3], ...tiembla(f, 0.25) }); m.sinCobija(); m.luz(0.2, 1.4, -6.0, 0.6, "#ffb070"); } },
+  { w: 117, foco: 1.9, cInf: 8, ini: c([0.05, 1.2, -5.2], [0.3, 1.12, -7.0], 46), fin: c([0.08, 1.19, -5.35], [0.3, 1.12, -7.0], 44), hacer: ({ f, m }) => { m.ver("tu", [0.3, 0, -7.0], { ...NOCHE, bebe: DUERME, ojos: 1.08, pupila: 0.24, ojeras: 0.8, cejasMiedo: 0.7, boca: "o", sudor: 0.5, brazoIzq: [0.45, 1.3], brazoDer: [0.45, 1.3], ...tiembla(f, 0.25) }); m.sinCobija(); m.luz(0.2, 1.4, -6.0, 0.6, "#ffb070"); } },
   // 21 · A las dos, en la sala,
   { w: 121, foco: 3.0, cInf: 6, ini: c([-2.55, 1.75, 0.65], [-0.9, 0.8, 3.1], 54), fin: c([-2.45, 1.72, 0.85], [-0.9, 0.8, 3.1], 52), hacer: ({ f, m }) => { m.ver("tu", TU_SOFA, { ...LAMPARA, sentado: 1, bebe: DUERME, mirarY: 0.5, boca: "linea", brazoIzq: [0.45, 1.3], brazoDer: [0.45, 1.3], respira: 0.5 + 0.5 * Math.sin(f * 0.07) }); } },
   // 22 · suena el monitor.
   { w: 127, foco: 0.38, cInf: 10, rapido: true, ini: c(MON(0.13, 0.12, 0.38), MON(0, 0.09, 0), 36), fin: c(MON(0.11, 0.11, 0.3), MON(0, 0.09, 0), 34), hacer: ({ f, m }) => { m.monitorNivel(0.35 + 0.35 * Math.abs(Math.sin(f * 0.3))); m.luz(MONITOR.x + 0.3, 0.9, MONITOR.z + 0.4, 0.4); } },
   // 23 · Alguien le canta una canción de cuna al bebé.
-  { w: 130, foco: 1.65, cInf: 8, ini: TU_CERCA(0.15, 44), fin: TU_CERCA(0.4, 42), hacer: ({ f, m }) => { m.ver("tu", TU_SOFA, { ...LAMPARA, sentado: 1, bebe: DUERME, mirarY: 0.45, mirarX: 0.2, ojos: 1.1, pupila: 0.22, cejasMiedo: 0.8, boca: "o", brazoIzq: [0.45, 1.3], brazoDer: [0.45, 1.3], ...tiembla(f, 0.25) }); m.luz(-0.8, 1.4, 2.4, 0.5); } },
+  { w: 130, foco: 1.65, cInf: 8, ini: TU_CERCA(0.15, 44), fin: TU_CERCA(0.4, 42), hacer: ({ f, m }) => { m.ver("tu", TU_SOFA, { ...LAMPARA, sentado: 1, bebe: DUERME, mirarY: 0.45, mirarX: 0.2, ojos: 1.1, pupila: 0.22, ojeras: 0.8, cejasMiedo: 0.8, boca: "o", brazoIzq: [0.45, 1.3], brazoDer: [0.45, 1.3], ...tiembla(f, 0.25) }); m.luz(-0.8, 1.4, 2.4, 0.5); } },
   // 24 · Muy cerca de la cuna.
   { w: 139, foco: 2.6, cInf: 7, ini: c([0.0, 1.5, -5.2], [0.5, 0.85, -7.75], 46), fin: c([0.02, 1.48, -5.4], [0.5, 0.85, -7.75], 44), hacer: ({ m }) => { m.sinCobija(); m.meceSola = true; } },
   // 25 · Pero el bebé está en tus brazos.
@@ -119,7 +119,7 @@ const PLANOS: Plano[] = [
   // 28 · «Ya tráemelo. Su cuna está lista».
   { w: 159, foco: 0.3, cInf: 10, rapido: true, ini: c(MON(0.09, 0.1, 0.27), MON(0, 0.1, 0), 30), fin: c(MON(0.07, 0.1, 0.21), MON(0, 0.1, 0), 28), hacer: ({ f, m }) => { m.monitorNivel(habla(f, 159, 164) * 0.9); m.luz(MONITOR.x + 0.3, 0.9, MONITOR.z + 0.4, 0.4); } },
   // 29 · Miras al bebé.
-  { w: 165, foco: 1.6, cInf: 8, ini: TU_CERCA(0.3, 42), fin: TU_CERCA(0.45, 40), hacer: ({ f, m }) => { m.ver("tu", TU_SOFA, { ...LAMPARA, sentado: 1, bebe: { ojos: "abiertos", mirar: [0.6, -0.6] }, mirarY: 0.7, ojos: 1.08, pupila: 0.24, cejasMiedo: 0.6, boca: "linea", brazoIzq: [0.45, 1.3], brazoDer: [0.45, 1.3], ...tiembla(f, 0.2) }); m.luz(-0.8, 1.4, 2.4, 0.5); } },
+  { w: 165, foco: 1.6, cInf: 8, ini: TU_CERCA(0.3, 42), fin: TU_CERCA(0.45, 40), hacer: ({ f, m }) => { m.ver("tu", TU_SOFA, { ...LAMPARA, sentado: 1, bebe: { ojos: "abiertos", mirar: [0.6, -0.6] }, mirarY: 0.7, ojos: 1.08, pupila: 0.24, ojeras: 0.8, cejasMiedo: 0.6, boca: "linea", brazoIzq: [0.45, 1.3], brazoDer: [0.45, 1.3], ...tiembla(f, 0.2) }); m.luz(-0.8, 1.4, 2.4, 0.5); } },
   // 30 · No ha llorado desde que lo cargaste.
   { w: 168, foco: 0.55, cInf: 8, ini: POV_SOFA(0.02), fin: POV_SOFA(0.1), hacer: ({ f, m }) => { m.pov("carga", { ojos: "abiertos", mirar: [0.3, -0.5], palido: 0.2 }, "#d0c0b0", 0.5, 1.5, 0.2, f); } },
   // 31 · No parpadea.
@@ -129,9 +129,9 @@ const PLANOS: Plano[] = [
   // 33 · En el monitor, la cuna cruje.
   { w: 180, foco: 2.4, cInf: 7, ini: c([-0.25, 1.45, -5.25], [1.05, 1.0, -7.6], 46), fin: c([-0.22, 1.43, -5.45], [1.05, 1.0, -7.6], 44), hacer: ({ f, m }) => { m.sinCobija(); m.meceSola = true; m.cunaCruje = 1; m.ver("sombra", SOMBRA_CUNA, { ...NOCHE, ojosVacios: true, parpadeo: false, ojos: 0.9, mirarX: -0.5, mirarY: 0.4, brazoIzq: [0.5, 0.9], respira: 0.5 + 0.5 * Math.sin(f * 0.05), hombros: 0.3 }); m.sinContacto("sombra"); m.luz(1.75, 1.7, -8.35, 1.0, "#6a88c8"); } },
   // 34 · ¿Lo regresas a su cuna...
-  { w: 186, foco: 2.6, cInf: 7, ini: c([0.12, 1.25, -1.0], [-0.25, 1.1, 1.6], 46), fin: c([0.1, 1.24, -0.85], [-0.25, 1.1, 1.6], 44), hacer: ({ f, m }) => { m.ver("tu", [-0.25, 0, 1.6], { ...LAMPARA, bebe: { ojos: "fijos", palido: 0.6 }, ojos: 1.12, pupila: 0.2, cejasMiedo: 1, boca: "linea", sudor: 1, hombros: 0.5, brazoIzq: [0.45, 1.3], brazoDer: [0.45, 1.3], ...tiembla(f, 0.5) }); m.luz(-0.2, 1.4, 0.4, 0.5, "#8fb0ff"); } },
+  { w: 186, foco: 2.6, cInf: 7, ini: c([0.12, 1.25, -1.0], [-0.25, 1.1, 1.6], 46), fin: c([0.1, 1.24, -0.85], [-0.25, 1.1, 1.6], 44), hacer: ({ f, m }) => { m.ver("tu", [-0.25, 0, 1.6], { ...LAMPARA, bebe: { ojos: "fijos", palido: 0.6 }, ojos: 1.12, pupila: 0.2, ojeras: 0.8, cejasMiedo: 1, boca: "linea", sudor: 1, hombros: 0.5, brazoIzq: [0.45, 1.3], brazoDer: [0.45, 1.3], ...tiembla(f, 0.5) }); m.luz(-0.2, 1.4, 0.4, 0.5, "#8fb0ff"); } },
   // 35 · o sales corriendo con él?
-  { w: 191, foco: 1.95, cInf: 8, rapido: true, ini: c([-0.35, 1.2, 1.95], [-2.05, 1.13, 3.0], 46), fin: c([-0.45, 1.19, 2.05], [-2.05, 1.13, 3.0], 44), hacer: ({ f, m }) => { m.ver("tu", [-2.05, 0, 3.0], { ...LAMPARA, bebe: { ojos: "fijos", palido: 0.6 }, mirarX: -0.7, ojos: 1.15, pupila: 0.18, cejasMiedo: 1, boca: "o", sudor: 1, hombros: 0.6, brazoIzq: [0.45, 1.3], brazoDer: [0.45, 1.3], ...tiembla(f, 0.6) }); m.luz(-1.2, 1.4, 2.2, 0.6); } },
+  { w: 191, foco: 1.95, cInf: 8, rapido: true, ini: c([-0.35, 1.2, 1.95], [-2.05, 1.13, 3.0], 46), fin: c([-0.45, 1.19, 2.05], [-2.05, 1.13, 3.0], 44), hacer: ({ f, m }) => { m.ver("tu", [-2.05, 0, 3.0], { ...LAMPARA, bebe: { ojos: "fijos", palido: 0.6 }, mirarX: -0.7, ojos: 1.15, pupila: 0.18, ojeras: 0.8, cejasMiedo: 1, boca: "o", sudor: 1, hombros: 0.6, brazoIzq: [0.45, 1.3], brazoDer: [0.45, 1.3], ...tiembla(f, 0.6) }); m.luz(-1.2, 1.4, 2.2, 0.6); } },
 ];
 const inicioPlano = (i: number) => (i === 0 ? 0 : fw(PLANOS[i].w) - 2);
 export const planoEn = (f: number) => { let i = 0; while (i + 1 < PLANOS.length && f >= inicioPlano(i + 1)) i++; return i; };
@@ -234,6 +234,25 @@ class Mundo {
   }
 }
 
+// ------------------------------------------------------------------ acabado de la referencia 7 (§8.9)
+/** LUT de color: quita saturación (≈ 0.8), enfría (menos rojo, más azul) y levanta los negros hacia un azul oscuro. */
+const lutFrio = () => {
+  const n = 32, d = new Float32Array(n ** 3 * 4);
+  for (let bi = 0; bi < n; bi++) for (let gi = 0; gi < n; gi++) for (let ri = 0; ri < n; ri++) {
+    let r = ri / (n - 1), g = gi / (n - 1), b = bi / (n - 1);
+    const L = 0.299 * r + 0.587 * g + 0.114 * b;
+    r = L + (r - L) * 0.6; g = L + (g - L) * 0.63; b = L + (b - L) * 0.7;
+    r = r ** 0.7; g = g ** 0.7; b = b ** 0.7; // más claro en medios y sombras (la referencia mide brillo 0.22)
+    r *= 0.92; g *= 0.985; b *= 1.07;
+    const s = (1 - L) ** 2; r += 0.03 * s; g += 0.045 * s; b += 0.075 * s; // sombras azul oscuro (no negro puro)
+    const i = (ri + gi * n + bi * n * n) * 4;
+    d[i] = Math.min(1, r); d[i + 1] = Math.min(1, g); d[i + 2] = Math.min(1, b); d[i + 3] = 1;
+  }
+  return new LookupTexture(d, n).convertToUint8();
+};
+/** textura fija de manchas y polvo encima de todo (como lente sucia / película vieja); no se mueve: no parpadea */
+const Polvo: React.FC = () => <Img src={staticFile("texturas/grunge_ninera.png")} style={{ position: "absolute", inset: 0, width: 1080, height: 1920, mixBlendMode: "multiply", opacity: 0.9 }} />;
+
 // ------------------------------------------------------------------ escena 3D
 const PORTADA: Plano = PLANOS[34];
 
@@ -248,7 +267,8 @@ const Escena: React.FC<{ portada?: boolean }> = ({ portada }) => {
     lens: new LensBlur({ maxCoC: 22, nearScale: 1.0 }),
     bloom: new BloomEffect({ blendFunction: BlendFunction.ADD, intensity: 1.0, luminanceThreshold: 0.62, luminanceSmoothing: 0.25, mipmapBlur: true, radius: 0.7 }),
     tone: new ToneMappingEffect({ mode: ToneMappingMode.NEUTRAL }),
-    sat: new HueSaturationEffect({ saturation: -0.28 }), // noche apagada (§8.9: saturación ≈ 0.32)
+    sat: new HueSaturationEffect({ saturation: -0.06 }),
+    lut: new LUT3DEffect(lutFrio()), // color de la referencia 7 (§8.9): azul gris, apagado, negros azul oscuro
     luz: new BrightnessContrastEffect({ brightness: -0.01, contrast: 0.16 }),
     vin: new VignetteEffect({ offset: 0.28, darkness: 0.78 }),
   }), [scene, cam]);
@@ -257,7 +277,7 @@ const Escena: React.FC<{ portada?: boolean }> = ({ portada }) => {
     const cc = new EffectComposer(gl, { multisampling: 4, frameBufferType: THREE.HalfFloatType });
     cc.addPass(new RenderPass(scene, cam)); cc.addPass(fx.ink);
     cc.addPass(new EffectPass(cam, fx.lens.pre)); cc.addPass(new EffectPass(cam, fx.lens.main));
-    cc.addPass(new EffectPass(cam, fx.bloom, fx.tone, fx.sat, fx.luz, fx.vin));
+    cc.addPass(new EffectPass(cam, fx.bloom, fx.tone, fx.lut, fx.sat, fx.luz, fx.vin));
     return cc;
   }, [gl, scene, cam, fx]);
   useEffect(() => { composer.setSize(size.width, size.height); }, [composer, size.width, size.height]);
@@ -364,6 +384,7 @@ export const Ninera: React.FC = () => {
       <Rotulo f={f} />
       <Titulo f={f} />
       <Botones f={f} />
+      <Polvo />
       <Subtitulos f={f} />
     </AbsoluteFill>
   );

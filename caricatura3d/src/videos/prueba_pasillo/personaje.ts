@@ -54,6 +54,7 @@ export type Pose = {
   sostiene?: "inhalador" | "celular" | "celularEncendido" | "hoja"; // hoja: papel doblado en cuatro («Camión escolar») // objeto en la mano derecha del personaje (izquierda de la pantalla)
   bocaAbre?: number; // 0 … 1 con boca "abierta" (hablar)
   ojosVacios?: boolean; // «el otro turno»: pupila mínima y ojeras
+  ojeras?: number; // 0 … 1: manchas moradas bajo los ojos (cansancio, miedo) («La niñera», como la referencia 7)
   sudor: number;
   // brazos articulados: hombro y codo, ángulos desde la vertical (positivo = hacia fuera)
   brazoIzq: [number, number];
@@ -562,6 +563,11 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
     const lejano = Math.sign(g) === s;
     const sx = lejano ? 1 - 0.35 * Math.abs(g) : 1;
     const x = fx + s * sep;
+    if (p.ojeras) { // media luna morada y suave bajo el ojo (el blanco del ojo tapa la parte de arriba)
+      const go = ctx.createRadialGradient(x, ey + er * 0.75, er * 0.1, x, ey + er * 0.6, er * 1.05);
+      go.addColorStop(0, `rgba(96,64,120,${0.55 * p.ojeras})`); go.addColorStop(1, "rgba(96,64,120,0)");
+      ctx.fillStyle = go; ctx.beginPath(); ctx.ellipse(x, ey + er * 0.5, er * sx * 1.12, er * 1.0, 0, 0, Math.PI * 2); ctx.fill();
+    }
     if (p.parpadeo) {
       ctx.lineWidth = 6; ctx.strokeStyle = TINTA;
       ctx.beginPath(); ctx.ellipse(x, ey + er * 0.1, er * sx * 0.85, er * 0.3, 0, 0.12 * Math.PI, 0.88 * Math.PI); ctx.stroke();
