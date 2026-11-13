@@ -1,0 +1,17 @@
+{
+  "golpe_titulo": {"texto": "Deep cinematic impact boom for horror trailer, short", "seg": 2},
+  "whoosh": {"texto": "Short soft cinematic whoosh swoosh", "seg": 1},
+  "dron": {"texto": "Dark low horror drone, slowly rising tension, no melody", "seg": 22},
+  "latidos": {"texto": "Slow deep human heartbeat, close and muffled, steady", "seg": 10, "loop": true},
+  "cable_truena": {"texto": "Steel elevator cable snapping with a loud metallic twang and creak, short", "seg": 1.2},
+  "caida": {"texto": "Old elevator cabin dropping fast in a shaft, rattling metal and rushing air, short", "seg": 2},
+  "frenazo": {"texto": "Elevator emergency brake slamming, harsh metal screech and heavy jolt impact, short", "seg": 1.5},
+  "apagon": {"texto": "Fluorescent lights cutting off with a heavy electrical clunk, then silence, very short", "seg": 0.8},
+  "ding": {"texto": "Old elevator arrival bell ding, single chime", "seg": 1},
+  "puertas_elevador": {"texto": "Old elevator sliding doors opening with a rumble and a thud, short", "seg": 1.5},
+  "luz_emergencia": {"texto": "Red emergency light switching on with a low electric hum that fades, short", "seg": 1.5},
+  "interfon": {"texto": "Old intercom speaker clicking on with a short buzz, short", "seg": 0.8},
+  "baja_piso": {"texto": "Elevator cabin lurching down one floor with a heavy metal clunk and creak, short", "seg": 1.5},
+  "puertas_atoradas": {"texto": "Elevator doors forced half open, scraping and jamming with a metal grind, short", "seg": 1.5},
+  "papel": {"texto": "Old paper notice fluttering on a wall, single soft rustle, short", "seg": 0.8}
+}

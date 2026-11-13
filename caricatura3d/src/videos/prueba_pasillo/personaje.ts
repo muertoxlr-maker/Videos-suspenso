@@ -65,6 +65,7 @@ export type Pose = {
   luzX: number; // -1 luz desde la izquierda de la pantalla … 1 desde la derecha
   borde?: string; // color de la luz de borde (lámpara, linterna, farola) en el lado iluminado; hace que el personaje resalte de noche
   lagrimas?: number; // 0 … 1: lágrimas que bajan por las mejillas
+  manoBoca?: { piel: string; manga: string }; // la mano de otra persona le tapa la boca desde un lado, a propósito («El elevador»)
   // cuerpo (los pies NO se mueven: la cadera se desplaza y las piernas se inclinan)
   cuerpoX?: number; // desplazamiento lateral de cadera y torso, en diámetros de cabeza
   cabezaX?: number; // desplazamiento extra de la cabeza sobre el torso
@@ -667,6 +668,15 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
       const lx = fx + s2 * sep - s2 * er * 0.2, ly = ey + er * 1.0;
       ctx.beginPath(); ctx.roundRect(lx - 4, ly, 8, r * 0.45 * (p.lagrimas ?? 0), 4); ctx.fill();
     }
+  }
+  // mano de otra persona sobre la boca (entra desde la izquierda de la pantalla, con su manga)
+  if (p.manoBoca) {
+    const hx = mx + r * 0.05, hy = my + r * 0.02, hw = r * 0.62, hh = r * 0.36;
+    contorno(() => ctx.roundRect(hx - hw / 2 - r * 0.9, hy - hh * 0.42, r * 0.9, hh * 0.84, r * 0.12), p.manoBoca.manga, 6); // la manga
+    contorno(() => ctx.roundRect(hx - hw / 2, hy - hh / 2, hw, hh, [r * 0.08, hh * 0.5, hh * 0.5, r * 0.08]), luz(p.manoBoca.piel, 0.05), 6);
+    ctx.strokeStyle = sombra(p.manoBoca.piel, 0.45); ctx.lineWidth = 3.5;
+    for (let i = 1; i < 4; i++) { ctx.beginPath(); ctx.moveTo(hx + hw * 0.05, hy - hh / 2 + i * hh / 4); ctx.lineTo(hx + hw * 0.45, hy - hh / 2 + i * hh / 4); ctx.stroke(); } // dedos
+    contorno(() => ctx.ellipse(hx - hw * 0.12, hy - hh * 0.5, hw * 0.2, hh * 0.16, -0.3, 0, Math.PI * 2), luz(p.manoBoca.piel, 0.05), 5); // pulgar
   }
   // gota de sudor
   if (p.sudor > 0) {
