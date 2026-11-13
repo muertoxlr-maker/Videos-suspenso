@@ -27,3 +27,10 @@
 - La luz de la tele cambia suave (antes saltaba cada 9 cuadros y hacía parpadear las paredes).
 - `revisar_parpadeo.py` en clips de prueba (0–89, 1060–1189, 1270–1359, 1600–1689, 2000–2089) y en el video completo:
   lo marcado es movimiento buscado (manos que tiemblan, acercamiento de cámara, cuna que cruje, foco que parpadea).
+  En el video completo lo marcado son las palabras de los subtítulos que cambian de color (s 1, 20, 27, 42), el
+  borde de la puerta en el acercamiento del s 5 y los ojos del bebé que tiemblan al final (s 64); nada en pisos ni
+  paredes quietas.
+
+## Video final
+- 2164 cuadros, 1080×1920, 72.1 s (`caricatura3d/salida/ninera/ninera.mp4`, no se sube a git).
+- Audio: −14.1 LUFS, pico −2.3 dBFS.
