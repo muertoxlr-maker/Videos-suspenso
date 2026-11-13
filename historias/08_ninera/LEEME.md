@@ -34,3 +34,5 @@
 ## Video final
 - 2164 cuadros, 1080×1920, 72.1 s (`caricatura3d/salida/ninera2/ninera.mp4`, no se sube a git).
 - Audio: −14.1 LUFS, pico −2.3 dBFS.
+- `portada.jpg` — portada para TikTok (composición `NineraPortada`): la niñera asustada con el bebé de ojos abiertos
+  en brazos, el sillón y el monitor atrás. Con bebé en brazos la trenza es corta para no caerle en la cara al bebé.

@@ -407,7 +407,7 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
   }
   if (a.peinado === "trenza" && p.vista === "frente") {
     // trenza que cae por detrás del hombro derecho del personaje (izquierda de la pantalla)
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < (p.bebe ? 3 : 6); i++) { // con bebé en brazos, trenza corta: no le cae en la cara
       const tx = cx - r * 0.78 - i * r * 0.03, ty = cabezaY + r * 0.25 + i * r * 0.27;
       contorno(() => ctx.ellipse(tx, ty, r * 0.16 - i * 2, r * 0.17, 0.3 * (i % 2 ? 1 : -1), 0, Math.PI * 2), gradLado(tx - r * 0.2, tx + r * 0.2, a.pelo, 0.35), 6);
     }
