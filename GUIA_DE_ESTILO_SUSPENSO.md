@@ -416,7 +416,7 @@ focos, letreros); «Gasolinera» tenía 4 %. El usuario aprobó estas mejoras pa
 **Aprobado por el usuario después de «La niñera»** («realmente sí mejoraste los gráficos… ojalá lo mantengas así»).
 Desde ahora el **acabado gráfico de abajo es el estándar de todos los videos nuevos**, encima de §8: se parte del
 código de `caricatura3d/src/videos/ninera/` (personajes `estilo: "ref7"`, texturas gastadas, LUT frío, neblina,
-textura de polvo encima, luz de luna en el piso). Video de comparación: `caricatura3d/salida/ninera/ninera.mp4`
+luz de luna en el piso; nada de puntitos encima de la imagen). Video de comparación: `caricatura3d/salida/ninera2/ninera.mp4`
 (no está en git; las fotos de revisión van en `referencias/aprobado/`).
 Solo estilo; la historia, frases y personajes de ese video **no se copian** (está en `referencias_privadas/ref_gota/`,
 ignorada por git). Medido con `medir_referencia.py` (83 s, 39 planos):
@@ -436,7 +436,8 @@ ignorada por git). Medido con `medir_referencia.py` (83 s, 39 planos):
   silueta al fondo de un cuarto oscuro). Partículas (polvo) cayendo en los cuartos.
 - **Acabado gráfico** (el usuario pidió copiar «lo visual»: personajes, cuartos, color y luz): LUT frío
   (`lutFrio` en `ninera/Ninera.tsx`: saturación ×0.6–0.7, gamma 0.7, menos rojo, sombras azul oscuro en vez de negro),
-  textura fija de manchas y polvo encima de todo (`public/texturas/grunge_ninera.png`, multiplicar), neblina azul
+  **sin** capa de polvo encima (se probó una con puntitos y rayitas y el usuario la vio como pantalla sucia: la
+  referencia no la tiene; lo gastado va solo en paredes y muebles), neblina azul
   adentro (`Fog #141a24, 3.5–15 m`), paredes con humedad que baja del techo, chorreados, raspones y orillas sucias,
   techo de paneles, muebles con `texGastado`, la ventana dibujada con luz de luna en el piso. Personajes con
   `estilo: "ref7"`: torso angosto de cápsula (0.5–0.58 de la cabeza), boca de susto grande con lengua rosa, `ojeras`.

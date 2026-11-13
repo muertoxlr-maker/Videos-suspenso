@@ -13,7 +13,7 @@
 - Animación: `caricatura3d/src/videos/ninera/` (composición `Ninera`, 2164 cuadros; portada `NineraPortada`).
   Por pedido del usuario se copió lo **gráfico** del video de referencia 7 (guía §8.9): personajes `estilo:"ref7"`,
   cuartos gastados (paredes con manchas, techo de paneles, muebles con `texGastado`), luz de luna en el piso, color
-  frío con LUT y textura de polvo encima. Las tomas y la historia son propias.
+  frío con LUT (sin capa de polvo encima: el usuario la vio como pantalla sucia). Las tomas y la historia son propias.
   Escenario en `ninera.ts`: casa por fuera (tejado, ventanas, porche, cerca, buzón, árbol, pueblo al fondo), sala con
   sillón, mesita con monitor de bebé, tele, lámpara de pie, tapetes, juguetes y reloj; cocina con refri, imanes y la
   hoja de reglas, estufa, fregadero y frutero; pasillo con foco, puertas y tapete; cuarto del bebé con cuna (móvil que
@@ -32,5 +32,5 @@
   paredes quietas.
 
 ## Video final
-- 2164 cuadros, 1080×1920, 72.1 s (`caricatura3d/salida/ninera/ninera.mp4`, no se sube a git).
+- 2164 cuadros, 1080×1920, 72.1 s (`caricatura3d/salida/ninera2/ninera.mp4`, no se sube a git).
 - Audio: −14.1 LUFS, pico −2.3 dBFS.

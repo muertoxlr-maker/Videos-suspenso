@@ -7,7 +7,7 @@
 // Cada plano empieza 2 cuadros antes de su palabra.
 import React, { useEffect, useMemo } from "react";
 import * as THREE from "three";
-import { AbsoluteFill, Img, continueRender, delayRender, staticFile, useCurrentFrame } from "remotion";
+import { AbsoluteFill, continueRender, delayRender, staticFile, useCurrentFrame } from "remotion";
 import { ThreeCanvas } from "@remotion/three";
 import { useFrame, useThree } from "@react-three/fiber";
 import {
@@ -251,7 +251,6 @@ const lutFrio = () => {
   return new LookupTexture(d, n).convertToUint8();
 };
 /** textura fija de manchas y polvo encima de todo (como lente sucia / película vieja); no se mueve: no parpadea */
-const Polvo: React.FC = () => <Img src={staticFile("texturas/grunge_ninera.png")} style={{ position: "absolute", inset: 0, width: 1080, height: 1920, mixBlendMode: "multiply", opacity: 0.9 }} />;
 
 // ------------------------------------------------------------------ escena 3D
 const PORTADA: Plano = PLANOS[34];
@@ -384,7 +383,6 @@ export const Ninera: React.FC = () => {
       <Rotulo f={f} />
       <Titulo f={f} />
       <Botones f={f} />
-      <Polvo />
       <Subtitulos f={f} />
     </AbsoluteFill>
   );
