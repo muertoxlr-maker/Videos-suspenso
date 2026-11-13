@@ -219,7 +219,7 @@ class Mundo {
     h.luzPasillo.intensity = 4.5 * on; h.haloPasillo.visible = on > 0.3; (h.haloPasillo.material as THREE.SpriteMaterial).opacity = 0.5 * on;
     h.mBulbo.color.set(on > 0.3 ? "#ffeec0" : "#4a4238"); (h.charco.material as THREE.MeshBasicMaterial).opacity = 0.22 * on;
     // tele: cambia de brillo como cuando pasan escenas
-    h.luzTele.intensity = 1.4 + 0.5 * ruido(Math.floor(f / 9));
+    { const n = Math.floor(f / 18), u = suave(0, 1, (f % 18) / 18); h.luzTele.intensity = 1.4 + 0.4 * lerp(ruido(n), ruido(n + 1), u); } // cambia suave (si salta, las paredes parpadean)
     // móvil que gira despacio; la mecedora se mece sola en los planos del cuarto vacío
     h.movil.rotation.y = f * 0.012;
     h.mece.rotation.x = this.meceSola ? 0.07 * Math.sin(f * 0.11) : 0;
