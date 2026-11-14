@@ -22,3 +22,4 @@
 ## Video final
 - 2471 cuadros, 1080×1920, 82.4 s (`caricatura3d/salida/tren/tren.mp4`, no se sube a git).
 - Audio: −14.0 LUFS, pico −2.3 dBFS.
+- `portada.jpg` — portada para TikTok (composición `TrenPortada`): zombie pegado al vidrio de la puerta del vagón, con el título «DESPUÉS DE LA SIRENA, NADIE SUBE. NI TU MAMÁ».
