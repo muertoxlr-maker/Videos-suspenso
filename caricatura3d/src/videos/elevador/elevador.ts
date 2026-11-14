@@ -304,9 +304,10 @@ export function crearElevador() {
   pasillo.add(plano(2 * PX, 3.0, mConc2, 0, -1.5, P0 - 0.004, Math.PI));
   pasillo.add(plano(2 * PX, 3.0, mConc2, 0, C.puertaAlto + 1.5, P0 - 0.004, Math.PI));
   pasillo.add(caja(C.puertaAncho + 0.1, 0.03, 0.08, lambert({ color: "#9a9a9e" }), 0, -0.015, P0 - 0.03)); // umbral de metal
-  for (const s of [-1, 1]) pasillo.add(caja(0.06, C.puertaAlto + 0.06, 0.05, mMarco, s * (C.puertaAncho / 2 + 0.03), (C.puertaAlto + 0.06) / 2, P0 + 0.025));
-  pasillo.add(caja(C.puertaAncho + 0.12, 0.06, 0.05, mMarco, 0, C.puertaAlto + 0.03, P0 + 0.025));
-  const puertasPiso = corrediza(C.puertaAncho, C.puertaAlto, mAcero, P0 + 0.012); pasillo.add(puertasPiso.g); // puertas del piso (lado del pasillo)
+  // marco plano y sin contorno: como caja, su orilla casi de canto salía como rayita punteada que temblaba
+  for (const s of [-1, 1]) { const m = plano(0.06, C.puertaAlto + 0.06, mMarco, s * (C.puertaAncho / 2 + 0.03), (C.puertaAlto + 0.06) / 2, P0 + 0.004); m.layers.set(NOINK); pasillo.add(m); }
+  { const m = plano(C.puertaAncho + 0.12, 0.06, mMarco, 0, C.puertaAlto + 0.03, P0 + 0.004); m.layers.set(NOINK); pasillo.add(m); }
+  const puertasPiso = corrediza(C.puertaAncho, C.puertaAlto, mAcero, P0 - 0.0135); pasillo.add(puertasPiso.g); // puertas del piso, al ras y detrás de la pared (se esconden al abrir); un escalón de 1–3 cm a 3 m queda justo en el umbral de la tinta y sale punteado
   const placaMat = lambert({ map: texPlaca("14") });
   const placa = plano(0.2, 0.225, placaMat, -0.78, 1.6, P0 + 0.006); pasillo.add(placa);
   pasillo.add(caja(0.1, 0.18, 0.02, lambert({ color: "#b8b4a8" }), 0.66, 1.1, P0 + 0.01)); // botón de llamar
