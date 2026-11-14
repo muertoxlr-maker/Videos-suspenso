@@ -1,13 +1,17 @@
 # «El elevador»
 
-- `GUION.md` — guion: el elevador cae tres pisos y frena de golpe (gancho), luego la historia desde el principio: bajas
+- **Sin adelanto** (pedido del usuario: no le gustan los inicios que adelantan la historia). La primera versión abría
+  con la caída del elevador; se quitó y el video empieza en «Imagina que…». Para no rehacer el render se cortó el video
+  ya hecho (desde el cuadro 188, con 12 cuadros quietos al inicio) y se recortó la voz 5.88 s
+  (`voz/voz_con_adelanto.mp3` y `palabras_con_adelanto.json` son la versión anterior).
+- `GUION.md` — guion (la frase de la caída ya no se usa): bajas
   del piso 14 con tu hermanito Leo, en el 9 se sube un señor de traje gris, la hoja con tres reglas, la luz de
   emergencia roja, el portero que por el interfón dice que en la cámara solo se ven dos personas, Leo que cuenta, y el
   espejo donde Leo no tiene reflejo. Final con dos botones: QUEDARTE / SALIR SOLO.
 - `voz/` — narración con la voz del usuario (`voz_final.mp3`, 76.33 s) y `palabras.json` con los tiempos.
 - `sfx/` — efectos cortos (pedidos en `sfx/pedidos.json`): cable que truena, caída, frenazo, apagón, ding, puertas
   del elevador, luz de emergencia, interfón, baja un piso, puertas atoradas, papel; golpe de título, whoosh, dron y
-  latidos vienen de antes. Los del gancho van 8 dB más fuertes.
+  latidos vienen de antes. Los de la caída ya no se usan.
 - `mezcla.py` → `audio/mezcla.wav` — voz + efectos, cada uno solo en su palabra; dron y latidos solo al final (guía §5).
 - Animación: `caricatura3d/src/videos/elevador/` (composición `Elevador`, 2290 cuadros; portada `ElevadorPortada`).
   Acabado de la guía §8.9 (personajes `ref7`, lugares gastados, LUT frío, sin polvo encima). Escenario en
@@ -25,5 +29,5 @@
   mueve, letrero que se escribe y subtítulos.
 
 ## Video final
-- 2290 cuadros, 1080×1920, 76.3 s (`caricatura3d/salida/elevador/elevador.mp4`, no se sube a git).
-- Audio: −14.0 LUFS, pico −2.4 dBFS.
+- 2114 cuadros, 1080×1920, 70.5 s (`caricatura3d/salida/elevador/elevador.mp4`, no se sube a git).
+- Audio: −14.0 LUFS, pico −2.3 dBFS.
