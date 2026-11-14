@@ -143,10 +143,11 @@ export const dibujarIndicador = (c: CanvasRenderingContext2D, w: number, h: numb
 };
 
 /** puerta corrediza de dos hojas (acero): abre 0 cerrada … 1 abierta; las hojas se esconden detrás de los paneles */
-const corrediza = (ancho: number, alto: number, m: THREE.Material, z: number) => {
+const corrediza = (ancho: number, alto: number, m: THREE.Material, z: number, solapa = 0) => {
   const g = new THREE.Group();
   const hojas = [-1, 1].map((s) => {
-    const h = new THREE.Group(); h.add(caja(ancho / 2, alto, 0.025, m, 0, alto / 2, 0));
+    // solapa: la hoja se mete atrás de la pared para que en la orilla no quede una rendija que la tinta pinta punteada
+    const h = new THREE.Group(); h.add(caja(ancho / 2 + solapa, alto, 0.025, m, s * solapa / 2, alto / 2, 0));
     h.add(caja(0.012, alto, 0.03, lambert({ color: "#3a3c40" }), s * -(ancho / 4) , alto / 2, 0)); // canto de goma donde se juntan
     g.add(h); return h;
   });
@@ -307,7 +308,7 @@ export function crearElevador() {
   // marco plano y sin contorno: como caja, su orilla casi de canto salía como rayita punteada que temblaba
   for (const s of [-1, 1]) { const m = plano(0.06, C.puertaAlto + 0.06, mMarco, s * (C.puertaAncho / 2 + 0.03), (C.puertaAlto + 0.06) / 2, P0 + 0.004); m.layers.set(NOINK); pasillo.add(m); }
   { const m = plano(C.puertaAncho + 0.12, 0.06, mMarco, 0, C.puertaAlto + 0.03, P0 + 0.004); m.layers.set(NOINK); pasillo.add(m); }
-  const puertasPiso = corrediza(C.puertaAncho, C.puertaAlto, mAcero, P0 - 0.0135); pasillo.add(puertasPiso.g); // puertas del piso, al ras y detrás de la pared (se esconden al abrir); un escalón de 1–3 cm a 3 m queda justo en el umbral de la tinta y sale punteado
+  const puertasPiso = corrediza(C.puertaAncho, C.puertaAlto, mAcero, P0 - 0.0135, 0.05); pasillo.add(puertasPiso.g); // puertas del piso, al ras y detrás de la pared (se esconden al abrir); un escalón de 1–3 cm a 3 m queda justo en el umbral de la tinta y sale punteado
   const placaMat = lambert({ map: texPlaca("14") });
   const placa = plano(0.2, 0.225, placaMat, -0.78, 1.6, P0 + 0.006); pasillo.add(placa);
   pasillo.add(caja(0.1, 0.18, 0.02, lambert({ color: "#b8b4a8" }), 0.66, 1.1, P0 + 0.01)); // botón de llamar
