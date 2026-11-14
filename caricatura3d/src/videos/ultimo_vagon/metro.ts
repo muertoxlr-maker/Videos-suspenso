@@ -58,6 +58,7 @@ function vagon(nuestro: boolean) {
   const techo = caja(2 * V.x, 0.06, L, [mInt, mInt, lambert({ color: "#9a4f20" }), lambert({ color: "#ddd6bd" }), mInt, mInt] as unknown as THREE.Material, 0, V.alto + 0.03, cz); g.add(techo);
   // paredes laterales con ventanas y huecos de puerta; cara exterior naranja, interior crema
   const ventanas: THREE.Mesh[] = [];
+  const hojas: { g: THREE.Group; s: number; h: number; z: number; zc: number }[] = [];
   for (const s of [-1, 1]) {
     const mats = s > 0 ? [mExt, mInt, mInt, mInt, mInt, mInt] : [mInt, mExt, mInt, mInt, mInt, mInt];
     const pared = (zA: number, zB: number, yA: number, yB: number) => { const b = caja(0.06, yB - yA, zB - zA, mats as unknown as THREE.Material, s * V.x, (yA + yB) / 2, (zA + zB) / 2); g.add(b); };
@@ -80,12 +81,15 @@ function vagon(nuestro: boolean) {
     for (const zc of PUERTAS_Z) {
       for (const h of [-1, 1]) {
         const z = zc + h * 0.325;
-        g.add(caja(0.04, 1.0, 0.63, mPuerta, s * (V.x - 0.01), 0.5, z), caja(0.04, 0.4, 0.63, mPuerta, s * (V.x - 0.01), 2.0, z));
-        g.add(caja(0.04, 0.8, 0.12, mPuerta, s * (V.x - 0.01), 1.4, z + h * 0.255), caja(0.04, 0.8, 0.08, mPuerta, s * (V.x - 0.01), 1.4, z - h * 0.275));
-        const vv = new THREE.Mesh(new THREE.PlaneGeometry(0.42, 0.8), vidrio()); vv.rotation.y = Math.PI / 2; vv.position.set(s * (V.x - 0.01), 1.4, z - h * 0.02); vv.layers.set(NOINK); g.add(vv); ventanas.push(vv);
+        // cada hoja es un grupo (para «El último tren», donde las puertas se abren y cierran; cerrada queda igual que antes)
+        const hg = new THREE.Group(); hg.position.set(s * (V.x - 0.01), 0, z); g.add(hg); hojas.push({ g: hg, s, h, z, zc });
+        hg.add(caja(0.04, 1.0, 0.63, mPuerta, 0, 0.5, 0), caja(0.04, 0.4, 0.63, mPuerta, 0, 2.0, 0));
+        hg.add(caja(0.04, 0.8, 0.12, mPuerta, 0, 1.4, h * 0.255), caja(0.04, 0.8, 0.08, mPuerta, 0, 1.4, -h * 0.275));
+        hg.add(caja(0.05, V.alto - 0.1, 0.015, mOscuro, -s * 0.01, (V.alto - 0.1) / 2, -h * 0.31)); // media junta de goma (orilla que se junta con la otra hoja)
+        const vv = new THREE.Mesh(new THREE.PlaneGeometry(0.42, 0.8), vidrio()); vv.rotation.y = Math.PI / 2; vv.position.set(0, 1.4, -h * 0.02); vv.layers.set(NOINK); hg.add(vv); ventanas.push(vv);
       }
       g.add(caja(0.05, V.alto, 0.08, mGris, s * (V.x - 0.02), V.alto / 2, zc - 0.69), caja(0.05, V.alto, 0.08, mGris, s * (V.x - 0.02), V.alto / 2, zc + 0.69));
-      g.add(caja(0.05, V.alto - 0.1, 0.03, mOscuro, s * (V.x - 0.03), (V.alto - 0.1) / 2, zc)); // junta de goma entre hojas
+      // (la junta de goma va en las hojas: ver el borde de cada una)
       g.add(caja(0.06, 0.06, 0.12, brillo("#ff3b2f"), s * (V.x - 0.05), 2.12, zc)); // luz de «puerta bloqueada»
       // tubos verticales junto a la puerta
       for (const dz of [-0.95, 0.95]) { const t = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, V.alto, 10), mMetal); t.position.set(s * (V.x - 0.45), V.alto / 2, zc + dz); g.add(t); }
@@ -115,7 +119,7 @@ function vagon(nuestro: boolean) {
   }
   // fuelle entre vagones (pasillo cerrado de goma)
   if (nuestro) g.add(caja(0.05, 2.1, 0.6, mOscuro, -0.55, 1.05, V.z0 - 0.3), caja(0.05, 2.1, 0.6, mOscuro, 0.55, 1.05, V.z0 - 0.3), caja(1.1, 0.05, 0.6, mOscuro, 0, 2.1, V.z0 - 0.3), caja(1.1, 0.05, 0.6, mOscuro, 0, 0.0, V.z0 - 0.3));
-  return { g, ventanas, luces, extremos };
+  return { g, ventanas, luces, extremos, hojas };
 }
 
 export function crearMetro() {

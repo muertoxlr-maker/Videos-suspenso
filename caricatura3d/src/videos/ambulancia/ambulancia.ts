@@ -181,7 +181,7 @@ const texMadera = () => lienzo((c, w, h) => {
   manchas(c, w, h, 5, "30,20,12", 0.3);
 }, 128, 128);
 /** multitud de zombies vista desde arriba/lejos: cabezas y brazos levantados (para «cientos de manos») */
-const texMultitud = (semilla: number) => lienzo((c, w, h) => {
+export const texMultitud = (semilla: number) => lienzo((c, w, h) => {
   c.clearRect(0, 0, w, h);
   const pieles = ["#9a9fa8", "#a39aa8", "#8e9a9c", "#a8a6a0"], ropas = ["#3a4654", "#54423a", "#3e5446", "#5a5460", "#6a3a34"];
   for (let k = 0; k < 16; k++) {
@@ -207,7 +207,7 @@ const texMultitud = (semilla: number) => lienzo((c, w, h) => {
 }, 1024, 384);
 
 // ------------------------------------------------------------------ piezas
-const lampara = (alto = 0.24) => { // linterna de campamento: base, vidrio encendido, tapa y asa
+export const lampara = (alto = 0.24) => { // linterna de campamento: base, vidrio encendido, tapa y asa
   const g = new THREE.Group(), m = lambert({ color: "#3a5a4a" });
   g.add(cil(0.07, 0.08, 0.05, m, 0, 0.025, 0), cil(0.055, 0.055, alto - 0.1, brillo("#ffd89a"), 0, alto / 2, 0), cil(0.08, 0.07, 0.04, m, 0, alto - 0.03, 0));
   const asa = new THREE.Mesh(new THREE.TorusGeometry(0.07, 0.008, 6, 14, Math.PI), m); asa.position.y = alto - 0.01; g.add(asa);
@@ -215,7 +215,7 @@ const lampara = (alto = 0.24) => { // linterna de campamento: base, vidrio encen
   g.children.forEach((o) => { if ((o as THREE.Mesh).material && ((o as THREE.Mesh).material as THREE.Material).type === "MeshBasicMaterial") o.layers.set(NOINK); });
   return g;
 };
-const huacal = (x: number, y: number, z: number, m: THREE.Material, w = 0.6, h = 0.4, d = 0.45) => { // caja de madera de tablitas
+export const huacal = (x: number, y: number, z: number, m: THREE.Material, w = 0.6, h = 0.4, d = 0.45) => { // caja de madera de tablitas
   const g = new THREE.Group(); g.position.set(x, y, z);
   g.add(caja(w, 0.03, d, m, 0, 0.015, 0));
   for (const s of [-1, 1]) { for (let k = 0; k < 3; k++) g.add(caja(w, 0.09, 0.02, m, 0, 0.08 + k * 0.13, s * (d / 2 - 0.01)), caja(0.02, 0.09, d, m, s * (w / 2 - 0.01), 0.08 + k * 0.13, 0)); }
@@ -223,7 +223,7 @@ const huacal = (x: number, y: number, z: number, m: THREE.Material, w = 0.6, h =
   g.add(caja(w, 0.03, d, m, 0, h - 0.015, 0)); // tapa (para sentarse)
   return g;
 };
-const catre = (m: THREE.Material, mTela: THREE.Material) => { // catre: patas en X, largueros y lona
+export const catre = (m: THREE.Material, mTela: THREE.Material) => { // catre: patas en X, largueros y lona
   const g = new THREE.Group();
   g.add(caja(0.75, 0.04, 1.9, mTela, 0, 0.36, 0));
   for (const s of [-1, 1]) g.add(caja(0.04, 0.04, 1.95, m, s * 0.38, 0.35, 0));

@@ -37,6 +37,7 @@ export type Aspecto = {
   mojado?: boolean; // pelo y ropa empapados: brillos y gotas pegadas («Taquería»)
   coletas?: string; // dos coletas a los lados de la cabeza, con liga de este color («Camión escolar»)
   rebozo?: string; // color de un rebozo sobre los hombros, con flecos («Velorio»)
+  rota?: boolean; // solo la ropa rota y manchada del zombie, sin cambiar la cara («El último tren»: la mamá)
   zombi?: number; // zombie («La ambulancia»): piel con manchas, cicatriz cosida y grieta, cuencas hundidas, párpado de enojo, boca con dientes en pico, ropa rota con manchas y orilla en jirones; el número cambia el dibujo
   estilo?: "ref7"; // cuerpo de cápsula angosta y boca abierta grande, como el video de referencia 7 («La niñera»)
   semilla: number; // para el temblor del trazo
@@ -394,8 +395,8 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
   }
   if (p.vista === "espalda") sillaRespaldo(); // de espaldas, el respaldo queda entre la cámara y la persona
 
-  if (a.zombi) { // ropa de zombie: manchas, parche cosido, rasgaduras y la orilla de abajo en jirones
-    const zr = azar(a.zombi * 7 + 3), x0 = cx - anchoBajo / 2, yT = torsoTop - D * 0.04;
+  if (a.zombi || a.rota) { // ropa de zombie: manchas, parche cosido, rasgaduras y la orilla de abajo en jirones
+    const zr = azar((a.zombi ?? a.semilla) * 7 + 3), x0 = cx - anchoBajo / 2, yT = torsoTop - D * 0.04;
     ctx.save(); ctx.beginPath(); ctx.rect(x0 + 4, yT, anchoBajo - 8, torsoH + D * 0.04); ctx.clip();
     for (let k = 0; k < 5; k++) { // manchas: sangre seca (rojo oscuro) y mugre verdosa
       const mx2 = x0 + zr() * anchoBajo, my2 = yT + zr() * torsoH, rr = D * (0.07 + zr() * 0.11);
