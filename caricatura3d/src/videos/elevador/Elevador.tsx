@@ -313,11 +313,11 @@ const lutFrio = () => {
 };
 
 // ------------------------------------------------------------------ escena 3D
-const PORTADA: Plano = PLANOS[35];
+const PORTADA: Plano = PLANOS[37]; // «Y su mano sigue en la tuya»: Leo sonriendo junto a ti (la toma más clara y escalofriante)
 
 const Escena: React.FC<{ portada?: boolean }> = ({ portada }) => {
   const f0 = useCurrentFrame();
-  const f = portada ? fw(180) : f0;
+  const f = portada ? fw(189) : f0;
   const { camera, scene, gl, size } = useThree();
   const cam = camera as THREE.PerspectiveCamera;
   const mundo = useMemo(() => new Mundo(), []);
@@ -469,8 +469,8 @@ export const ElevadorPortada: React.FC = () => {
   return (
     <AbsoluteFill style={{ background: "#05070c" }}>
       <Lienzo3D portada />
-      <div style={{ position: "absolute", bottom: 0, width: "100%", height: 760, background: "linear-gradient(#05070c00, #05070cee 45%)" }} />
-      <div style={{ position: "absolute", bottom: 260, width: "100%", textAlign: "center" }}>
+      <div style={{ position: "absolute", bottom: 0, width: "100%", height: 620, background: "linear-gradient(#05070c00, #05070cee 50%)" }} />
+      <div style={{ position: "absolute", bottom: 90, width: "100%", textAlign: "center" }}>
         {linea("SI NO TIENE", "#ffffff", 104)}
         {linea("REFLEJO,", "#ffffff", 104)}
         {linea("NO LE DES LA ESPALDA", "#ffd23a", 84)}

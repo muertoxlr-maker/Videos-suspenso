@@ -31,3 +31,4 @@
 ## Video final
 - 2114 cuadros, 1080×1920, 70.5 s (`caricatura3d/salida/elevador/elevador.mp4`, no se sube a git).
 - Audio: −14.0 LUFS, pico −2.3 dBFS.
+- `portada.jpg` — portada para TikTok (composición `ElevadorPortada`): Leo sonriendo junto a ti, asustado; título abajo para no tapar la sonrisa.
