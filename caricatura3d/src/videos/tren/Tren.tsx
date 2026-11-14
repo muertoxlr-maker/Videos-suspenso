@@ -44,6 +44,9 @@ const CARTAS = {
   z4: [zombi("#6a6478", "#34383e", "#4a4440", "mono", "#a8a6a0", 4, { rebozo: "#5a6a4a" }), 1.62],
   z5: [zombi("#8a7440", "#2a2e38", "#2a2420", "rizado", "#9098a8", 5, { mandil: "#b8b0a0" }), 1.68],
   z6: [zombi("#5a5a5e", "#2a2e38", "#3a3430", "revuelto", "#a0a4a0", 6, { prenda: "chamarra", barba: "sombra" }), 1.72],
+  z7: [zombi("#6a3a5a", "#2a2e38", "#1e1c1c", "trenza", "#9aa0aa", 7), 1.6],
+  z8: [zombi("#3a5a5a", "#34383e", "#4a3a30", "rizado", "#a4a09a", 8, { gorra: "#8a6a2a" }), 1.7],
+  z9: [zombi("#7a6a5a", "#2a2e38", "#2a2420", "mono", "#9a9ca8", 9, { prenda: "uniforme" }), 1.66],
 } as const;
 type Quien = keyof typeof CARTAS;
 const ZS: Quien[] = ["z1", "z2", "z3", "z4", "z5", "z6"];
@@ -137,7 +140,7 @@ const PLANOS: Plano[] = [
   // 10 · El tren arranca.  (desde el andén: el tren se va; los zombies corren junto a él)
   { w: 67, lugar: "estacion", foco: 7, cInf: 6, ini: c([3.0, 1.6, -9.5], [1.4, 1.3, 2.0], 50), fin: c([3.0, 1.6, -9.5], [1.4, 1.3, 6.0], 48), hacer: ({ f, m }) => { const z = trenZ(f); PERSIGUEN(m, f, z + 4, 6); m.zombiesPegados(f, z); } },
   // 11 · Afuera, cientos de caras golpean las ventanas.  (desde adentro, las ventanas llenas)
-  { w: 70, lugar: "estacion", foco: 2.6, cInf: 7, sacude: () => 0.008, ini: c([-0.9, 1.4, -0.6], [1.4, 1.35, -1.6], 54), fin: c([-0.85, 1.38, -0.9], [1.4, 1.35, -1.6], 52), hacer: ({ f, m }) => { m.multitudVentana(f); m.ver("sofi", [-0.2, 0, -0.1], { ...VAGON, ...MIEDO(f, 0.6), boca: "grito", lagrimas: 0.6, mirarX: 0.8, brazoIzq: [1.6, -0.9], brazoDer: [1.6, -0.9] }, [1, 0]); } },
+  { w: 70, lugar: "estacion", foco: 2.6, cInf: 7, sacude: () => 0.008, ini: c([-0.75, 1.38, -0.75], [1.4, 1.36, -0.75], 50), fin: c([-0.5, 1.37, -0.75], [1.4, 1.36, -0.75], 48), hacer: ({ f, m }) => { m.multitudVentana(f);  } },
   // 12 · Diez minutos después, el tren se detiene en un túnel.  (por fuera: el tren llega frenando, con los faros)
   { w: 77, lugar: "tunel", foco: 8, cInf: 6, ini: c([-1.2, 0.9, 19], [0.2, 1.1, 8], 46), fin: c([-1.1, 0.95, 18.2], [0.2, 1.1, 8], 46), hacer: ({ f, m }) => { m.llega(f); } },
   // 13 · Hay gente con lámparas. Es un refugio.  (el andén del refugio, visto desde la puerta abierta)
@@ -253,10 +256,22 @@ class Mundo {
   /** zombies que golpean las ventanas mientras el tren arranca */
   zombiesPegados(f: number, tz: number) { void f; void tz; }
   multitudVentana(f: number) {
-    const x = this.x; x.multitud.visible = true;
-    const t = Math.max(0, f - ARRANCA()) / FPS;
-    x.multitud.position.z = -0.55 * t * t * 0.6;
+    // atrás, la multitud sencilla (lejos y chiquita); pegados al vidrio, los zombies con detalle (los mismos de toda la historia)
+    const x = this.x; x.multitud.visible = false; // (la multitud sencilla ya no: el usuario la vio simple; todos con detalle)
+    const t = Math.max(0, f - ARRANCA()) / FPS, corre = 0.33 * t * t;
+    x.multitud.position.set(1.8, 0.75, -corre); // más atrás y más arriba: de la multitud sencilla solo se ven las manos levantadas
     x.filas.forEach((p, i) => { p.position.y = 2.05 - Math.floor(i / 4) * 0.12 + 0.06 * Math.sin(f * 0.35 + i * 1.7); });
+    ZS.forEach((q, i) => {
+      let z = -2.2 + i * 0.62 - corre * 0.5; while (z < -2.3) z += 3.72;
+      const golpe = Math.abs(Math.sin(f * 0.45 + i * 1.3));
+      this.ver(q, [V.x + 0.2 + (i % 2) * 0.12, 0.08 + 0.05 * golpe, z], { ...ANDEN, ...ZOMBI(f, i), boca: i % 2 ? "grito" : "abierta", brazoIzq: [2.75 - 0.2 * golpe, 0.05], brazoDer: [2.75 - 0.2 * Math.abs(Math.sin(f * 0.45 + i * 1.3 + 1.5)), 0.05] }, [-1, 0], tambalea(f, i) * 0.5);
+      this.cartas[q].contacto.visible = false;
+    });
+    (["z7", "z8", "z9"] as Quien[]).forEach((q, i) => { // segunda fila, un poco más atrás y más arriba
+      let z = -1.9 + i * 1.24 - corre * 0.45; while (z < -2.3) z += 3.72;
+      this.ver(q, [V.x + 0.85, 0.3 + 0.05 * Math.abs(Math.sin(f * 0.4 + i)), z], { ...ANDEN, ...ZOMBI(f, i + 6), boca: "grito", brazoIzq: [2.8, 0.05], brazoDer: [2.6, 0.1] }, [-1, 0]);
+      this.cartas[q].contacto.visible = false;
+    });
   }
   /** el tren llega al refugio frenando (visto desde el túnel) */
   llega(f: number) {
