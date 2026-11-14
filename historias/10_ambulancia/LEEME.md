@@ -30,3 +30,4 @@
 ## Video final
 - 2248 cuadros, 1080×1920, 74.9 s (`caricatura3d/salida/ambulancia/ambulancia.mp4`, no se sube a git).
 - Audio: −14.1 LUFS, pico −2.3 dBFS.
+- `portada.jpg` — portada para TikTok (composición `AmbulanciaPortada`): la cara del zombie contra el parabrisas, con el título «SI TIENE FIEBRE, DUERME AMARRADO».

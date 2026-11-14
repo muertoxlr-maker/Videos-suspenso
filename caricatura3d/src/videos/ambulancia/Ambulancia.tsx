@@ -381,11 +381,11 @@ const lutFrio = () => {
 };
 
 // ------------------------------------------------------------------ escena 3D
-const PORTADA: Plano = PLANOS[7];
+const PORTADA: Plano = PLANOS[6]; // «Uno se trepa al cofre»: la cara del zombie contra el parabrisas
 
 const Escena: React.FC<{ portada?: boolean }> = ({ portada }) => {
   const f0 = useCurrentFrame();
-  const f = portada ? fw(40) : f0;
+  const f = portada ? fw(37) : f0;
   const { camera, scene, gl, size } = useThree();
   const cam = camera as THREE.PerspectiveCamera;
   const mundo = useMemo(() => new Mundo(), []);
@@ -516,6 +516,24 @@ export const Ambulancia: React.FC = () => {
       <Titulo f={f} />
       <Botones f={f} />
       <Subtitulos f={f} />
+    </AbsoluteFill>
+  );
+};
+// Portada: el zombie en el cofre y tú gritando al volante (la acción del inicio); el título abajo, sin tapar caras.
+export const AmbulanciaPortada: React.FC = () => {
+  useFuentes();
+  const linea = (txt: string, color: string, tam: number) => (
+    <div style={{ fontFamily: "Titulo", fontSize: tam, lineHeight: 1.1, color, letterSpacing: -1, textShadow: [...Array(24)].map((_, j) => `${(Math.cos(j / 24 * 6.283) * 11).toFixed(1)}px ${(Math.sin(j / 24 * 6.283) * 11).toFixed(1)}px 0 #0d0a0c`).join(",") + ", 0 14px 0 #0d0a0c, 0 22px 34px rgba(0,0,0,0.7)" }}>{txt}</div>
+  );
+  return (
+    <AbsoluteFill style={{ background: "#05070c" }}>
+      <Lienzo3D portada />
+      <div style={{ position: "absolute", bottom: 0, width: "100%", height: 620, background: "linear-gradient(#05070c00, #05070cee 50%)" }} />
+      <div style={{ position: "absolute", bottom: 90, width: "100%", textAlign: "center" }}>
+        {linea("SI TIENE FIEBRE,", "#ffffff", 100)}
+        {linea("DUERME", "#ffffff", 100)}
+        {linea("AMARRADO", "#ffd23a", 112)}
+      </div>
     </AbsoluteFill>
   );
 };
