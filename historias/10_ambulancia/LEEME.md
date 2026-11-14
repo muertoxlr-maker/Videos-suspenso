@@ -21,6 +21,8 @@
 ## Revisión §8.6c / §8.6d
 - Nadie atraviesa paredes ni vidrios: el zombie de la ventana queda afuera (el vidrio se rompe), el del cofre sube por
   el frente; la cobija nunca llega a la boca de Beto; el volante va bajo y no tapa la boca.
+- Beto se recarga en ti inclinando toda su tarjeta (antes se corría el dibujo y la cabeza quedaba cortada en línea
+  recta; lo vio el usuario). Se rehicieron solo los tramos 1500–2247.
 - La torreta alterna rojo y azul con una onda suave (no estroboscópica).
 - `revisar_parpadeo.py` en el video (primero en los 50 s iniciales, luego completo): lo marcado es movimiento buscado
   (la avenida que corre, sacudidas de la ambulancia, ojos y manos que tiemblan); nada en tomas quietas.
