@@ -26,6 +26,14 @@ estructura**, casi al segundo:
 |---|---|---|---|
 | **Gancho** | 0–7 s | Empieza con **«Imagina que…»** (6 de 6), en segunda persona y presente. Un lugar cotidiano y concreto + una interrupción. | Una fiesta familiar que se corta; un vecino raro que toca tu puerta; un hotel donde suena el teléfono. En uno el gancho es una paradoja («te pasa X… y no pasa nada»). |
 
+> ✅ **Gancho con acción (referencia 8, mandada por el usuario como ejemplo de lo que quiere).** La historia empieza
+> *ya dentro del peligro*, en orden y sin adelantos: la frase «Imagina que…» se dice encima de la acción (en la
+> referencia, el segundo 0 ya es una persecución con disparos; el personaje lleva días huyendo). Medido en la referencia:
+> acción física desde el cuadro 0, cortes cada ~1.5–2 s en los primeros 12 s, tomas de vehículo/carrera/caras de pánico,
+> la familia en riesgo presentada en los primeros 5 s, rótulo de lugar y hora arriba. La calma y las reglas llegan
+> hasta la mitad (~s 30), y el final sigue siendo la decisión con dos botones. Para historias nuevas: elegir un
+> protagonista que ya está huyendo, peleando o corriendo cuando empieza el video (no «llegas a un lugar tranquilo»).
+>
 > ❌ **Prohibido por el usuario (después de «El elevador»): nada de adelantos.** El video no empieza con una escena de más adelante (o del clímax) para luego regresar a «Imagina que…». La primera frase es «Imagina que…» y la historia va en orden; el suspenso del inicio sale de la interrupción dentro de esa misma escena.
 | **Amenaza y contexto** | 5–13 s | Llega la noticia del peligro por un canal concreto (gente gritando, la radio, recepción, un vecino) y se fija el lugar cerrado. | Siempre hay **un espacio cerrado** que proteger: salón, búnker, refugio, rancho, habitación. |
 | **Regla Nº 1** | 13–17.4 s ✅ | «Regla número uno: …» + **una frase que la justifica** con lógica del mundo. | Reglas de supervivencia simples y visuales (apagar la música, el silencio es la alarma, no abrir). |
