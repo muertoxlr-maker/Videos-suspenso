@@ -105,7 +105,11 @@ const AL_PIE = (m: Mundo, f: number, k: number, alto = 2.6) => {
 const SENTADOS = (m: Mundo, f: number, tu: Partial<Pose> = {}, beto: Partial<Pose> = {}, fiebre = false) => {
   m.cobija = true;
   m.ver("tu", TU_S, { ...CALIDA, sentado: 1, brazoIzq: [0.2, 0.3], brazoDer: [0.2, 0.3], ...tu }, [0, -1]);
-  m.ver(fiebre ? "betoF" : "beto", BETO_S, { ...CALIDA, sentado: 1, giro: -0.25, ...(fiebre ? { ojeras: 1, sudor: 1, ...tiembla(f, 0.5) } : {}), ...beto }, [0, -1]);
+  // recargarse: se mueve y se inclina TODA la tarjeta hacia ti (antes se corría el dibujo dentro de la tarjeta y la cabeza
+  // se salía de la orilla: quedaba cortada en línea recta)
+  const recarga = Math.max(0, (beto.cuerpoX ?? 0) + (beto.cabezaX ?? 0));
+  const { cuerpoX: _cx, cabezaX: _hx, ...bp } = beto; void _cx; void _hx;
+  m.ver(fiebre ? "betoF" : "beto", [BETO_S[0] - recarga * 0.32, BETO_S[1], BETO_S[2]], { ...CALIDA, sentado: 1, giro: -0.25, ...(fiebre ? { ojeras: 1, sudor: 1, ...tiembla(f, 0.5) } : {}), ...bp }, [0, -1], -recarga * 0.38);
 };
 const REGLAS_CAM = (dist: number, y: number, fov: number, dx = 0): Cam => c([PARED_REGLAS.x - 0.55 + dx, AZ + y + 0.1, PARED_REGLAS.z + dist], [PARED_REGLAS.x - 0.55 + dx, AZ + y, PARED_REGLAS.z], fov);
 /** los dos sentados, de frente */
