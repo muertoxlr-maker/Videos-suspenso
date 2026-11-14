@@ -34,6 +34,8 @@ estructura**, casi al segundo:
 > hasta la mitad (~s 30), y el final sigue siendo la decisión con dos botones. Para historias nuevas: elegir un
 > protagonista que ya está huyendo, peleando o corriendo cuando empieza el video (no «llegas a un lugar tranquilo»).
 >
+> ✅ **Aprobado por el usuario: «La ambulancia»** (`caricatura3d/src/videos/ambulancia/`, `historias/10_ambulancia/`) — gancho con acción desde el segundo 0, ~34 s de acción antes de las reglas, zombies con detalle (`zombi` en `personaje.ts`). Es el modelo para los próximos videos de acción.
+>
 > ❌ **Prohibido por el usuario (después de «El elevador»): nada de adelantos.** El video no empieza con una escena de más adelante (o del clímax) para luego regresar a «Imagina que…». La primera frase es «Imagina que…» y la historia va en orden; el suspenso del inicio sale de la interrupción dentro de esa misma escena.
 | **Amenaza y contexto** | 5–13 s | Llega la noticia del peligro por un canal concreto (gente gritando, la radio, recepción, un vecino) y se fija el lugar cerrado. | Siempre hay **un espacio cerrado** que proteger: salón, búnker, refugio, rancho, habitación. |
 | **Regla Nº 1** | 13–17.4 s ✅ | «Regla número uno: …» + **una frase que la justifica** con lógica del mundo. | Reglas de supervivencia simples y visuales (apagar la música, el silencio es la alarma, no abrir). |
