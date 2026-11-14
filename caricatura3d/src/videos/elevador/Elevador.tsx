@@ -23,7 +23,9 @@ import { BOTONERA, CAB, CAMARA, EMERGENCIA, ESPEJO, HOJA, INDICADOR, INTERFON, P
 import PALABRAS from "./palabras.json";
 
 export const FPS = 30;
-export const ELEVADOR_CUADROS = Math.ceil(76.33 * FPS); // duración de voz_final.mp3
+// Sin adelanto (pedido del usuario): la voz se recortó y empieza en «Imagina que…». Las palabras del adelanto
+// (0–12) siguen en palabras.json con tiempos negativos para no mover los números; nunca se ven ni se oyen.
+export const ELEVADOR_CUADROS = Math.ceil(70.45 * FPS); // duración de voz_final.mp3 (76.33 − 5.88 s del adelanto)
 const P = PALABRAS as { txt: string; ini: number; fin: number }[];
 const fw = (i: number) => Math.round(P[i].ini * FPS);
 const fin = (i: number) => Math.round(P[i].fin * FPS);
@@ -172,7 +174,8 @@ const PLANOS: Plano[] = [
   // 39 · o sales tú solo por la rendija?  (la rendija: el pasillo arriba, el concreto abajo)
   { w: 198, foco: 1.4, cInf: 8, rapido: true, ini: c([0.15, 1.45, -0.4], [0.0, 1.55, 0.9], 48), fin: c([0.08, 1.48, 0.1], [0.0, 1.6, 0.9], 44), hacer: ({ m }) => { m.entrePisos(0.5); m.luz(0.0, 2.0, 0.5, 0.9, "#ff4a30"); } },
 ];
-const inicioPlano = (i: number) => (i === 0 ? 0 : fw(PLANOS[i].w) - 2);
+const PRIMERO = 4; // los planos 0–3 eran el adelanto de la caída: ya no salen
+const inicioPlano = (i: number) => (i <= PRIMERO ? 0 : fw(PLANOS[i].w) - 2);
 export const planoEn = (f: number) => { let i = 0; while (i + 1 < PLANOS.length && f >= inicioPlano(i + 1)) i++; return i; };
 const EMERG = () => fw(104) + 2; // se prende la luz roja
 const APAGON = () => fw(12); // «se apaga» (en el gancho)
@@ -378,6 +381,7 @@ const contornoTexto = (px: number) => ({ WebkitTextStroke: `${px}px #0d0a0c`, pa
 const BLOQUES: number[][] = (() => {
   const out: number[][] = []; let cur: number[] = [];
   P.forEach((w, i) => {
+    if (w.ini < 0) return; // palabras del adelanto quitado
     if (cur.length && (cur.length >= 3 || w.ini - P[i - 1].fin > 0.32 || /[.,:;?!»…]$/.test(P[i - 1].txt))) { out.push(cur); cur = []; }
     cur.push(i);
   });

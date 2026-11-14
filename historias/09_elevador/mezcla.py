@@ -20,7 +20,7 @@ import sonido  # noqa: E402
 SR = sonido.SR
 FPS = 30
 P = json.load(open(AQUI / "voz" / "palabras.json"))
-CUADROS = int(np.ceil(76.33 * FPS))  # = ELEVADOR_CUADROS del video
+CUADROS = int(np.ceil(70.45 * FPS))  # = ELEVADOR_CUADROS del video
 DUR = CUADROS / FPS
 N = int(DUR * SR)
 rng = np.random.default_rng(48)
@@ -115,12 +115,7 @@ def poner(x, seg, vol=1.0):
     pista[i:i + len(x)] += x * vol
 
 
-# gancho (0–6 s): la caída del elevador, más fuerte que el resto — es la acción que engancha
-poner(golpe("cable_truena", -4), 0.0)                      # antes de «¡Agárrate!»
-poner(golpe("caida", -5), fw(1) - 0.1)                     # «El elevador cae tres pisos...»
-poner(golpe("frenazo", -3), fw(7) - 0.05)                  # «y frena de golpe»
-poner(golpe("apagon", -6), fw(10) + 0.1)                   # «Todo se apaga»
-gancho = pista.copy(); pista[:] = 0                        # el gancho va 8 dB más fuerte que los demás efectos
+# sin adelanto (pedido del usuario): la voz empieza en «Imagina que…»; los efectos de la caída ya no van
 # títulos: golpe fuerte en las reglas, más suave en el salto de tiempo
 for w in (61, 76, 87):
     poner(golpe("golpe_titulo", -5), t(w) - 0.07)
@@ -137,7 +132,7 @@ poner(golpe("golpe_titulo", -6), t(193) - 0.07)            # botones
 # final (solo los últimos segundos): dron y latidos
 dron_f = tramo(sfx("dron"), fw(169), DUR, 3.0, 0.8)
 latidos = tramo(sfx("latidos"), fw(179), DUR, 1.0, 0.6)
-fondo_crudo = dron_f * db(-5) + latidos * db(-3) + pista * db(-14) + gancho * db(-6)
+fondo_crudo = dron_f * db(-5) + latidos * db(-3) + pista * db(-14) 
 
 # ------------------------------------------------------------------ voz y mezcla
 voz = sonido.leer_audio(AQUI / "voz" / "voz_final.mp3")
