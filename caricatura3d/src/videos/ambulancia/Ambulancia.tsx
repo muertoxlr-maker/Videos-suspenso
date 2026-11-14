@@ -182,7 +182,7 @@ const PLANOS: Plano[] = [
   // 30 · «Tengo frío».
   { w: 143, lugar: "azotea", foco: 1.6, cInf: 8, ini: CERCA(BETO_S_CARA, 1.9, 36), fin: CERCA(BETO_S_CARA, 1.7, 34), hacer: ({ f, m }) => { m.noche = true; SENTADOS(m, f, {}, { mirarX: 0.5, mirarY: 0.4, boca: "abierta", bocaAbre: habla(f, 143, 144), cejasMiedo: 0.7, hombros: 0.8, ...tiembla(f, 0.9) }, true); m.soloBeto(); } },
   // 31 · Le tocas la frente.
-  { w: 145, lugar: "azotea", foco: 3.8, cInf: 7, ini: DOS(4.0, 42), fin: DOS(3.8, 42), hacer: ({ f, k, m }) => { m.noche = true; SENTADOS(m, f, { mirarX: -0.7, mirarY: -0.2, cejasMiedo: 0.5, boca: "linea", brazoIzq: [lerp(0.4, 2.0, empuje(k * 2, 2)), 0.25], cuerpoX: -0.2 }, { mirarX: 0.5, mirarY: 0.4, boca: "triste", hombros: 0.7 }, true); } },
+  { w: 145, lugar: "azotea", foco: 3.8, cInf: 7, ini: DOS(4.0, 42), fin: DOS(3.8, 42), hacer: ({ f, k, m }) => { m.noche = true; SENTADOS(m, f, { mirarX: -0.7, mirarY: -0.2, cejasMiedo: 0.5, boca: "linea", cuerpoX: -0.2 }, { mirarX: 0.5, mirarY: 0.4, boca: "triste", hombros: 0.7 }, true); m.tocar(empuje(k * 2.2, 2)); } },
   // 32 · Está ardiendo.
   { w: 149, lugar: "azotea", foco: 1.8, cInf: 8, ini: CERCA(TU_S_CARA, 2.2, 36), fin: CERCA(TU_S_CARA, 1.95, 34), hacer: ({ f, m }) => { m.noche = true; SENTADOS(m, f, { ...MIEDO(f, 0.5), mirarX: -0.5, mirarY: -0.2, boca: "o", sudor: 1, cejasMiedo: 1 }, {}, true); m.soloTu(); } },
   // 33 · Un guardia pasa con su linterna, revisando uno por uno.  (ustedes de espaldas, al frente; él alumbra a los que duermen)
@@ -206,6 +206,23 @@ class Mundo {
   f = 0;
   adentro = false; golpes = false; cobija = false; cobijaSube = 0; noche = false; multitud = 0; escaleraArriba = false; escaleraY = 0; ambuZ = 0;
   private cam!: THREE.PerspectiveCamera;
+  // tu mano en la frente de Beto: manga (barra con contorno) y mano redonda, delante de las tarjetas
+  toque = (() => {
+    const g = new THREE.Group(), tinta = new THREE.MeshBasicMaterial({ color: "#141012" });
+    const manga = new THREE.Group(); manga.add(new THREE.Mesh(new THREE.PlaneGeometry(1, 0.075), tinta), Object.assign(new THREE.Mesh(new THREE.PlaneGeometry(1, 0.045), new THREE.MeshBasicMaterial({ color: "#2a4468" })), { renderOrder: 1 }));
+    manga.children[1].position.z = 0.003;
+    const mano = new THREE.Group(); mano.add(new THREE.Mesh(new THREE.CircleGeometry(0.085, 20), tinta), new THREE.Mesh(new THREE.CircleGeometry(0.068, 20), new THREE.MeshBasicMaterial({ color: "#8f7460" })));
+    mano.children[1].position.z = 0.003;
+    g.add(manga, mano); g.traverse((o) => o.layers.set(NOINK)); g.visible = false; this.h.raiz.add(g);
+    return { g, manga, mano };
+  })();
+  /** k 0 … 1: la mano sale de tu hombro y llega a la frente de Beto (las tarjetas miran a −z) */
+  tocar(k: number) {
+    const z = LUG[2] - 0.05, o = new THREE.Vector3(TU_S[0] + 0.27, AZ + 0.8, z), d = new THREE.Vector3(BETO_S[0] - 0.02, BETO_S_CARA[1] - 0.02, z), m = o.clone().lerp(d, k);
+    const t = this.toque; t.g.visible = true; t.g.rotation.y = Math.PI; t.g.position.set(0, 0, 0);
+    t.mano.position.set(-m.x, m.y, -m.z); const c = o.clone().add(m).multiplyScalar(0.5), l = m.clone().sub(o);
+    t.manga.position.set(-c.x, c.y, -c.z + 0.004); t.manga.scale.set(Math.max(0.01, l.length()), 1, 1); t.manga.rotation.z = Math.atan2(l.y, -l.x);
+  }
   constructor() { for (const c of Object.values(this.cartas)) { this.h.raiz.add(c.grupo); c.sombraLarga.visible = false; } }
   reiniciar(cam: THREE.PerspectiveCamera) {
     this.cam = cam;
@@ -213,6 +230,7 @@ class Mundo {
     const h = this.h;
     h.luzExtra.intensity = 0; h.luzExtra2.intensity = 0; h.luzLinterna.intensity = 0; h.haces.forEach((x) => (x.visible = false));
     this.adentro = false; this.golpes = false; this.cobija = false; this.cobijaSube = 0; this.noche = false; this.multitud = 0; this.escaleraArriba = false; this.escaleraY = 0; this.ambuZ = 0;
+    this.toque.g.visible = false;
     h.cobijaDoblada.visible = false; h.vidrioRoto.visible = false; h.vidrioTrasDer.visible = true;
   }
   luz(x: number, y: number, z: number, i: number, color = "#ffc890") { const l = this.h.luzExtra; l.position.set(x, y, z); l.intensity = i; l.color.set(color); }
