@@ -183,7 +183,7 @@ const texMadera = () => lienzo((c, w, h) => {
 /** multitud de zombies vista desde arriba/lejos: cabezas y brazos levantados (para «cientos de manos») */
 const texMultitud = (semilla: number) => lienzo((c, w, h) => {
   c.clearRect(0, 0, w, h);
-  const pieles = ["#8fa58a", "#9aa694", "#7f9884", "#a3a890"], ropas = ["#3a4654", "#54423a", "#3e5446", "#5a5460", "#6a3a34"];
+  const pieles = ["#9a9fa8", "#a39aa8", "#8e9a9c", "#a8a6a0"], ropas = ["#3a4654", "#54423a", "#3e5446", "#5a5460", "#6a3a34"];
   for (let k = 0; k < 16; k++) {
     const x = 30 + k * (w - 60) / 15 + (rz(semilla + k) - 0.5) * 22, y = h * 0.62 + rz(semilla * 3 + k) * h * 0.2, r = 30 + rz(semilla * 7 + k) * 8;
     const piel = pieles[k % 4], ropa = ropas[(k + semilla) % 5];
@@ -200,7 +200,9 @@ const texMultitud = (semilla: number) => lienzo((c, w, h) => {
     c.fillStyle = piel; c.beginPath(); c.arc(x, y, r, 0, 7); c.fill(); c.stroke();
     c.fillStyle = ["#2a2420", "#3a3430", "#1e1c1c"][k % 3]; c.beginPath(); c.arc(x, y - r * 0.25, r * 1.02, Math.PI * 1.05, Math.PI * 1.95); c.fill(); // pelo
     for (const s of [-1, 1]) { c.fillStyle = "rgba(60,40,70,0.5)"; c.beginPath(); c.arc(x + s * r * 0.38, y + r * 0.02, r * 0.3, 0, 7); c.fill(); c.fillStyle = "#e8e4dc"; c.beginPath(); c.arc(x + s * r * 0.38, y - r * 0.02, r * 0.24, 0, 7); c.fill(); c.lineWidth = 3; c.stroke(); c.fillStyle = "#141012"; c.beginPath(); c.arc(x + s * r * 0.38, y - r * 0.02, r * 0.045, 0, 7); c.fill(); }
-    c.fillStyle = "#2a0e0e"; c.beginPath(); c.ellipse(x, y + r * 0.52, r * 0.3, r * 0.2, 0, 0, 7); c.fill(); c.lineWidth = 3; c.stroke();
+    c.fillStyle = "#2a0a10"; c.beginPath(); c.ellipse(x, y + r * 0.52, r * 0.36, r * 0.24, 0, 0, 7); c.fill(); c.lineWidth = 3; c.stroke();
+    c.fillStyle = "#e8e2c4"; for (let d = -2; d <= 2; d++) { c.beginPath(); c.moveTo(x + d * r * 0.13 - r * 0.06, y + r * 0.32); c.lineTo(x + d * r * 0.13, y + r * 0.5); c.lineTo(x + d * r * 0.13 + r * 0.06, y + r * 0.32); c.fill(); }
+    for (const s of [-1, 1]) { c.strokeStyle = "#141012"; c.lineWidth = 5; c.beginPath(); c.moveTo(x + s * r * 0.62, y - r * 0.34); c.lineTo(x + s * r * 0.14, y - r * 0.12); c.stroke(); }
   }
 }, 1024, 384);
 

@@ -37,6 +37,7 @@ export type Aspecto = {
   mojado?: boolean; // pelo y ropa empapados: brillos y gotas pegadas («Taquería»)
   coletas?: string; // dos coletas a los lados de la cabeza, con liga de este color («Camión escolar»)
   rebozo?: string; // color de un rebozo sobre los hombros, con flecos («Velorio»)
+  zombi?: number; // zombie («La ambulancia»): piel con manchas, cicatriz cosida y grieta, cuencas hundidas, párpado de enojo, boca con dientes en pico, ropa rota con manchas y orilla en jirones; el número cambia el dibujo
   estilo?: "ref7"; // cuerpo de cápsula angosta y boca abierta grande, como el video de referencia 7 («La niñera»)
   semilla: number; // para el temblor del trazo
 };
@@ -393,6 +394,30 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
   }
   if (p.vista === "espalda") sillaRespaldo(); // de espaldas, el respaldo queda entre la cámara y la persona
 
+  if (a.zombi) { // ropa de zombie: manchas, parche cosido, rasgaduras y la orilla de abajo en jirones
+    const zr = azar(a.zombi * 7 + 3), x0 = cx - anchoBajo / 2, yT = torsoTop - D * 0.04;
+    ctx.save(); ctx.beginPath(); ctx.rect(x0 + 4, yT, anchoBajo - 8, torsoH + D * 0.04); ctx.clip();
+    for (let k = 0; k < 5; k++) { // manchas: sangre seca (rojo oscuro) y mugre verdosa
+      const mx2 = x0 + zr() * anchoBajo, my2 = yT + zr() * torsoH, rr = D * (0.07 + zr() * 0.11);
+      ctx.fillStyle = k % 2 ? "rgba(96,20,22,0.8)" : "rgba(70,92,54,0.7)";
+      ctx.beginPath(); ctx.ellipse(mx2, my2, rr, rr * (0.6 + zr() * 0.6), zr() * 3, 0, Math.PI * 2); ctx.fill();
+      if (k % 2) { ctx.fillRect(mx2 - 4, my2, 8, rr * (1.2 + zr() * 1.6)); ctx.beginPath(); ctx.arc(mx2 + rr * 1.3, my2 - rr * 0.6, rr * 0.22, 0, 7); ctx.fill(); }
+    }
+    if (p.vista === "frente") { // parche de otra tela, con puntadas
+      const px2 = x0 + anchoBajo * (0.14 + zr() * 0.4), py2 = yT + torsoH * (0.38 + zr() * 0.25), pw = anchoBajo * 0.36, ph = torsoH * 0.26;
+      ctx.fillStyle = mezcla(a.ropa, "#c9c2a8", 0.55); ctx.fillRect(px2, py2, pw, ph);
+      ctx.strokeStyle = TINTA; ctx.lineWidth = 3; ctx.setLineDash([7, 6]); ctx.strokeRect(px2 + 3, py2 + 3, pw - 6, ph - 6); ctx.setLineDash([]);
+    }
+    ctx.strokeStyle = TINTA; ctx.lineWidth = 4; // rasgaduras
+    for (let k = 0; k < 3; k++) { const rx = x0 + anchoBajo * (0.15 + zr() * 0.7), ry = yT + torsoH * (0.12 + zr() * 0.6); ctx.beginPath(); ctx.moveTo(rx, ry); ctx.lineTo(rx + D * 0.05, ry + D * 0.08); ctx.lineTo(rx - D * 0.02, ry + D * 0.14); ctx.lineTo(rx + D * 0.04, ry + D * 0.22); ctx.stroke(); }
+    ctx.restore();
+    // jirones: se recortan picos en la orilla de abajo y se repasa el contorno
+    const n = 6, pts: [number, number][] = [];
+    for (let k = 0; k <= n; k++) { const x = x0 + (anchoBajo * k) / n; pts.push([x, torsoBot + 8]); if (k < n) pts.push([x + anchoBajo / n / 2 + (zr() - 0.5) * 10, torsoBot - D * (0.06 + zr() * 0.13)]); }
+    ctx.save(); ctx.globalCompositeOperation = "destination-out"; ctx.beginPath(); ctx.moveTo(x0 - 8, torsoBot + 14); pts.forEach(([x, y]) => ctx.lineTo(x, y)); ctx.lineTo(x0 + anchoBajo + 8, torsoBot + 14); ctx.closePath(); ctx.fill(); ctx.restore();
+    ctx.strokeStyle = TINTA; ctx.lineWidth = LW * 0.8; ctx.beginPath(); pts.forEach(([x, y], k) => (k ? ctx.lineTo(x, y - 1) : ctx.moveTo(x, y - 12))); ctx.lineTo(x0 + anchoBajo, torsoBot - 12); ctx.stroke();
+  }
+
   // ---------------- cabeza ----------------
   cx += (p.cabezaX ?? 0) * D;
   const g = p.vista === "frente" ? p.giro : 0;
@@ -563,6 +588,19 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
   const ey = cabezaY + r * 0.08;
   const er = r * 0.2 * p.ojos;
   const sep = r * 0.4 * (1 - 0.22 * Math.abs(g));
+  if (a.zombi) { // piel de zombie: manchas, una grieta que baja de la frente, cicatriz cosida en la mejilla y cuencas hundidas
+    const zr = azar(a.zombi * 13 + 1), lado = a.zombi % 2 ? 1 : -1;
+    ctx.save(); ctx.beginPath(); ctx.arc(cx, cabezaY, r - 5, 0, Math.PI * 2); ctx.clip();
+    for (let k = 0; k < 5; k++) { ctx.fillStyle = k % 2 ? "rgba(70,60,90,0.3)" : "rgba(60,84,60,0.3)"; ctx.beginPath(); ctx.ellipse(cx + (zr() - 0.5) * r * 1.7, cabezaY + (zr() - 0.5) * r * 1.7, r * (0.1 + zr() * 0.16), r * (0.08 + zr() * 0.12), zr() * 3, 0, Math.PI * 2); ctx.fill(); }
+    ctx.strokeStyle = TINTA; ctx.lineWidth = 4; // grieta
+    let gx2 = cx - lado * r * (0.25 + zr() * 0.3), gy2 = cabezaY - r * 0.98; ctx.beginPath(); ctx.moveTo(gx2, gy2);
+    for (let k = 0; k < 4; k++) { gx2 += (zr() - 0.4) * r * 0.2 * -lado; gy2 += r * 0.13; ctx.lineTo(gx2, gy2); if (k === 1) { ctx.lineTo(gx2 + lado * r * 0.12, gy2 + r * 0.05); ctx.moveTo(gx2, gy2); } } ctx.stroke();
+    const cx2 = fx + lado * r * 0.62, cy2 = cabezaY + r * 0.42; // cicatriz con puntadas
+    ctx.lineWidth = 4.5; ctx.beginPath(); ctx.moveTo(cx2 - r * 0.16, cy2 - r * 0.12); ctx.lineTo(cx2 + r * 0.14, cy2 + r * 0.14); ctx.stroke();
+    ctx.lineWidth = 3.5; for (let k = 0; k < 4; k++) { const t = k / 3, x = cx2 - r * 0.16 + t * r * 0.3, y = cy2 - r * 0.12 + t * r * 0.26; ctx.beginPath(); ctx.moveTo(x + r * 0.05, y - r * 0.05); ctx.lineTo(x - r * 0.05, y + r * 0.05); ctx.stroke(); }
+    for (const s of [-1, 1]) { const go = ctx.createRadialGradient(fx + s * sep, ey, er * 0.4, fx + s * sep, ey, er * 1.75); go.addColorStop(0, "rgba(30,20,40,0.75)"); go.addColorStop(1, "rgba(30,20,40,0)"); ctx.fillStyle = go; ctx.beginPath(); ctx.arc(fx + s * sep, ey, er * 1.75, 0, Math.PI * 2); ctx.fill(); }
+    ctx.restore();
+  }
   for (const s of [-1, 1]) {
     const lejano = Math.sign(g) === s;
     const sx = lejano ? 1 - 0.35 * Math.abs(g) : 1;
@@ -577,7 +615,14 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
       ctx.beginPath(); ctx.ellipse(x, ey + er * 0.1, er * sx * 0.85, er * 0.3, 0, 0.12 * Math.PI, 0.88 * Math.PI); ctx.stroke();
       continue;
     }
-    contorno(() => ctx.ellipse(x, ey, er * sx, er * 1.06, 0, 0, Math.PI * 2), "#f6f1e6", 6);
+    contorno(() => ctx.ellipse(x, ey, er * sx, er * 1.06, 0, 0, Math.PI * 2), a.zombi ? "#ecebc4" : "#f6f1e6", 6);
+    if (a.zombi) { // párpado caído en diagonal (mirada de enojo) y pupila mínima
+      ctx.save(); ctx.beginPath(); ctx.ellipse(x, ey, er * sx - 2, er * 1.06 - 2, 0, 0, Math.PI * 2); ctx.clip();
+      ctx.fillStyle = sombra(a.piel, 0.45); ctx.beginPath(); ctx.moveTo(x - s * er * 1.3, ey - er * 1.3); ctx.lineTo(x + s * er * 1.3, ey - er * 1.3); ctx.lineTo(x + s * er * 1.3, ey - er * 0.62); ctx.lineTo(x - s * er * 1.3, ey + er * 0.08); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = TINTA; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(x + s * er * 1.3, ey - er * 0.62); ctx.lineTo(x - s * er * 1.3, ey + er * 0.08); ctx.stroke(); ctx.restore();
+      ctx.beginPath(); ctx.arc(x + (p.mirarX * 0.45) * er * sx - s * er * 0.1, ey + er * 0.38 + p.mirarY * 0.2 * er, er * 0.14, 0, Math.PI * 2); ctx.fillStyle = TINTA; ctx.fill();
+      continue;
+    }
     if (p.ojosVacios) { // ojeras grisáceas bajo cada ojo
       ctx.lineWidth = 4; ctx.strokeStyle = "rgba(60,50,70,0.55)";
       ctx.beginPath(); ctx.ellipse(x, ey + er * 0.2, er * sx * 1.05, er * 1.15, 0, 0.15 * Math.PI, 0.85 * Math.PI); ctx.stroke();
@@ -608,7 +653,20 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
   const my = cabezaY + r * 0.55;
   const mw = r * 0.26 * (1 - 0.2 * Math.abs(g));
   const mx = fx + g * r * 0.06;
-  if (p.boca === "dientes") {
+  if (a.zombi && (p.boca === "abierta" || p.boca === "grito" || p.boca === "dientes")) { // boca de zombie: abierta, oscura, con dientes en pico arriba y abajo
+    const k = p.boca === "grito" ? 1 : p.boca === "dientes" ? 0.45 : Math.max(0.3, p.bocaAbre ?? 0.5), bw2 = mw * 1.25, bh = r * (0.12 + 0.2 * k), cy2 = my + r * 0.05;
+    const forma = () => { ctx.moveTo(mx - bw2, cy2 - bh * 0.7); ctx.quadraticCurveTo(mx, cy2 - bh * 1.15, mx + bw2, cy2 - bh * 0.7); ctx.quadraticCurveTo(mx + bw2 * 1.12, cy2 + bh * 0.4, mx + bw2 * 0.6, cy2 + bh); ctx.quadraticCurveTo(mx, cy2 + bh * 1.2, mx - bw2 * 0.6, cy2 + bh); ctx.quadraticCurveTo(mx - bw2 * 1.12, cy2 + bh * 0.4, mx - bw2, cy2 - bh * 0.7); };
+    contorno(forma, "#2a0a10", 6);
+    ctx.save(); ctx.beginPath(); forma(); ctx.clip();
+    ctx.fillStyle = "#8a2a34"; ctx.beginPath(); ctx.ellipse(mx, cy2 + bh * 0.95, bw2 * 0.6, bh * 0.45, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#e8e2c4"; ctx.strokeStyle = TINTA; ctx.lineWidth = 2.5;
+    const nd = 6;
+    for (let i = 0; i < nd; i++) { const xa = mx - bw2 + (2 * bw2 * i) / nd, xb = xa + (2 * bw2) / nd, alto2 = bh * (0.55 + 0.25 * ((i * 7 + (a.zombi ?? 0)) % 3) / 2);
+      ctx.beginPath(); ctx.moveTo(xa, cy2 - bh * 1.2); ctx.lineTo((xa + xb) / 2, cy2 - bh * 1.0 + alto2); ctx.lineTo(xb, cy2 - bh * 1.2); ctx.closePath(); ctx.fill(); ctx.stroke();
+      if (i > 0 && i < nd - 1 && (i + (a.zombi ?? 0)) % 4 !== 0) { ctx.beginPath(); ctx.moveTo(xa + 3, cy2 + bh * 1.25); ctx.lineTo((xa + xb) / 2 + 3, cy2 + bh * 1.05 - alto2 * 0.75); ctx.lineTo(xb + 3, cy2 + bh * 1.25); ctx.closePath(); ctx.fill(); ctx.stroke(); } }
+    ctx.restore();
+    ctx.fillStyle = "rgba(96,20,22,0.85)"; ctx.beginPath(); ctx.roundRect(mx + bw2 * 0.35, cy2 + bh * 0.9, 7, r * 0.2, 3.5); ctx.fill(); // hilo de sangre
+  } else if (p.boca === "dientes") {
     contorno(() => ctx.roundRect(mx - mw, my - r * 0.1, mw * 2, r * 0.2, r * 0.05), "#f3eee2", 6);
     ctx.lineWidth = 3.5; ctx.strokeStyle = TINTA;
     ctx.beginPath(); ctx.moveTo(mx - mw, my); ctx.lineTo(mx + mw, my); ctx.stroke();

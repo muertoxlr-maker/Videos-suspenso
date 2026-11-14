@@ -37,11 +37,11 @@ const JOVEN: Aspecto = { piel: "#d2a482", pelo: "#1a1414", ropa: "#3a6a5a", ropa
 const zombi = (ropa: string, pantalon: string, pelo: string, peinado: Aspecto["peinado"], piel: string, semilla: number, extra: Partial<Aspecto> = {}): Aspecto => ({ piel, pelo, ropa, ropaInterior: "#3a3a36", pantalon, zapatos: "#2a2622", peinado, estilo: "ref7", semilla, ...extra });
 const CARTAS = {
   tu: [TU, 1.62], beto: [BETO, 1.15], betoF: [BETO_F, 1.15], guardia: [GUARDIA, 1.76], senora: [SENORA, 1.52], senor: [SENOR, 1.66], joven: [JOVEN, 1.6],
-  z1: [zombi("#4a5a6a", "#3a3e48", "#2a2420", "revuelto", "#8fa58a", 1021, { prenda: "camisa" }), 1.68],
-  z2: [zombi("#6a3a34", "#2e3238", "#3a3430", "largo", "#9aa694", 1023), 1.58],
-  z3: [zombi("#3e5446", "#4a4238", "#1e1c1c", "recogido", "#7f9884", 1025, { prenda: "chamarra", barba: "sombra" }), 1.74],
-  z4: [zombi("#5a5460", "#34383e", "#4a4440", "mono", "#a3a890", 1027, { cuello: "redondo" }), 1.62],
-  z5: [zombi("#7a6a3a", "#2a2e38", "#2a2420", "rizado", "#889e88", 1029, { mandil: "#b8b0a0" }), 1.7],
+  z1: [zombi("#56687a", "#3a3e48", "#2a2420", "revuelto", "#9a9fa8", 1021, { prenda: "camisa", zombi: 1 }), 1.68],
+  z2: [zombi("#7a3e3a", "#2e3238", "#2a2226", "largo", "#a39aa8", 1023, { zombi: 2 }), 1.58],
+  z3: [zombi("#4a6450", "#4a4238", "#1e1c1c", "recogido", "#8e9a9c", 1025, { prenda: "chamarra", gorra: "#7a2a2a", zombi: 3 }), 1.74],
+  z4: [zombi("#6a6478", "#34383e", "#4a4440", "mono", "#a8a6a0", 1027, { cuello: "redondo", rebozo: "#5a6a4a", zombi: 4 }), 1.62],
+  z5: [zombi("#8a7440", "#2a2e38", "#2a2420", "rizado", "#9098a8", 1029, { mandil: "#b8b0a0", sombrero: "#a89a78", zombi: 5 }), 1.7],
 } as const;
 type Quien = keyof typeof CARTAS;
 const ALTO = (q: Quien) => CARTAS[q][1];
@@ -94,7 +94,7 @@ const MANEJA = (m: Mundo, f: number, pose: Partial<Pose> = {}) => m.ver("tu", CH
 /** zombies que persiguen a la ambulancia por la avenida (detrás y a los lados) */
 const PERSIGUEN = (m: Mundo, f: number, lejos = 0, cuantos = 5) => {
   const L: [number, number][] = [[-2.3, -3.2], [2.2, -4.6], [-3.2, -6.5], [3.3, -2.6], [-1.9, -8.5]];
-  L.slice(0, cuantos).forEach(([x, z], i) => m.ver(ZS[i], [x + 0.25 * Math.sin(f * 0.05 + i), brinco(f, i), z - lejos + 0.5 * Math.sin(f * 0.07 + i * 2)], { ...LUNA, ...ZOMBI(f, i), ...CORRE(f, i * 1.7) }, [0, 1]));
+  L.slice(0, cuantos).forEach(([x, z], i) => m.ver(ZS[i], [x + 0.25 * Math.sin(f * 0.05 + i), brinco(f, i), z - lejos + 0.5 * Math.sin(f * 0.07 + i * 2)], { ...LUNA, ...ZOMBI(f, i), ...CORRE(f, i * 1.7) }, [0, 1], 0.13 * Math.sin(f * 0.42 + i * 2)));
 };
 /** el pie de la escalera con los zombies que se van juntando */
 const AL_PIE = (m: Mundo, f: number, k: number, alto = 2.6) => {
@@ -128,7 +128,7 @@ const PLANOS: Plano[] = [
   // 5 · Los zombies golpean los costados  (por fuera: corren pegados y le pegan a la lámina)
   { w: 28, lugar: "calle", foco: 5, cInf: 7, sacude: (f) => 0.015 + 0.02 * Math.abs(Math.sin(f * 0.5)), ini: c([-3.4, 1.35, 5.6], [-1.3, 1.55, -0.6], 46), fin: c([-3.1, 1.3, 4.6], [-1.3, 1.55, -0.6], 44), hacer: ({ f, m }) => {
     m.golpes = true;
-    [[-1.78, -2.4], [-1.82, -0.9], [-1.78, 0.6]].forEach(([x, z], i) => m.ver(ZS[i], [x, brinco(f, i), z], { ...LUNA, ...ZOMBI(f, i), piernas: [Math.max(0, Math.sin(f * 0.85 + i)), Math.max(0, -Math.sin(f * 0.85 + i))], brazoIzq: [2.2 + 0.5 * Math.sin(f * 0.6 + i * 2), 0.4], brazoDer: [2.2 - 0.5 * Math.sin(f * 0.6 + i * 2), 0.4], giro: -0.5 }, [0.4, 1]));
+    [[-1.78, -2.4], [-1.82, -0.9], [-1.78, 0.6]].forEach(([x, z], i) => m.ver(ZS[i], [x, brinco(f, i), z], { ...LUNA, ...ZOMBI(f, i), piernas: [Math.max(0, Math.sin(f * 0.85 + i)), Math.max(0, -Math.sin(f * 0.85 + i))], brazoIzq: [2.2 + 0.5 * Math.sin(f * 0.6 + i * 2), 0.4], brazoDer: [2.2 - 0.5 * Math.sin(f * 0.6 + i * 2), 0.4], giro: -0.5 }, [0.4, 1], -0.1 + 0.08 * Math.sin(f * 0.42 + i * 2)));
     m.ver("z4", [-3.4 + 0.2 * Math.sin(f * 0.1), brinco(f, 4), -5.5], { ...LUNA, ...ZOMBI(f, 4), ...CORRE(f, 4) }, [0, 1]);
   } },
   // 6 · Uno se trepa al cofre  (desde tu asiento: aparece su cara contra el parabrisas)
