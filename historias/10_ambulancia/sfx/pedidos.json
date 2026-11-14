@@ -1,0 +1,71 @@
+{
+ "golpe_titulo": {
+  "texto": "Deep cinematic impact boom for horror trailer, short",
+  "seg": 2
+ },
+ "whoosh": {
+  "texto": "Short soft cinematic whoosh swoosh",
+  "seg": 1
+ },
+ "dron": {
+  "texto": "Dark low horror drone, slowly rising tension, no melody",
+  "seg": 22
+ },
+ "latidos": {
+  "texto": "Slow deep human heartbeat, close and muffled, steady",
+  "seg": 10,
+  "loop": true
+ },
+ "motor": {
+  "texto": "Ambulance van engine roaring past at high speed with a short siren wail, no music",
+  "seg": 2.5
+ },
+ "golpes_lamina": {
+  "texto": "Many fists banging hard on the metal side of a van, fast chaotic thumps, no voices",
+  "seg": 1.8
+ },
+ "grunidos": {
+  "texto": "Group of zombies snarling and growling aggressively, close, short",
+  "seg": 2
+ },
+ "trepa": {
+  "texto": "Heavy body landing on a car hood, metal thud and scraping hands, short",
+  "seg": 1
+ },
+ "frenazo": {
+  "texto": "Car emergency braking, loud tire screech on asphalt, short",
+  "seg": 1.5
+ },
+ "cae": {
+  "texto": "Body hitting asphalt and rolling, heavy thud, short",
+  "seg": 1
+ },
+ "vidrio": {
+  "texto": "Car window glass shattering violently, short",
+  "seg": 1.2
+ },
+ "acelera": {
+  "texto": "Van engine revving hard and accelerating away, tires chirp, short",
+  "seg": 1.8
+ },
+ "escalera": {
+  "texto": "Aluminum ladder sliding down and clattering against a concrete wall, short",
+  "seg": 1.4
+ },
+ "patada": {
+  "texto": "Hard kick impact with a grunt-less thud and body falling, short",
+  "seg": 0.9
+ },
+ "escalera_sube": {
+  "texto": "Aluminum ladder being dragged up over a concrete edge, metallic scraping, short",
+  "seg": 1.5
+ },
+ "rascan": {
+  "texto": "Dozens of fingernails scratching a concrete wall with low zombie moans, eerie, no music",
+  "seg": 2.6
+ },
+ "linterna": {
+  "texto": "Flashlight click on and slow footsteps on a gravel rooftop, quiet night",
+  "seg": 2.2
+ }
+}
