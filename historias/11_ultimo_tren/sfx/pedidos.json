@@ -1,0 +1,75 @@
+{
+ "golpe_titulo": {
+  "texto": "Deep cinematic impact boom for horror trailer, short",
+  "seg": 2
+ },
+ "whoosh": {
+  "texto": "Short soft cinematic whoosh swoosh",
+  "seg": 1
+ },
+ "dron": {
+  "texto": "Dark low horror drone, slowly rising tension, no melody",
+  "seg": 22
+ },
+ "latidos": {
+  "texto": "Slow deep human heartbeat, close and muffled, steady",
+  "seg": 10,
+  "loop": true
+ },
+ "grunidos": {
+  "texto": "Group of zombies snarling and growling aggressively, close, short",
+  "seg": 2
+ },
+ "pasos_corren": {
+  "texto": "Two people running fast on a tiled subway platform, quick footsteps echoing, short",
+  "seg": 2.5
+ },
+ "escalera_electrica": {
+  "texto": "Escalator mechanical hum with zombies groaning, short, no music",
+  "seg": 2
+ },
+ "silbato": {
+  "texto": "Subway conductor whistle, one sharp blast, echoing station",
+  "seg": 1
+ },
+ "timbre_puertas": {
+  "texto": "Subway door closing warning chime beeps, short",
+  "seg": 1.5
+ },
+ "puertas_cierran": {
+  "texto": "Subway sliding doors slamming shut on something, rubber thud, short",
+  "seg": 1
+ },
+ "extintor_golpe": {
+  "texto": "Heavy metal fire extinguisher smashing onto an arm, hard clang and crunch, short",
+  "seg": 0.9
+ },
+ "tren_arranca": {
+  "texto": "Subway train starting to move, electric motor whine rising and wheels on rails, short",
+  "seg": 2.5
+ },
+ "golpes_vidrio": {
+  "texto": "Many hands banging on train windows, frantic thumps on glass, short",
+  "seg": 2
+ },
+ "frena_tren": {
+  "texto": "Subway train braking to a stop with metal screech and air hiss, short",
+  "seg": 2
+ },
+ "sirena": {
+  "texto": "Air raid warning siren wailing in a tunnel, short",
+  "seg": 2.5
+ },
+ "apagon": {
+  "texto": "Big electrical breaker switching off with a heavy clunk, lights die, then silence, very short",
+  "seg": 0.8
+ },
+ "corre_lejos": {
+  "texto": "Distant footsteps running on concrete in an echoing tunnel, getting closer, short",
+  "seg": 2.2
+ },
+ "golpes_puerta": {
+  "texto": "Fists pounding on a metal train door with glass window, three hard knocks, short",
+  "seg": 1.5
+ }
+}
