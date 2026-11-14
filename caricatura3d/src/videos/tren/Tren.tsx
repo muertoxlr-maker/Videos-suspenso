@@ -256,7 +256,7 @@ class Mundo {
     const x = this.x; x.multitud.visible = true;
     const t = Math.max(0, f - ARRANCA()) / FPS;
     x.multitud.position.z = -0.55 * t * t * 0.6;
-    x.filas.forEach((p, i) => { p.position.y = 0.3 - Math.floor(i / 4) * 0.1 + 0.06 * Math.sin(f * 0.35 + i * 1.7); });
+    x.filas.forEach((p, i) => { p.position.y = 2.05 - Math.floor(i / 4) * 0.12 + 0.06 * Math.sin(f * 0.35 + i * 1.7); });
   }
   /** el tren llega al refugio frenando (visto desde el túnel) */
   llega(f: number) {
