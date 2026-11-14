@@ -25,6 +25,8 @@ estructura**, casi al segundo:
 | Parte | Cuándo | Qué hace | Cómo lo hacen (descrito, no copiado) |
 |---|---|---|---|
 | **Gancho** | 0–7 s | Empieza con **«Imagina que…»** (6 de 6), en segunda persona y presente. Un lugar cotidiano y concreto + una interrupción. | Una fiesta familiar que se corta; un vecino raro que toca tu puerta; un hotel donde suena el teléfono. En uno el gancho es una paradoja («te pasa X… y no pasa nada»). |
+
+> ❌ **Prohibido por el usuario (después de «El elevador»): nada de adelantos.** El video no empieza con una escena de más adelante (o del clímax) para luego regresar a «Imagina que…». La primera frase es «Imagina que…» y la historia va en orden; el suspenso del inicio sale de la interrupción dentro de esa misma escena.
 | **Amenaza y contexto** | 5–13 s | Llega la noticia del peligro por un canal concreto (gente gritando, la radio, recepción, un vecino) y se fija el lugar cerrado. | Siempre hay **un espacio cerrado** que proteger: salón, búnker, refugio, rancho, habitación. |
 | **Regla Nº 1** | 13–17.4 s ✅ | «Regla número uno: …» + **una frase que la justifica** con lógica del mundo. | Reglas de supervivencia simples y visuales (apagar la música, el silencio es la alarma, no abrir). |
 | **Regla Nº 2** | 19–30 s ✅ | Igual. A veces la segunda regla ya prepara el conflicto final. | |

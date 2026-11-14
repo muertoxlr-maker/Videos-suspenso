@@ -15,6 +15,8 @@
 - **Objetos y estructuras que se entiendan y con detalle** (guía §8.6d): en las fotos de revisión, cada mueble u objeto
   importante debe reconocerse a la primera al tamaño del celular, con sus piezas típicas y más detalle; las posturas
   (sentado, recargado…) deben mostrar el mueble que las sostiene.
+- **Nada de adelantos al inicio** (pedido del usuario): no abrir con una escena de más adelante para luego regresar.
+  El video empieza con «Imagina que…» y la historia va en orden (guía, tabla del gancho).
 - **Sonido: efectos cortos, solo en su momento.** Nada de ambientes o bucles que suenen casi todo el video (guía §5).
 - La base técnica de caricatura (Three.js + Remotion) está en `caricatura3d/`; su origen y licencia, en
   `tutorial-caricatura/ORIGEN.md` y `tutorial-caricatura/LICENSE` (MIT: conserva los avisos de copyright).
