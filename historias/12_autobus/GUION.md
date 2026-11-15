@@ -1,4 +1,4 @@
-# «El autobús escolar» — guion (borrador, falta aprobación)
+# «El autobús escolar» — guion (aprobado por el usuario)
 
 - Zombies. Gancho con acción desde el segundo 0, en orden y sin adelantos (modelo: «La ambulancia», guía §1).
 - Rótulo: `DÍA 1 · 2:40 PM · ESCUELA PRIMARIA`. Botones: **CONTESTAR** (azul) / **QUEDARTE CALLADO** (rojo).
