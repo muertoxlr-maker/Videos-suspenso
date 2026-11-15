@@ -157,7 +157,7 @@ export const crearLancha = (nombre: string, franja: string) => {
   pts.forEach((p, i) => {
     if (i) acum += p.distanceTo(pts[i - 1]);
     pos.push(p.x * 0.82, -0.25, p.y * 0.97, p.x, L.borda, p.y);
-    uv.push(acum / largo * 2 % 2, 0, acum / largo * 2 % 2, 1);
+    uv.push(-acum / largo * 2, 0, -acum / largo * 2, 1); // al revés: así el nombre se lee bien por los dos lados
     if (i) { const b = (i - 1) * 2; idx.push(b, b + 2, b + 1, b + 1, b + 2, b + 3); }
   });
   const gc = new THREE.BufferGeometry(); gc.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3)); gc.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2)); gc.setIndex(idx); gc.computeVertexNormals();

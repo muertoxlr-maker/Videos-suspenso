@@ -1,0 +1,83 @@
+{
+ "golpe_titulo": {
+  "texto": "Deep cinematic impact boom for horror trailer, short",
+  "seg": 2
+ },
+ "whoosh": {
+  "texto": "Short soft cinematic whoosh swoosh",
+  "seg": 1
+ },
+ "dron": {
+  "texto": "Dark low horror drone, slowly rising tension, no melody",
+  "seg": 22
+ },
+ "latidos": {
+  "texto": "Slow deep human heartbeat, close and muffled, steady",
+  "seg": 10,
+  "loop": true
+ },
+ "grunidos": {
+  "texto": "Group of zombies snarling and growling aggressively, close, short",
+  "seg": 2
+ },
+ "cae": {
+  "texto": "(copiado de «La ambulancia»)",
+  "seg": 1
+ },
+ "pasos_muelle": {
+  "texto": "Person running fast on old wooden dock planks, heavy hollow footsteps and panting, short, no music",
+  "seg": 3
+ },
+ "salto_lancha": {
+  "texto": "Person jumping and landing hard inside a small wooden fishing boat, hollow thump and water sloshing, short",
+  "seg": 1.5
+ },
+ "jalon_motor": {
+  "texto": "Pulling the starter cord of an outboard boat motor, engine sputters once and dies, short",
+  "seg": 1.5
+ },
+ "agarra": {
+  "texto": "Wet hand slapping and gripping the wooden edge of a small boat, short",
+  "seg": 1
+ },
+ "remazo": {
+  "texto": "Wooden oar hitting a head hard, heavy wooden thud, short",
+  "seg": 1
+ },
+ "motor_arranca": {
+  "texto": "Outboard boat engine starting and revving loud, boat speeding away on water, short",
+  "seg": 3
+ },
+ "ola_rocas": {
+  "texto": "Big ocean wave crashing on rocks and a small wooden boat smashing against them, wood cracking, short",
+  "seg": 2.5
+ },
+ "puerta_faro": {
+  "texto": "Heavy old wooden door slamming shut in a stone tower, short",
+  "seg": 1.2
+ },
+ "tranca": {
+  "texto": "Heavy wooden beam dropped into iron brackets to bar a door, solid clunk, short",
+  "seg": 1
+ },
+ "nado": {
+  "texto": "Someone swimming slowly in the sea at night, soft splashing strokes, distant, short",
+  "seg": 3
+ },
+ "parpadea_luz": {
+  "texto": "Large electric lamp buzzing and flickering, electrical crackle, short",
+  "seg": 2
+ },
+ "apagon": {
+  "texto": "Big lamp switching off, deep electrical clunk and hum dying out, short",
+  "seg": 1.5
+ },
+ "goteo": {
+  "texto": "Few slow water drops dripping onto a metal floor, close, quiet room",
+  "seg": 3
+ },
+ "clic_encendedor": {
+  "texto": "Single click of a lighter flint wheel striking a spark, close, no flame",
+  "seg": 1
+ }
+}

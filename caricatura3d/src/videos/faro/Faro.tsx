@@ -130,7 +130,7 @@ const PLANOS: Plano[] = [
   // 8 · Las olas los empujan  (detrás de la lancha, en el mar: Chema en el timón, tú; adelante la isla con el faro)
   { w: 46, lugar: "afuera", enLancha: true, foco: 3, cInf: 6, sacude: () => 0.008, ini: c([0.0, 1.9, -4.6], [0.0, 1.6, 6.0], 50), fin: c([0.0, 1.85, -4.4], [0.0, 1.7, 6.0], 50), hacer: ({ f, m }) => { m.navegan(f); } },
   // 9 · contra las rocas de una isla.  (de lado, en el agua: una ola avienta la lancha contra las piedras)
-  { w: 50, lugar: "afuera", foco: 6, cInf: 6, sacude: (f) => 0.006 + golpeCam(f, PEGA(), 0.08, 16), ini: c([9.5, 1.4, 52.5], [CHOQUE.x, 0.9, 56.5], 48), fin: c([9.2, 1.4, 53.2], [CHOQUE.x, 1.0, 57.2], 46), hacer: ({ f, m }) => { m.navegan(f); m.ola(f); } },
+  { w: 50, lugar: "afuera", foco: 6, cInf: 6, sacude: (f) => 0.006 + golpeCam(f, PEGA(), 0.08, 16), ini: c([9.5, 1.4, 52.5], [CHOQUE.x, 0.9, 56.5], 48), fin: c([9.2, 1.4, 53.2], [CHOQUE.x, 1.0, 57.2], 46), hacer: ({ f, m }) => { m.navegan(f); m.ola(f); m.luz(CHOQUE.x + 3, 3.5, CHOQUE.z - 2.5, 9, "#c8d8ff"); } },
   // 10 · Arriba, un faro encendido.  (desde las rocas, hacia arriba: el faro, la luz girando)
   { w: 56, lugar: "afuera", foco: 14, cInf: 5, ini: c([CHOQUE.x - 1.5, 1.4, CHOQUE.z - 1.0], [ISLA.x, 13, ISLA.z], 52), fin: c([CHOQUE.x - 1.6, 1.3, CHOQUE.z - 1.4], [ISLA.x, 15, ISLA.z], 50), hacer: ({ f, m }) => { m.navegan(f); m.encallados(f); } },
   // 11 · Elías, el farero, baja corriendo con una lámpara,  (al pie de la escalera de piedra: baja hacia nosotros)
@@ -150,7 +150,7 @@ const PLANOS: Plano[] = [
   // 19 · A medianoche  (afuera: el faro de noche, la luz girando)
   { w: 135, lugar: "afuera", foco: 20, cInf: 5, ini: c([-16, 5.5, 48], [ISLA.x, 16, ISLA.z], 44), fin: c([-15.5, 5.6, 49.5], [ISLA.x, 16.5, ISLA.z], 43), hacer: ({ f, m }) => { m.encallados(f, true, true); } },
   // 20 · oyes que alguien nada hacia la isla.  (desde el balcón, hacia abajo: alguien nada en la luz de la luna)
-  { w: 137, lugar: "afuera", foco: 14, cInf: 6, ini: c([ISLA.x - 1.2, CUARTO.y + 1.5, ISLA.z - 2.6], [-4.5, 0, 50], 40), fin: c([ISLA.x - 1.2, CUARTO.y + 1.5, ISLA.z - 2.6], [-4.0, 0, 51.5], 36), hacer: ({ f, m }) => { m.nada(f); m.encallados(f, true, true); } },
+  { w: 137, lugar: "afuera", foco: 14, cInf: 6, ini: c([ISLA.x - 1.2, CUARTO.y + 1.5, ISLA.z - 2.9], [-4.2, 0.4, 48.6], 26), fin: c([ISLA.x - 1.2, CUARTO.y + 1.5, ISLA.z - 2.9], [-4.2, 0.4, 49.6], 22), hacer: ({ f, m }) => { m.nada(f); m.encallados(f, true, true); } },
   // 21 · Nadie se mueve.  (los tres, quietos, mirando hacia la ventana)
   { w: 144, lugar: "cuarto", foco: 1.6, cInf: 7, ini: AMPLIO(0.25, 52), fin: AMPLIO(0.3, 48), hacer: ({ f, m }) => { m.arriba(f, true, true); } },
   // 22 · Luego, la lámpara parpadea...  (la lámpara de cerca: se prende y se apaga)
@@ -341,9 +341,9 @@ class Mundo {
     this.ver("elias", CU(TH.elias, R_CU), { ...L0, ...miedo("elias"), ...cuenta("elias", 161), brazoIzq: [lerp(0.2, 1.6, agarra), 0.1], cabezaX: 0.15 * niega, giro: 0.5 * niega, ...(agarra > 0 ? { boca: "dientes" } : {}) });
     if (saca > 0) { // el encendedor en la mano de Chema (y la chispa al hacer clic)
       const h = this.h, pc = new THREE.Vector3(...CU(TH.chema, R_CU)), cp = this.cam.position, hacia = cp.clone().sub(pc).setY(0).normalize(), der = new THREE.Vector3(hacia.z, 0, -hacia.x);
-      const mano = pc.clone().addScaledVector(hacia, 0.12).addScaledVector(der, -0.2).setY(CUARTO.y + lerp(0.6, 0.9, saca));
-      h.encendedor.visible = true; h.encendedor.position.copy(mano); h.encendedor.lookAt(cp);
-      const clic = f - fw(193) - 2; if (clic >= 0 && clic < 4) { h.chispa.material.opacity = 1 - clic / 4; h.chispa.scale.setScalar(0.3); h.luzEnc.intensity = 2.5 * (1 - clic / 4); }
+      const mano = pc.clone().addScaledVector(hacia, 0.12).addScaledVector(der, -0.1).setY(CUARTO.y + lerp(0.6, 0.95, saca));
+      h.encendedor.visible = true; h.encendedor.position.copy(mano); h.encendedor.lookAt(cp); h.encendedor.scale.setScalar(1.6);
+      const clic = f - fw(193) - 2; if (clic >= 0 && clic < 4) { h.chispa.material.opacity = 1 - clic / 4; h.chispa.scale.setScalar(0.5); h.luzEnc.intensity = 2.5 * (1 - clic / 4); }
     }
     void prendida;
   }
@@ -357,7 +357,7 @@ class Mundo {
   /** «alguien nada hacia la isla»: cabeza y hombros fuera del agua, brazadas, ondas */
   nada(f: number) {
     const z = 48 + (f - fw(137)) / FPS * 0.9, x = -4.2 + 0.1 * Math.sin(f * 0.1), brazo = Math.sin(f * 0.22);
-    this.ver("ahogado", [x, -ALTO("ahogado") * 0.55 + 0.04 * Math.sin(f * 0.22), z], { ...LUNA, ...ZOMBI(f, 0), brazoIzq: [1.6 + 1.2 * brazo, 0.2], brazoDer: [1.6 - 1.2 * brazo, 0.2] }, [0, 1]);
+    this.ver("ahogado", [x, -ALTO("ahogado") * 0.42 + 0.04 * Math.sin(f * 0.22), z], { ...LUNA, ...ZOMBI(f, 0), brazoIzq: [1.6 + 1.2 * brazo, 0.2], brazoDer: [1.6 - 1.2 * brazo, 0.2] }, [0, 1]);
     this.cartas.ahogado.contacto.visible = false;
     this.h.ondas.forEach((o, i) => { const t = ((f + i * 14) % 42) / 42; o.position.set(x, 0.03, z); o.scale.setScalar(0.4 + t * 1.6); (o.material as THREE.MeshBasicMaterial).opacity = 0.6 * (1 - t); });
   }
