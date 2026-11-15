@@ -414,10 +414,11 @@ const lutFrio = () => {
 };
 
 // ------------------------------------------------------------------ escena 3D
-const PORTADA_I = 39; // la perilla… se cambia abajo si hace falta
+const PORTADA_I = 36; // la silueta detrás del vidrio de la puerta
+const PORTADA_F = () => fw(174);
 const Escena: React.FC<{ portada?: boolean }> = ({ portada }) => {
   const f0 = useCurrentFrame();
-  const f = portada ? fw(37) : f0;
+  const f = portada ? PORTADA_F() : f0;
   const { camera, scene, gl, size } = useThree();
   const cam = camera as THREE.PerspectiveCamera;
   const mundo = useMemo(() => new Mundo(), []);
@@ -444,7 +445,7 @@ const Escena: React.FC<{ portada?: boolean }> = ({ portada }) => {
 
   const i = portada ? PORTADA_I : planoEn(f);
   const pl = PLANOS[i];
-  const fp = portada ? fw(PLANOS[PORTADA_I].w) + 50 : f;
+  const fp = f;
   const a = inicioPlano(i), b = i + 1 < PLANOS.length ? inicioPlano(i + 1) : AUTOBUS_CUADROS;
   const k0 = Math.min(1, Math.max(0, (fp - a) / Math.max(1, b - a)));
   const k = pl.rapido ? empuje(k0, 3) : k0;

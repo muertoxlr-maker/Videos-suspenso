@@ -21,3 +21,4 @@
 ## Video final
 - 2460 cuadros, 1080×1920, 82.0 s (`caricatura3d/salida/autobus/autobus.mp4`, no se sube a git).
 - Audio: −14.0 LUFS, pico −2.2 dBFS.
+- `portada.jpg` — portada para TikTok (composición `AutobusPortada`): silueta detrás del vidrio esmerilado de la puerta del salón, con el título «ALGUIEN CONTESTÓ «PRESENTE»… CON TU VOZ».
