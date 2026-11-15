@@ -1,0 +1,87 @@
+{
+ "golpe_titulo": {
+  "texto": "Deep cinematic impact boom for horror trailer, short",
+  "seg": 2
+ },
+ "whoosh": {
+  "texto": "Short soft cinematic whoosh swoosh",
+  "seg": 1
+ },
+ "dron": {
+  "texto": "Dark low horror drone, slowly rising tension, no melody",
+  "seg": 22
+ },
+ "latidos": {
+  "texto": "Slow deep human heartbeat, close and muffled, steady",
+  "seg": 10,
+  "loop": true
+ },
+ "grunidos": {
+  "texto": "Group of zombies snarling and growling aggressively, close, short",
+  "seg": 2
+ },
+ "puerta_neumatica": {
+  "texto": "(copiado de «El camión escolar»)",
+  "seg": 1
+ },
+ "freno_aire": {
+  "texto": "(copiado de «El camión escolar»)",
+  "seg": 1
+ },
+ "acelera": {
+  "texto": "(copiado de «La ambulancia»)",
+  "seg": 1
+ },
+ "cae": {
+  "texto": "(copiado de «La ambulancia»)",
+  "seg": 1
+ },
+ "frenazo": {
+  "texto": "(copiado de «La ambulancia»)",
+  "seg": 1
+ },
+ "vidrio": {
+  "texto": "(copiado de «La ambulancia»)",
+  "seg": 1
+ },
+ "pasos_nino": {
+  "texto": "A child running fast on a concrete sidewalk, quick light footsteps, panting, short, no music",
+  "seg": 3
+ },
+ "golpe_ventana": {
+  "texto": "Body slamming hard against a bus side window, thick glass thud and rattle, short",
+  "seg": 1.5
+ },
+ "volantazo": {
+  "texto": "Big bus tires screeching during a sharp swerve, short",
+  "seg": 2
+ },
+ "banqueta": {
+  "texto": "Heavy school bus bouncing up over a concrete curb, loud suspension thump and metal rattle, short",
+  "seg": 1.5
+ },
+ "puesto": {
+  "texto": "Bus crashing through a metal newspaper kiosk, metal crunch, magazines and papers flying, short",
+  "seg": 2.5
+ },
+ "porton": {
+  "texto": "Heavy iron gate swinging shut with a loud metal clang, short",
+  "seg": 2
+ },
+ "cadena": {
+  "texto": "Metal chain wrapped around iron bars, rattling, then a padlock clicking shut, short",
+  "seg": 2.5
+ },
+ "reja": {
+  "texto": "Zombies grabbing and shaking metal fence bars, rattling iron, growls, short",
+  "seg": 2.5
+ },
+ "toc_toc": {
+  "texto": "Three slow knocks on a wooden classroom door, short, no voices",
+  "seg": 2
+ },
+ "perilla": {
+  "texto": "Old metal doorknob slowly turning, creaky latch mechanism, close, quiet, short",
+  "seg": 2.5
+ }
+}
