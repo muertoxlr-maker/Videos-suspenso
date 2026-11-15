@@ -13,6 +13,7 @@ import { NINERA_CUADROS, Ninera, NineraPortada } from "./videos/ninera/Ninera";
 import { ELEVADOR_CUADROS, Elevador, ElevadorPortada } from "./videos/elevador/Elevador";
 import { AMBULANCIA_CUADROS, Ambulancia, AmbulanciaPortada } from "./videos/ambulancia/Ambulancia";
 import { TREN_CUADROS, Tren, TrenPortada } from "./videos/tren/Tren";
+import { AUTOBUS_CUADROS, Autobus, AutobusPortada } from "./videos/autobus/Autobus";
 import { HojaMovimiento, HojaPersonajes } from "./videos/hoja/HojaPersonajes";
 import { GASO_CUADROS, Gasolinera, GasolineraPortada } from "./videos/gasolinera/Gasolinera";
 
@@ -37,6 +38,8 @@ export const Raiz: React.FC = () => (
     <Composition id="Ambulancia" component={Ambulancia} durationInFrames={AMBULANCIA_CUADROS} fps={30} width={1080} height={1920} />
     <Composition id="Tren" component={Tren} durationInFrames={TREN_CUADROS} fps={30} width={1080} height={1920} />
     <Composition id="TrenPortada" component={TrenPortada} durationInFrames={TREN_CUADROS} fps={30} width={1080} height={1920} />
+    <Composition id="Autobus" component={Autobus} durationInFrames={AUTOBUS_CUADROS} fps={30} width={1080} height={1920} />
+    <Composition id="AutobusPortada" component={AutobusPortada} durationInFrames={AUTOBUS_CUADROS} fps={30} width={1080} height={1920} />
     <Composition id="AmbulanciaPortada" component={AmbulanciaPortada} durationInFrames={AMBULANCIA_CUADROS} fps={30} width={1080} height={1920} />
     <Composition id="ElevadorPortada" component={ElevadorPortada} durationInFrames={ELEVADOR_CUADROS} fps={30} width={1080} height={1920} />
     <Composition id="CamionPortada" component={CamionPortada} durationInFrames={CAMION_CUADROS} fps={30} width={1080} height={1920} />

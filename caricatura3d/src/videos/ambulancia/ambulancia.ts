@@ -37,23 +37,23 @@ const suelo = (w: number, d: number, m: THREE.Material, x: number, y: number, z:
 const rz = (n: number) => { const x = Math.sin(n * 91.7) * 43758.5453; return x - Math.floor(x); };
 
 // ------------------------------------------------------------------ texturas
-const manchas = (c: CanvasRenderingContext2D, w: number, h: number, n: number, col = "18,16,14", a = 0.25) => {
+export const manchas = (c: CanvasRenderingContext2D, w: number, h: number, n: number, col = "18,16,14", a = 0.25) => {
   for (let k = 0; k < n; k++) { const x = (k * 71 + 13) % w, y = (k * 113 + 7) % h, g = c.createRadialGradient(x, y, 2, x, y, 26 + (k % 3) * 16); g.addColorStop(0, `rgba(${col},${a})`); g.addColorStop(1, `rgba(${col},0)`); c.fillStyle = g; c.fillRect(0, 0, w, h); }
 };
-const texAsfalto = () => lienzo((c, w, h) => {
+export const texAsfalto = () => lienzo((c, w, h) => {
   c.fillStyle = "#2c2e33"; c.fillRect(0, 0, w, h);
   for (let k = 0; k < 500; k++) { c.fillStyle = `rgba(${k % 2 ? "70,72,78" : "14,14,16"},0.35)`; c.fillRect(rz(k) * w, rz(k + 500) * h, 2, 2); }
   manchas(c, w, h, 10, "10,10,12", 0.4);
   c.strokeStyle = "rgba(8,8,10,0.6)"; c.lineWidth = 2; // grietas
   for (let k = 0; k < 5; k++) { c.beginPath(); let x = rz(k * 3) * w, y = rz(k * 5) * h; c.moveTo(x, y); for (let j = 0; j < 5; j++) { x += (rz(k * 7 + j) - 0.5) * 60; y += (rz(k * 11 + j) - 0.3) * 50; c.lineTo(x, y); } c.stroke(); }
 }, 256, 256, [4, 16]);
-const texBanqueta = () => lienzo((c, w, h) => {
+export const texBanqueta = () => lienzo((c, w, h) => {
   c.fillStyle = "#56575a"; c.fillRect(0, 0, w, h);
   c.strokeStyle = "rgba(20,20,22,0.7)"; c.lineWidth = 3; for (let i = 0; i <= 2; i++) { c.beginPath(); c.moveTo(0, i * h / 2); c.lineTo(w, i * h / 2); c.stroke(); }
   manchas(c, w, h, 6, "20,18,16", 0.35);
 }, 128, 128, [1, 24]);
 /** fachada de edificio: ventanas (algunas rotas, alguna con luz), manchas de humedad, cortina de local abajo */
-const texEdificio = (semilla: number, color: string, pisos: number) => lienzo((c, w, h) => {
+export const texEdificio = (semilla: number, color: string, pisos: number) => lienzo((c, w, h) => {
   c.fillStyle = color; c.fillRect(0, 0, w, h);
   manchas(c, w, h, 14, "14,14,18", 0.35);
   const ph = h / (pisos + 1);
@@ -119,7 +119,7 @@ const texGabinete = () => lienzo((c, w, h) => { // gabinete con puertas, cruz ve
   c.strokeRect(6, h * 0.62, w - 12, h * 0.32); c.fillStyle = "#6a7278"; c.fillRect(w / 2 - 14, h * 0.76, 28, 5);
   c.fillStyle = "#2f8a4a"; c.fillRect(w / 2 - 6, 26, 12, 40); c.fillRect(w / 2 - 20, 40, 40, 12);
 }, 256, 128);
-const texConcreto = (rep: [number, number] = [1, 1]) => lienzo((c, w, h) => {
+export const texConcreto = (rep: [number, number] = [1, 1]) => lienzo((c, w, h) => {
   c.fillStyle = "#6a6a68"; c.fillRect(0, 0, w, h); manchas(c, w, h, 14, "24,22,20", 0.3);
   for (let k = 0; k < 260; k++) { c.fillStyle = `rgba(${k % 2 ? "120,120,116" : "30,30,30"},0.25)`; c.fillRect(rz(k + 3) * w, rz(k + 300) * h, 2, 2); }
 }, 256, 256, rep);
@@ -147,7 +147,7 @@ const texAzotea = () => lienzo((c, w, h) => { // impermeabilizante rojo gastado,
   c.fillStyle = "rgba(150,150,150,0.25)"; for (let k = 0; k < 6; k++) c.fillRect(rz(k) * w, rz(k + 6) * h, 50 + rz(k + 2) * 40, 30 + rz(k + 4) * 30);
   c.strokeStyle = "rgba(20,12,10,0.5)"; c.lineWidth = 2; for (let i = 0; i <= 4; i++) { c.beginPath(); c.moveTo(i * w / 4, 0); c.lineTo(i * w / 4, h); c.stroke(); }
 }, 256, 256, [4, 5]);
-const texTabique = () => lienzo((c, w, h) => { // pared de block pintada de blanco, sucia
+export const texTabique = () => lienzo((c, w, h) => { // pared de block pintada de blanco, sucia
   c.fillStyle = "#c9c6bc"; c.fillRect(0, 0, w, h);
   c.strokeStyle = "rgba(60,58,52,0.35)"; c.lineWidth = 2; for (let y = 0; y < h; y += 32) { c.beginPath(); c.moveTo(0, y); c.lineTo(w, y); c.stroke(); for (let x = (y / 32) % 2 ? 32 : 0; x < w; x += 64) { c.beginPath(); c.moveTo(x, y); c.lineTo(x, y + 32); c.stroke(); } }
   manchas(c, w, h, 12, "40,36,30", 0.28);
@@ -230,7 +230,7 @@ export const catre = (m: THREE.Material, mTela: THREE.Material) => { // catre: p
   for (const z of [-0.8, 0, 0.8]) for (const s of [-1, 1]) { const p = caja(0.035, 0.52, 0.035, m, 0, 0.18, z); p.rotation.z = s * 0.75; g.add(p); }
   return g;
 };
-const coche = (color: string, quemado = false) => { // coche abandonado: carrocería, cabina, vidrios, llantas, faros
+export const coche = (color: string, quemado = false) => { // coche abandonado: carrocería, cabina, vidrios, llantas, faros
   const g = new THREE.Group(), m = lambert({ map: texLamina(quemado ? "#2a2624" : color) }), mV = lambert({ color: quemado ? "#0a0a0c" : "#1c2632" }), mLl = lambert({ color: "#151517" });
   g.add(caja(1.8, 0.6, 4.2, m, 0, 0.62, 0), caja(1.6, 0.55, 2.1, m, 0, 1.18, -0.25));
   g.add(caja(1.5, 0.42, 0.03, mV, 0, 1.2, 0.815), caja(1.5, 0.42, 0.03, mV, 0, 1.2, -1.315));
@@ -240,7 +240,7 @@ const coche = (color: string, quemado = false) => { // coche abandonado: carroce
   g.add(caja(1.84, 0.12, 0.1, lambert({ color: "#1e2024" }), 0, 0.4, 2.12), caja(1.84, 0.12, 0.1, lambert({ color: "#1e2024" }), 0, 0.4, -2.12));
   return g;
 };
-const poste = (prendido: boolean) => { // poste de luz: tubo, brazo, luminaria
+export const poste = (prendido: boolean) => { // poste de luz: tubo, brazo, luminaria
   const g = new THREE.Group(), m = lambert({ color: "#3a3e44" });
   g.add(cil(0.07, 0.1, 6.2, m, 0, 3.1, 0, 8), caja(1.5, 0.07, 0.07, m, 0.7, 6.15, 0), caja(0.55, 0.1, 0.22, m, 1.35, 6.08, 0));
   const foco = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.03, 0.16), brillo(prendido ? "#ffd9a0" : "#2a2a2e")); foco.position.set(1.35, 6.02, 0); foco.layers.set(NOINK); g.add(foco);

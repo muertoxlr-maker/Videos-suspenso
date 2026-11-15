@@ -125,7 +125,7 @@ const texOxido = (base: string) => lienzo((c, w, h) => { // fierro viejo con óx
 }, 128, 128);
 
 // ------------------------------------------------------------------ camión
-function crearCamion() {
+export function crearCamion() {
   const g = new THREE.Group();
   const amarillo = lambert({ map: texAmarillo([2, 1]) }), negro = lambert({ color: "#141518" }), cromo = lambert({ color: "#c8ccd2", emissive: "#202428" });
   const forro = lambert({ map: texForro() }), techoM = lambert({ color: "#dedad0" }), vinil = lambert({ map: texVinil() }), vinilOsc = lambert({ color: "#24553a" });
