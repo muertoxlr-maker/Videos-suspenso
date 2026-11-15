@@ -1,4 +1,4 @@
-# «El faro» — guion (borrador, falta que el usuario lo apruebe)
+# «El faro» — guion (aprobado por el usuario)
 
 - Zombies. Gancho con acción desde el segundo 0, en orden y sin adelantos (modelo: «La ambulancia», guía §1).
 - Rótulo: `DÍA 3 · 6:50 PM · MUELLE SAN TELMO`. Botones: **VERLE LA CARA** (azul) / **NO DECIR NADA** (rojo).
