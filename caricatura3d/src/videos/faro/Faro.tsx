@@ -17,7 +17,7 @@ import { LensBlur } from "../alejandro/lensblur";
 import { Aspecto, Pose } from "../prueba_pasillo/personaje";
 import { POSE, Tarjeta, lerp, parpadea, ruido, suave } from "../turno3/comun";
 import { empuje, tiembla } from "../comun/movimiento";
-import { CHOQUE, CUARTO, ISLA, LAN, LANCHA0, MUELLE, REGLAS, REGLA_Y, TORRE, crearEscenario, enPared } from "./faro";
+import { CHOQUE, CUARTO, ESC_I, ISLA, LAN, LANCHA0, MUELLE, REGLAS, REGLA_Y, TORRE, crearEscenario, enPared } from "./faro";
 import PALABRAS from "./palabras.json";
 
 export const FPS = 30;
@@ -297,7 +297,8 @@ class Mundo {
   /** «Elías baja corriendo con una lámpara»: por la escalera de piedra, hacia la orilla */
   eliasBaja(f: number) {
     const u = Math.min(1, Math.max(0, (f - fw(60) + 6) / (fw(67) - fw(60) + 10)));
-    const z = lerp(CHOQUE.z + 6.4, CHOQUE.z + 1.3, u), y = z > CHOQUE.z + 4.9 ? ISLA.alto : Math.max(0.37, 0.37 + (z - CHOQUE.z - 1.2) / 0.42 * 0.33);
+    const z = lerp(CHOQUE.z + 6.4, ESC_I.z0, u), kz = (z - ESC_I.z0) / ESC_I.paso; // pisa cada escalón (sin flotar entre uno y otro)
+    const y = kz > 8.5 ? ISLA.alto : ESC_I.y0 + Math.min(8, Math.max(0, Math.round(kz))) * ESC_I.sube;
     const p: V3 = [0.6, y + brinco(f, 3, 0.9), z];
     this.ver("elias", p, { ...CALIDA, ...CORRE(f, 1, 0.9), brazoDer: [1.5, 0.3], boca: "abierta", bocaAbre: habla(f, 63, 67), mirarX: 0.2, cejasMiedo: 0.4 }, [0, -1]);
     this.lampara([p[0] - 0.42, p[1] + 1.0, p[2] - 0.12], 3);

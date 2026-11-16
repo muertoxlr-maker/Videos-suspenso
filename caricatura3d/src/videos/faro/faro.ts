@@ -20,6 +20,8 @@ export const ISLA = { x: 0, z: 72, alto: 3 }; // centro del faro; meseta de roca
 export const TORRE = { r0: 2.6, r1: 1.95, alto: 16, rIn: 0.25 }; // radio afuera abajo/arriba; la pared mide 0.25
 export const CUARTO = { y: ISLA.alto + 16, r: 2.6, pretil: 0.95, vidrio: 2.3, lente: 1.9 }; // la lente va arriba de las cabezas (no tapa a nadie) // cuarto de la lámpara
 export const CHOQUE = { x: 2.2, z: 58.6 }; // donde la lancha pega con las rocas
+/** escalera de piedra de la isla: escalón 0 abajo (huella a y0, centro en z0); 9 escalones; el último llega a la meseta */
+export const ESC_I = { y0: 0.37, sube: 0.33, paso: 0.3, z0: 72 - 10 - 0.15 - 8 * 0.3 };
 export const PUERTA_F = { ancho: 0.95, alto: 1.95 }; // la puerta del faro (en −z)
 export const REGLAS = { th: 0, ancho: 1.7, y0: 0.45, alto: 3.6 }; // panel de reglas (ángulo, ancho, de qué altura, alto)
 export const ESC_F = { th0: 0.5, paso: 0.25, sube: 0.205, r0: 1.18 }; // escalera: empieza en θ0, sube `sube` cada `paso` rad
@@ -297,9 +299,18 @@ export function crearEscenario() {
   [[CHOQUE.x + 1.6, 0.3, CHOQUE.z + 0.6, 1.6], [CHOQUE.x - 2.4, 0.2, CHOQUE.z + 1.2, 1.3], [CHOQUE.x + 0.4, 0.1, CHOQUE.z + 2.0, 1.4]].forEach(([x, y, z, s], k) => isla.add(roca(x, y, z, s, mRocaOsc, 90 + k)));
   // escalera de piedra desde la orilla hasta la meseta (sube hacia +z) y luego el caminito a la puerta
   const mPiedra = lambert({ color: "#6a6a64" });
-  for (let k = 0; k < 9; k++) isla.add(caja(1.3, 0.34, 0.5, mPiedra, 0.6, 0.2 + k * 0.33, CHOQUE.z + 1.2 + k * 0.42));
-  for (let k = 0; k < 9; k++) isla.add(caja(0.08, 0.7, 0.08, mFierro, -0.05, 0.6 + k * 0.33, CHOQUE.z + 1.2 + k * 0.42)); // postes del pasamanos
-  const pasamanos = cil(0.025, 0.025, 4.6, mFierro, -0.05, 2.3, CHOQUE.z + 2.9, 6); pasamanos.rotation.x = Math.PI / 2 - Math.atan2(2.64, 3.36); isla.add(pasamanos);
+  // escalones macizos (de la roca hacia arriba, sin huecos) delante de la ladera: la ladera sube más empinada que la
+  // escalera, así que cada escalón queda por fuera de la roca y se mete en ella solo por atrás
+  const mPiedraL = lambert({ color: "#5a5a55" });
+  for (let k = 0; k < 9; k++) {
+    const ya = ESC_I.y0 + k * ESC_I.sube, zk = ESC_I.z0 + k * ESC_I.paso;
+    isla.add(caja(1.3, ya + 0.6, ESC_I.paso + 1.2, mPiedra, 0.6, (ya - 0.6) / 2, zk + 0.6)); // huella + cuerpo que entra a la roca
+    isla.add(caja(1.34, 0.05, 0.08, mPiedraL, 0.6, ya + 0.005, zk - ESC_I.paso / 2 + 0.03)); // canto del escalón (se lee cada paso)
+    isla.add(caja(0.08, 0.7, 0.08, mFierro, -0.05, ya + 0.35, zk)); // postes del pasamanos
+  }
+  const subeT = 8 * ESC_I.sube, avanzaT = 8 * ESC_I.paso;
+  const pasamanos = cil(0.025, 0.025, Math.hypot(subeT, avanzaT) + 0.2, mFierro, -0.05, ESC_I.y0 + subeT / 2 + 0.7, ESC_I.z0 + avanzaT / 2, 6);
+  pasamanos.rotation.x = Math.PI / 2 - Math.atan2(subeT, avanzaT); isla.add(pasamanos);
   for (let k = 0; k < 5; k++) isla.add(caja(0.9, 0.05, 0.6, mPiedra, 0.4 - k * 0.08, I.alto + 0.03, CHOQUE.z + 5.6 + k * 0.75)); // lajas del camino
   // la casita del farero, tambos, boya vieja, tendedero y una lancha de remos volteada
   const casita = new THREE.Group(); casita.position.set(I.x - 5.2, I.alto, I.z - 2.5); isla.add(casita);
