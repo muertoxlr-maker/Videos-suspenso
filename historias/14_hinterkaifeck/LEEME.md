@@ -26,5 +26,9 @@
   textura del techo que sí parpadeaban se corrigieron antes del render.
 
 ## Video final
-- 2931 cuadros, 1080×1920, 97.7 s (`caricatura3d/salida/hinter/hinterkaifeck.mp4`, no se sube a git).
-- Audio: −14.0 LUFS, pico −2.3 dBFS.
+- 3042 cuadros, 1080×1920, 101.4 s (`caricatura3d/salida/hinter/hinterkaifeck.mp4`, no se sube a git).
+- Atajo del gancho: solo se dibujaron de nuevo los cuadros 0–290 (`salida/hinter/gancho/gancho.mp4`); el resto es el
+  render anterior desde su cuadro 180 («Hinterkaifeck era…»), que cae justo en el corte de toma.
+- Sonidos de suspenso (pedido del usuario): subidas cortas, golpes graves, piano tétrico y un chillido de violín solo
+  en los momentos fuertes (`mezcla.py`, bus `suspenso`); ninguno dura más de 3 s.
+- Audio: −14.0 LUFS, pico −1.9 dBFS.
