@@ -70,8 +70,8 @@ const texTablas = (base = "#5a4632", rep: [number, number] = [6, 1]) => lienzo((
 const texTejas = () => lienzo((c, w, h) => { // tejas oscuras con nieve encima (más nieve abajo, donde se junta)
   c.fillStyle = "#3a3634"; c.fillRect(0, 0, w, h);
   for (let y = 0; y < h; y += 24) for (let x = (y / 24) % 2 ? 0 : 16; x < w; x += 32) { c.fillStyle = "#2a2624"; c.fillRect(x, y + 18, 30, 6); }
-  for (let k = 0; k < 160; k++) { c.fillStyle = `rgba(220,228,240,${0.55 + rz(k) * 0.35})`; c.beginPath(); c.ellipse(rz(k + 4) * w, rz(k + 8) * h, 20 + rz(k + 2) * 40, 6 + rz(k + 6) * 8, 0, 0, 7); c.fill(); }
-}, 512, 512, [6, 2]);
+  c.filter = "blur(3px)"; for (let k = 0; k < 90; k++) { c.fillStyle = `rgba(220,228,240,${0.6 + rz(k) * 0.3})`; c.beginPath(); c.ellipse(rz(k + 4) * w, rz(k + 8) * h, 40 + rz(k + 2) * 60, 10 + rz(k + 6) * 12, 0, 0, 7); c.fill(); } c.filter = "none";
+}, 512, 512, [3, 1]);
 const texPiso = () => lienzo((c, w, h) => { // duela ancha gastada
   c.fillStyle = "#5e4a36"; c.fillRect(0, 0, w, h);
   for (let i = 0; i < 6; i++) { c.fillStyle = i % 2 ? "rgba(0,0,0,0.12)" : "rgba(255,230,200,0.05)"; c.fillRect(0, i * h / 6, w, h / 6); c.fillStyle = "rgba(18,12,8,0.8)"; c.fillRect(0, i * h / 6, w, 3); }
@@ -235,8 +235,7 @@ export function crearEscenario() {
   const ventanas = VENTANAS.map(([x, y]) => { const v = ventana(0.85, 1.0, mMarco, mPost); v.g.position.set(x, y + 0.5, G.z0 - 0.06); v.g.rotation.y = Math.PI; granja.add(v.g); return v; });
   for (const x of [1, 7, 11]) { const v = ventana(0.6, 0.45, mMarco, null); v.g.position.set(x, 3.4, G.z0 - 0.06); v.g.rotation.y = Math.PI; granja.add(v.g); }
   // puerta de la casa (tablas, cerrada) con su escalón y su farol apagado
-  granja.add(caja(PUERTA_CASA.ancho, PUERTA_CASA.alto, 0.08, lambert({ color: "#4a3424" }), PUERTA_CASA.x, PUERTA_CASA.alto / 2, G.z0 + 0.06));
-  for (let k = 1; k < 4; k++) granja.add(caja(0.015, PUERTA_CASA.alto - 0.1, 0.09, lambert({ color: "#2a1c12" }), PUERTA_CASA.x - PUERTA_CASA.ancho / 2 + k * PUERTA_CASA.ancho / 4, PUERTA_CASA.alto / 2, G.z0 + 0.05));
+  granja.add(caja(PUERTA_CASA.ancho, PUERTA_CASA.alto, 0.08, lambert({ map: texTablas("#4a3424", [0.5, 1]) }), PUERTA_CASA.x, PUERTA_CASA.alto / 2, G.z0 + 0.06)); // tablas pintadas en la textura (rayitas sueltas parpadeaban)
   granja.add(caja(PUERTA_CASA.ancho + 0.2, 0.08, 0.12, mMarco, PUERTA_CASA.x, PUERTA_CASA.alto + 0.04, G.z0 - 0.02), caja(1.5, 0.18, 0.8, lambert({ color: "#6a6a66" }), PUERTA_CASA.x, 0.09, G.z0 - 0.4));
   granja.add(cil(0.03, 0.03, 0.06, lambert({ color: "#a08a40" }), PUERTA_CASA.x + 0.35, 1.0, G.z0 - 0.02).rotateX(Math.PI / 2));
   // portón del granero: dos hojas con bisagras a los lados; abren hacia afuera (rotation.y)

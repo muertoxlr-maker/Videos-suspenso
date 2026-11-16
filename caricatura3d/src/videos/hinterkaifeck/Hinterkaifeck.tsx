@@ -80,7 +80,7 @@ const PLANOS: Plano[] = [
   // 0 · Durante tres días, alguien vivió en esta granja...  (la casa de noche; una sombra pasa por la ventana prendida)
   { w: 0, lugar: "afuera", foco: 10, cInf: 6, ini: c([-3.2, 1.7, -15.5], [-3.4, 1.6, -4.5], 44), fin: c([-3.3, 1.65, -12.0], [-3.4, 1.55, -4.5], 42), hacer: ({ f, m }) => { m.sombraVentana(f, 1, 8, 70); } },
   // 1 · con la familia muerta en el granero.  (el portón del granero, entreabierto y oscuro)
-  { w: 8, lugar: "afuera", foco: 6, cInf: 6, ini: c([5.6, 1.5, -11.5], [4, 1.6, -4.5], 44), fin: c([5.0, 1.5, -8.8], [4, 1.6, -4.5], 42), hacer: ({ m }) => { m.porton(0.22); } },
+  { w: 8, lugar: "afuera", foco: 6, cInf: 6, ini: c([7.8, 1.9, -15.5], [4, 2.2, -4.5], 46), fin: c([6.6, 1.75, -12.0], [4, 2.0, -4.5], 44), hacer: ({ m }) => { m.porton(0.22); m.luz(5, 3.2, -8, 4, "#b8c8ff"); } },
   // 2 · Hinterkaifeck era una granja aislada, rodeada de bosque.  (desde arriba: la granja sola en la nieve, el bosque alrededor)
   { w: 15, lugar: "afuera", foco: 30, cInf: 5, ini: c([-26, 26, -34], [0, 1, 0], 42), fin: c([-23, 24, -30], [0, 1, 0], 40), hacer: () => {} },
   // 3 · Ahí vivía Andreas Gruber con su esposa,
@@ -132,7 +132,7 @@ const PLANOS: Plano[] = [
   // 26 · El 4 de abril, como nadie había visto a la familia en días,  (de día: tres vecinos caminan hacia la granja)
   { w: 190, lugar: "afuera", dia: true, foco: 5, cInf: 7, ini: c([-7.4, 1.55, -7.4], [-13, 1.25, -13], 46), fin: c([-7.7, 1.55, -7.9], [-12.5, 1.25, -12.5], 46), hacer: ({ f, m }) => { m.vecinosVan(f); } },
   // 27 · los vecinos entraron...  (desde adentro del granero: el portón se abre; ellos, a contraluz)
-  { w: 203, lugar: "granero", dia: true, foco: 4.5, cInf: 7, ini: c(GA(0.3, 1.45, 2.3), GA(0, 1.45, -4), 48), fin: c(GA(0.2, 1.45, 1.6), GA(0, 1.45, -4), 46), hacer: ({ f, m }) => { m.abren(f); } },
+  { w: 203, lugar: "granero", dia: true, foco: 4.5, cInf: 7, ini: c(GA(0.2, 1.5, -0.6), GA(0, 1.4, -5), 50), fin: c(GA(0.1, 1.5, -1.3), GA(0, 1.4, -5), 48), hacer: ({ f, m }) => { m.abren(f); } },
   // 28 · y los encontraron.  (sus caras)
   { w: 206, lugar: "granero", dia: true, foco: 1.9, cInf: 8, sacude: () => 0.003, ini: c(GA(0, 1.55, -1.3), GA(0, 1.5, -3.4), 50), fin: c(GA(0, 1.55, -1.6), GA(0, 1.5, -3.4), 48), hacer: ({ f, m }) => { m.caras(f); } },
   // 29 · La policía interrogó a más de cien personas.
