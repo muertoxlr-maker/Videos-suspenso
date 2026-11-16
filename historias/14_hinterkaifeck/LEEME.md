@@ -1,10 +1,11 @@
 # «Hinterkaifeck» (caso real, mini documental)
 
 - `GUION.md` — guion aprobado y notas de qué datos son seguros y cuáles son relatos de testigos. Gancho de una frase
-  («Imagina que…» → la granja), luego la historia en orden: los Gruber en la granja de Baviera, 1922; huellas en la
-  nieve que llegan y no regresan, pasos en el ático, el periódico que nadie compró, la llave perdida; el 31 de marzo
+  («Durante tres días, alguien vivió en esta granja…», sin escena adelantada), luego la historia en orden: los Gruber
+  en la granja de Baviera, 1922; la sirvienta que renunció por ruidos en el ático; huellas en la nieve que llegan y no
+  regresan, pasos en el ático, el periódico de Múnich que nadie compró; el 31 de marzo
   llega la sirvienta María; esa noche matan a los seis (sin sangre ni violencia en pantalla, el asesino es solo una
-  silueta de espaldas); alguien se queda días dando de comer a las vacas; el 4 de abril los vecinos entran; más de
+  silueta de espaldas); humo en la chimenea: alguien se queda días dando de comer a los animales; el 4 de abril los vecinos entran; más de
   100 interrogados, nunca hubo culpable; derriban la granja en 1923. Final con pregunta.
 - `voz/` — narración con la voz del usuario (`voz_final.mp3`, 97.70 s) y `palabras.json`.
 - `sfx/` — efectos cortos (`pedidos.json`); `mezcla.py` → `audio/mezcla.wav`: cada efecto solo en su palabra, dron y
