@@ -6,7 +6,12 @@ no se parecen a nadie real.
 
 ## Narración (borrador para aprobar)
 
-Durante tres días, alguien vivió en esta granja… con la familia muerta en el granero.
+**[letrero: CASO HINTERKAIFECK]** Hinterkaifeck: el crimen sin resolver más famoso de Alemania. Durante tres días, el
+asesino vivió en la granja… con la familia muerta.
+
+(Gancho nuevo, pedido por el usuario: que se sepa el caso desde el primer segundo. Grabado aparte en `voz_gancho/` y
+pegado antes de «Hinterkaifeck era…»; el gancho anterior decía «Durante tres días, alguien vivió en esta granja… con
+la familia muerta en el granero».)
 
 **[rótulo: HINTERKAIFECK · BAVIERA, ALEMANIA · 1922]**
 

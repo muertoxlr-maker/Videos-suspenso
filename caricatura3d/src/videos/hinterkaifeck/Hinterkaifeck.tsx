@@ -22,7 +22,7 @@ import { ATICO, COCINA, ESCRITORIO, G, GRANERO, MESA, OFICINA, PORTON, PUERTA_CA
 import PALABRAS from "./palabras.json";
 
 export const FPS = 30;
-export const HINTER_CUADROS = Math.ceil(97.7 * FPS); // duración de voz_final.mp3
+export const HINTER_CUADROS = Math.ceil(101.4 * FPS); // duración de voz_final.mp3 (con el gancho nuevo)
 const P = PALABRAS as { txt: string; ini: number; fin: number }[];
 const fw = (i: number) => Math.round(P[i].ini * FPS);
 const fin = (i: number) => Math.round(P[i].fin * FPS);
@@ -69,84 +69,86 @@ const SENTADO = (q: Quien, x: number, z: number, asiento = 0.475): V3 => [x, asi
 const banca = MESA.z + MESA.ancho / 2 + 0.3; // la banca de atrás de la mesa (los que se sientan ahí ven hacia la cámara)
 
 // ventanas del frente (0–1 abajo, 2–4 arriba): cuáles están prendidas en cada momento
-const APAGON = () => fw(130); // «alguien los mató»: se van apagando una por una
+const APAGON = () => fw(137); // «alguien los mató»: se van apagando una por una
 const ventanasEn = (f: number, i: number): number => {
-  if (f < fw(127) - 2) return [0, 1, 3].includes(i) ? 1 : 0;
-  if (f < fw(150) - 2) { const orden = [3, 0, 1]; const k = orden.indexOf(i); if (k < 0) return 0; return f < APAGON() + k * 26 ? 1 : 0; }
+  if (f < fw(134) - 2) return [0, 1, 3].includes(i) ? 1 : 0;
+  if (f < fw(157) - 2) { const orden = [3, 0, 1]; const k = orden.indexOf(i); if (k < 0) return 0; return f < APAGON() + k * 26 ? 1 : 0; }
   return i === 1 ? 1 : 0; // después: solo la cocina (alguien sigue ahí)
 };
 
 const PLANOS: Plano[] = [
-  // 0 · Durante tres días, alguien vivió en esta granja...  (la casa de noche; una sombra pasa por la ventana prendida)
-  { w: 0, lugar: "afuera", foco: 10, cInf: 6, ini: c([-3.2, 1.7, -15.5], [-3.4, 1.6, -4.5], 44), fin: c([-3.3, 1.65, -12.0], [-3.4, 1.55, -4.5], 42), hacer: ({ f, m }) => { m.sombraVentana(f, 1, 8, 70); } },
-  // 1 · con la familia muerta en el granero.  (el portón del granero, entreabierto y oscuro)
-  { w: 8, lugar: "afuera", foco: 6, cInf: 6, ini: c([7.8, 1.9, -15.5], [4, 2.2, -4.5], 46), fin: c([6.6, 1.75, -12.0], [4, 2.0, -4.5], 44), hacer: ({ m }) => { m.porton(0.22); m.luz(5, 3.2, -8, 4, "#b8c8ff"); } },
+  // 0 · Hinterkaifeck: el crimen sin resolver más famoso de Alemania.  (la granja de noche desde el camino; letrero CASO HINTERKAIFECK)
+  { w: 0, lugar: "afuera", foco: 24, cInf: 5, ini: c([7.4, 4.6, -23.5], [-2.5, 2.4, -4.5], 48), fin: c([6.6, 4.0, -20.5], [-2.5, 2.4, -4.5], 46), hacer: () => {} },
+  // 1 · Durante tres días, el asesino vivió en la granja...  (la casa de noche; una sombra pasa por la ventana prendida)
+  { w: 9, lugar: "afuera", foco: 10, cInf: 6, ini: c([-3.2, 1.7, -15.5], [-3.4, 1.6, -4.5], 44), fin: c([-3.3, 1.65, -12.0], [-3.4, 1.55, -4.5], 42), hacer: ({ f, m }) => { m.sombraVentana(f, 1, fw(9) + 8, fw(9) + 70); } },
+  // 2 · con la familia muerta.  (el portón del granero, entreabierto y oscuro)
+  { w: 18, lugar: "afuera", foco: 6, cInf: 6, ini: c([7.8, 1.9, -15.5], [4, 2.2, -4.5], 46), fin: c([6.6, 1.75, -12.0], [4, 2.0, -4.5], 44), hacer: ({ m }) => { m.porton(0.22); m.luz(5, 3.2, -8, 4, "#b8c8ff"); } },
   // 2 · Hinterkaifeck era una granja aislada, rodeada de bosque.  (desde arriba: la granja sola en la nieve, el bosque alrededor)
-  { w: 15, lugar: "afuera", foco: 30, cInf: 5, ini: c([-26, 26, -34], [0, 1, 0], 42), fin: c([-23, 24, -30], [0, 1, 0], 40), hacer: () => {} },
+  { w: 22, lugar: "afuera", foco: 30, cInf: 5, ini: c([-26, 26, -34], [0, 1, 0], 42), fin: c([-23, 24, -30], [0, 1, 0], 40), hacer: () => {} },
   // 3 · Ahí vivía Andreas Gruber con su esposa,
-  { w: 23, lugar: "afuera", foco: 4, cInf: 7, ini: c([-6.0, 1.5, -9.8], [-6.0, 1.25, -5.3], 44), fin: c([-6.0, 1.5, -8.9], [-6.0, 1.25, -5.3], 42), hacer: ({ f, m }) => { m.familia(f, false); } },
+  { w: 30, lugar: "afuera", foco: 4, cInf: 7, ini: c([-6.0, 1.5, -9.8], [-6.0, 1.25, -5.3], 44), fin: c([-6.0, 1.5, -8.9], [-6.0, 1.25, -5.3], 42), hacer: ({ f, m }) => { m.familia(f, false); } },
   // 4 · su hija Viktoria y los dos hijos de ella.
-  { w: 30, lugar: "afuera", foco: 4, cInf: 7, ini: c([-3.9, 1.35, -9.4], [-3.9, 1.05, -5.6], 44), fin: c([-3.9, 1.3, -8.6], [-3.9, 1.0, -5.6], 42), hacer: ({ f, m }) => { m.familia(f, true); } },
+  { w: 37, lugar: "afuera", foco: 4, cInf: 7, ini: c([-3.9, 1.35, -9.4], [-3.9, 1.05, -5.6], 44), fin: c([-3.9, 1.3, -8.6], [-3.9, 1.0, -5.6], 42), hacer: ({ f, m }) => { m.familia(f, true); } },
   // 5 · Meses antes, la sirvienta renunció.  (se va por el camino con su bulto; voltea a ver la casa)
-  { w: 39, lugar: "afuera", foco: 6, cInf: 6, ini: c([-19.2, 1.55, -8.9], [-14.0, 1.2, -7.0], 46), fin: c([-19.6, 1.55, -8.9], [-15.8, 1.2, -7.3], 46), hacer: ({ f, m }) => { m.seVa(f); } },
+  { w: 46, lugar: "afuera", foco: 6, cInf: 6, ini: c([-19.2, 1.55, -8.9], [-14.0, 1.2, -7.0], 46), fin: c([-19.6, 1.55, -8.9], [-15.8, 1.2, -7.3], 46), hacer: ({ f, m }) => { m.seVa(f); } },
   // 6 · Según contaron después, decía que oía ruidos en el ático.  (en la cocina, viendo el techo)
-  { w: 44, lugar: "cocina", foco: 1.8, cInf: 8, ini: c(CO(0.7, 0.95, -2.15), CO(-1.9, 1.5, 0.3), 54), fin: c(CO(0.6, 0.9, -2.0), CO(-1.9, 1.65, 0.3), 52), hacer: ({ f, m }) => { m.viejaTecho(f); } },
+  { w: 51, lugar: "cocina", foco: 1.8, cInf: 8, ini: c(CO(0.7, 0.95, -2.15), CO(-1.9, 1.5, 0.3), 54), fin: c(CO(0.6, 0.9, -2.0), CO(-1.9, 1.65, 0.3), 52), hacer: ({ f, m }) => { m.viejaTecho(f); } },
   // 7 · A finales de marzo, Andreas les contó a sus vecinos algo raro.  (en la cerca del camino)
-  { w: 54, lugar: "afuera", foco: 4, cInf: 7, ini: c([-12.2, 1.55, -15.2], [-12.1, 1.35, -10.2], 50), fin: c([-12.2, 1.5, -14.4], [-12.1, 1.35, -10.2], 48), hacer: ({ f, m }) => { m.cerca(f); } },
+  { w: 61, lugar: "afuera", foco: 4, cInf: 7, ini: c([-12.2, 1.55, -15.2], [-12.1, 1.35, -10.2], 50), fin: c([-12.2, 1.5, -14.4], [-12.1, 1.35, -10.2], 48), hacer: ({ f, m }) => { m.cerca(f); } },
   // 8 · En la nieve había huellas.  (de cerca, bajito)
-  { w: 66, lugar: "afuera", foco: 2.5, cInf: 8, ini: c([7.9, 0.95, -17.2], [9.0, 0, -12.5], 46), fin: c([8.2, 0.8, -15.8], [9.1, 0, -11.5], 44), hacer: ({ m }) => { m.luz(8.6, 2.5, -14, 6, "#b8c8ff"); } },
+  { w: 73, lugar: "afuera", foco: 2.5, cInf: 8, ini: c([7.9, 0.95, -17.2], [9.0, 0, -12.5], 46), fin: c([8.2, 0.8, -15.8], [9.1, 0, -11.5], 44), hacer: ({ m }) => { m.luz(8.6, 2.5, -14, 6, "#b8c8ff"); } },
   // 9 · Venían del bosque hasta la casa...  (la cámara sigue las huellas desde el bosque hasta la granja)
-  { w: 71, lugar: "afuera", foco: 8, cInf: 6, ini: c([7.4, 1.8, -28.5], [9.6, 0.8, -4.5], 48), fin: c([8.6, 1.7, -16.5], [10, 0.9, -4.5], 46), hacer: () => {} },
+  { w: 78, lugar: "afuera", foco: 8, cInf: 6, ini: c([7.4, 1.8, -28.5], [9.6, 0.8, -4.5], 48), fin: c([8.6, 1.7, -16.5], [10, 0.9, -4.5], 46), hacer: () => {} },
   // 10 · y ninguna regresaba.  (la puertita con el candado roto; ahí terminan)
-  { w: 77, lugar: "afuera", foco: 2.6, cInf: 7, ini: c([8.9, 1.35, -9.4], [9.9, 0.8, -4.6], 46), fin: c([9.2, 1.25, -8.2], [9.9, 0.8, -4.6], 44), hacer: ({ m }) => { m.luz(9.6, 2.2, -6.5, 5, "#b8c8ff"); } },
+  { w: 84, lugar: "afuera", foco: 2.6, cInf: 7, ini: c([8.9, 1.35, -9.4], [9.9, 0.8, -4.6], 46), fin: c([9.2, 1.25, -8.2], [9.9, 0.8, -4.6], 44), hacer: ({ m }) => { m.luz(9.6, 2.2, -6.5, 5, "#b8c8ff"); } },
   // 11 · Esa noche, la familia oyó pasos arriba, en el ático.  (en la mesa, todos viendo el techo)
-  { w: 80, lugar: "cocina", foco: 2.2, cInf: 7, sacude: () => 0.003, ini: c(CO(0, 1.3, -1.95), CO(0, 1.25, 1.0), 54), fin: c(CO(0, 1.25, -1.6), CO(0, 1.3, 1.0), 52), hacer: ({ f, m }) => { m.mesaTecho(f); } },
+  { w: 87, lugar: "cocina", foco: 2.2, cInf: 7, sacude: () => 0.003, ini: c(CO(0, 1.3, -1.95), CO(0, 1.25, 1.0), 54), fin: c(CO(0, 1.25, -1.6), CO(0, 1.3, 1.0), 52), hacer: ({ f, m }) => { m.mesaTecho(f); } },
   // 12 · Andreas subió con una lámpara.  (sale por la trampilla del ático con el farol)
-  { w: 90, lugar: "atico", foco: 2.5, cInf: 7, ini: c(AT(-1.8, 1.3, -1.5), AT(-4, 0.8, 1.2), 50), fin: c(AT(-2.1, 1.25, -1.1), AT(-4, 0.9, 1.2), 48), hacer: ({ f, m }) => { m.subeAtico(f); } },
+  { w: 97, lugar: "atico", foco: 2.5, cInf: 7, ini: c(AT(-1.8, 1.3, -1.5), AT(-4, 0.8, 1.2), 50), fin: c(AT(-2.1, 1.25, -1.1), AT(-4, 0.9, 1.2), 48), hacer: ({ f, m }) => { m.subeAtico(f); } },
   // 13 · No había nadie.  (desde el rincón oscuro, detrás de la paja: él busca con el farol)
-  { w: 95, lugar: "atico", foco: 8, cInf: 6, sacude: () => 0.004, ini: c(AT(3.6, 1.0, -2.4), AT(-3.0, 1.2, 0.6), 44), fin: c(AT(3.4, 1.0, -2.3), AT(-3.0, 1.2, 0.6), 42), hacer: ({ f, m }) => { m.buscaAtico(f); } },
+  { w: 102, lugar: "atico", foco: 8, cInf: 6, sacude: () => 0.004, ini: c(AT(3.6, 1.0, -2.4), AT(-3.0, 1.2, 0.6), 44), fin: c(AT(3.4, 1.0, -2.3), AT(-3.0, 1.2, 0.6), 42), hacer: ({ f, m }) => { m.buscaAtico(f); } },
   // 14 · Después apareció en la granja un periódico de Múnich.  (el periódico en la mesa)
-  { w: 98, lugar: "cocina", foco: 0.6, cInf: 9, ini: c(CO(-0.35, 1.35, -0.3), CO(-0.35, 0.76, 0.25), 40), fin: c(CO(-0.35, 1.2, -0.12), CO(-0.35, 0.76, 0.25), 40), hacer: ({ m }) => { m.h.periodico.visible = true; } },
+  { w: 105, lugar: "cocina", foco: 0.6, cInf: 9, ini: c(CO(-0.35, 1.35, -0.3), CO(-0.35, 0.76, 0.25), 40), fin: c(CO(-0.35, 1.2, -0.12), CO(-0.35, 0.76, 0.25), 40), hacer: ({ m }) => { m.h.periodico.visible = true; } },
   // 15 · Nadie en la casa lo había comprado.  (Andreas con el periódico en la mano; Viktoria lo ve)
-  { w: 107, lugar: "cocina", foco: 2.4, cInf: 7, ini: c(CO(-0.9, 1.5, 1.35), CO(-0.95, 1.3, -1.3), 46), fin: c(CO(-0.9, 1.45, 1.05), CO(-0.95, 1.3, -1.3), 44), hacer: ({ f, m }) => { m.periodicoMano(f); } },
+  { w: 114, lugar: "cocina", foco: 2.4, cInf: 7, ini: c(CO(-0.9, 1.5, 1.35), CO(-0.95, 1.3, -1.3), 46), fin: c(CO(-0.9, 1.45, 1.05), CO(-0.95, 1.3, -1.3), 44), hacer: ({ f, m }) => { m.periodicoMano(f); } },
   // 16 · El 31 de marzo llegó una sirvienta nueva, María.  (llega a la puerta con su bulto)
-  { w: 114, lugar: "afuera", foco: 5, cInf: 7, ini: c([-6.5, 1.6, -12.5], [-6.5, 1.2, -6.0], 44), fin: c([-6.4, 1.55, -11.2], [-6.4, 1.2, -6.0], 42), hacer: ({ f, m }) => { m.llegaMaria(f); } },
+  { w: 121, lugar: "afuera", foco: 5, cInf: 7, ini: c([-6.5, 1.6, -12.5], [-6.5, 1.2, -6.0], 44), fin: c([-6.4, 1.55, -11.2], [-6.4, 1.2, -6.0], 42), hacer: ({ f, m }) => { m.llegaMaria(f); } },
   // 17 · Era su primer día.  (María en la cocina, junto a la estufa)
-  { w: 123, lugar: "cocina", foco: 1.9, cInf: 8, ini: c(CO(0.3, 1.5, -1.6), CO(1.1, 1.25, 1.45), 46), fin: c(CO(0.42, 1.48, -1.3), CO(1.1, 1.25, 1.45), 44), hacer: ({ f, m }) => { m.mariaCocina(f); } },
+  { w: 130, lugar: "cocina", foco: 1.9, cInf: 8, ini: c(CO(0.3, 1.5, -1.6), CO(1.1, 1.25, 1.45), 46), fin: c(CO(0.42, 1.48, -1.3), CO(1.1, 1.25, 1.45), 44), hacer: ({ f, m }) => { m.mariaCocina(f); } },
   // 18 · Esa misma noche, alguien los mató a los seis.  (la granja de noche: las ventanas se apagan una por una)
-  { w: 127, lugar: "afuera", foco: 14, cInf: 5, ini: c([-14, 3.2, -22], [-2, 2.5, 0], 44), fin: c([-13, 3.1, -19.5], [-2, 2.5, 0], 42), hacer: () => {} },
+  { w: 134, lugar: "afuera", foco: 14, cInf: 5, ini: c([-14, 3.2, -22], [-2, 2.5, 0], 44), fin: c([-13, 3.1, -19.5], [-2, 2.5, 0], 42), hacer: () => {} },
   // 19 · Cuatro en el granero, uno por uno.  (el portón entreabierto: adentro, un farol y una sombra)
-  { w: 136, lugar: "afuera", foco: 5, cInf: 7, ini: c([4.3, 1.5, -10.2], [4, 1.4, -4.5], 42), fin: c([4.2, 1.45, -9.0], [4, 1.4, -4.5], 40), hacer: ({ f, m }) => { m.porton(0.3); m.granEnLuz(f); } },
+  { w: 143, lugar: "afuera", foco: 5, cInf: 7, ini: c([4.3, 1.5, -10.2], [4, 1.4, -4.5], 42), fin: c([4.2, 1.45, -9.0], [4, 1.4, -4.5], 40), hacer: ({ f, m }) => { m.porton(0.3); m.granEnLuz(f); } },
   // 20 · Los otros dos, dentro de la casa.  (una ventana de abajo se apaga)
-  { w: 143, lugar: "afuera", foco: 3.5, cInf: 7, ini: c([-8.8, 1.5, -8.2], [-8.8, 1.5, -4.5], 40), fin: c([-8.8, 1.5, -7.3], [-8.8, 1.5, -4.5], 38), hacer: ({ f, m }) => { m.ventana(0, f < fw(147) ? 1 : 0); } },
+  { w: 150, lugar: "afuera", foco: 3.5, cInf: 7, ini: c([-8.8, 1.5, -8.2], [-8.8, 1.5, -4.5], 40), fin: c([-8.8, 1.5, -7.3], [-8.8, 1.5, -4.5], 38), hacer: ({ f, m }) => { m.ventana(0, f < fw(154) ? 1 : 0); } },
   // 21 · Pero eso no fue lo más extraño.  (la cocina a oscuras; la silla echada para atrás)
-  { w: 150, lugar: "cocina", foco: 2.2, cInf: 7, ini: c(CO(1.9, 1.6, -1.95), CO(0.2, 0.9, 0.4), 50), fin: c(CO(1.3, 1.5, -1.4), CO(0.2, 0.9, 0.4), 48), hacer: ({ m }) => { m.cocinaOscura(); } },
+  { w: 157, lugar: "cocina", foco: 2.2, cInf: 7, ini: c(CO(1.9, 1.6, -1.95), CO(0.2, 0.9, 0.4), 50), fin: c(CO(1.3, 1.5, -1.4), CO(0.2, 0.9, 0.4), 48), hacer: ({ m }) => { m.cocinaOscura(); } },
   // 22 · Los días siguientes, los vecinos vieron humo saliendo de la chimenea.  (desde el camino: dos vecinos ven el humo)
-  { w: 157, lugar: "afuera", foco: 6, cInf: 6, ini: c([-31.4, 2.3, -11.3], [-6, 3.4, -4.5], 48), fin: c([-31.0, 2.3, -11.2], [-6, 3.8, -4.5], 46), hacer: ({ f, m }) => { m.vecinosHumo(f); } },
+  { w: 164, lugar: "afuera", foco: 6, cInf: 6, ini: c([-31.4, 2.3, -11.3], [-6, 3.4, -4.5], 48), fin: c([-31.0, 2.3, -11.2], [-6, 3.8, -4.5], 46), hacer: ({ f, m }) => { m.vecinosHumo(f); } },
   // 23 · Alguien les daba de comer a los animales...  (en el granero: las vacas comen; una sombra de espaldas)
-  { w: 168, lugar: "granero", foco: 3.2, cInf: 7, ini: c(GA(-1.7, 1.65, -2.6), GA(0.5, 1.0, 1.4), 52), fin: c(GA(-1.45, 1.6, -2.2), GA(0.5, 1.0, 1.4), 50), hacer: ({ f, m }) => { m.daComer(f); } },
+  { w: 175, lugar: "granero", foco: 3.2, cInf: 7, ini: c(GA(-1.7, 1.65, -2.6), GA(0.5, 1.0, 1.4), 52), fin: c(GA(-1.45, 1.6, -2.2), GA(0.5, 1.0, 1.4), 50), hacer: ({ f, m }) => { m.daComer(f); } },
   // 24 · y comía en la cocina.  (la sombra sentada a la mesa, de espaldas: pan, taza con vapor)
-  { w: 176, lugar: "cocina", foco: 1.9, cInf: 8, ini: c(CO(1.7, 1.55, -2.25), CO(0.15, 0.9, 0.2), 56), fin: c(CO(1.55, 1.5, -2.05), CO(0.15, 0.9, 0.2), 54), hacer: ({ f, m }) => { m.come(f); } },
+  { w: 183, lugar: "cocina", foco: 1.9, cInf: 8, ini: c(CO(1.7, 1.55, -2.25), CO(0.15, 0.9, 0.2), 56), fin: c(CO(1.55, 1.5, -2.05), CO(0.15, 0.9, 0.2), 54), hacer: ({ f, m }) => { m.come(f); } },
   // 25 · El asesino se quedó a vivir ahí... con ellos.  (afuera: la sombra parada en la ventana de la cocina)
-  { w: 181, lugar: "afuera", foco: 8, cInf: 6, ini: c([-3.0, 1.6, -13.5], [-3.4, 1.5, -4.5], 42), fin: c([-3.1, 1.6, -9.8], [-3.4, 1.5, -4.5], 38), hacer: ({ f, m }) => { m.sombraVentana(f, 1, -1, -1); } },
+  { w: 188, lugar: "afuera", foco: 8, cInf: 6, ini: c([-3.0, 1.6, -13.5], [-3.4, 1.5, -4.5], 42), fin: c([-3.1, 1.6, -9.8], [-3.4, 1.5, -4.5], 38), hacer: ({ f, m }) => { m.sombraVentana(f, 1, -1, -1); } },
   // 26 · El 4 de abril, como nadie había visto a la familia en días,  (de día: tres vecinos caminan hacia la granja)
-  { w: 190, lugar: "afuera", dia: true, foco: 5, cInf: 7, ini: c([-7.4, 1.55, -7.4], [-13, 1.25, -13], 46), fin: c([-7.7, 1.55, -7.9], [-12.5, 1.25, -12.5], 46), hacer: ({ f, m }) => { m.vecinosVan(f); } },
+  { w: 197, lugar: "afuera", dia: true, foco: 5, cInf: 7, ini: c([-7.4, 1.55, -7.4], [-13, 1.25, -13], 46), fin: c([-7.7, 1.55, -7.9], [-12.5, 1.25, -12.5], 46), hacer: ({ f, m }) => { m.vecinosVan(f); } },
   // 27 · los vecinos entraron...  (desde adentro del granero: el portón se abre; ellos, a contraluz)
-  { w: 203, lugar: "granero", dia: true, foco: 4.5, cInf: 7, ini: c(GA(0.2, 1.5, -0.6), GA(0, 1.4, -5), 50), fin: c(GA(0.1, 1.5, -1.3), GA(0, 1.4, -5), 48), hacer: ({ f, m }) => { m.abren(f); } },
+  { w: 210, lugar: "granero", dia: true, foco: 4.5, cInf: 7, ini: c(GA(0.2, 1.5, -0.6), GA(0, 1.4, -5), 50), fin: c(GA(0.1, 1.5, -1.3), GA(0, 1.4, -5), 48), hacer: ({ f, m }) => { m.abren(f); } },
   // 28 · y los encontraron.  (sus caras)
-  { w: 206, lugar: "granero", dia: true, foco: 1.9, cInf: 8, sacude: () => 0.003, ini: c(GA(0, 1.55, -1.3), GA(0, 1.5, -3.4), 50), fin: c(GA(0, 1.55, -1.6), GA(0, 1.5, -3.4), 48), hacer: ({ f, m }) => { m.caras(f); } },
+  { w: 213, lugar: "granero", dia: true, foco: 1.9, cInf: 8, sacude: () => 0.003, ini: c(GA(0, 1.55, -1.3), GA(0, 1.5, -3.4), 50), fin: c(GA(0, 1.55, -1.6), GA(0, 1.5, -3.4), 48), hacer: ({ f, m }) => { m.caras(f); } },
   // 29 · La policía interrogó a más de cien personas.
-  { w: 209, lugar: "oficina", foco: 2.0, cInf: 7, ini: c(OF(0.95, 1.5, -1.7), OF(0, 1.0, 0.8), 48), fin: c(OF(0.8, 1.45, -1.35), OF(0, 1.0, 0.8), 46), hacer: ({ f, m }) => { m.interroga(f); } },
+  { w: 216, lugar: "oficina", foco: 2.0, cInf: 7, ini: c(OF(0.95, 1.5, -1.7), OF(0, 1.0, 0.8), 48), fin: c(OF(0.8, 1.45, -1.35), OF(0, 1.0, 0.8), 46), hacer: ({ f, m }) => { m.interroga(f); } },
   // 30 · Nunca encontró al culpable.  (el expediente: SIN RESOLVER)
-  { w: 217, lugar: "oficina", foco: 0.45, cInf: 9, ini: c(OF(0.05, 1.32, 0.5), OF(0.05, 0.79, 0.92), 42), fin: c(OF(0.05, 1.25, 0.58), OF(0.05, 0.79, 0.92), 42), hacer: () => {} },
+  { w: 224, lugar: "oficina", foco: 0.45, cInf: 9, ini: c(OF(0.05, 1.32, 0.5), OF(0.05, 0.79, 0.92), 42), fin: c(OF(0.05, 1.25, 0.58), OF(0.05, 0.79, 0.92), 42), hacer: () => {} },
   // 31 · Un año después, derribaron la granja.  (lo que quedó: escombros con nieve y la chimenea sola)
-  { w: 221, lugar: "afuera", dia: true, foco: 18, cInf: 5, ini: c([-18, 5, -21], [0, 1, 0], 42), fin: c([-16, 4.6, -18.5], [0, 1, 0], 42), hacer: ({ m }) => { m.derribada(); } },
+  { w: 228, lugar: "afuera", dia: true, foco: 18, cInf: 5, ini: c([-18, 5, -21], [0, 1, 0], 42), fin: c([-16, 4.6, -18.5], [0, 1, 0], 42), hacer: ({ m }) => { m.derribada(); } },
   // 32 · Hoy, cien años después, nadie sabe quién estaba  (el campo vacío con la cruz)
-  { w: 227, lugar: "afuera", foco: 5, cInf: 7, ini: c([1.0, 1.4, -7.0], [1.0, 1.4, -1.0], 46), fin: c([1.0, 1.35, -5.6], [1.0, 1.45, -1.0], 44), hacer: ({ m }) => { m.hoy(); } },
+  { w: 234, lugar: "afuera", foco: 5, cInf: 7, ini: c([1.0, 1.4, -7.0], [1.0, 1.4, -1.0], 46), fin: c([1.0, 1.35, -5.6], [1.0, 1.45, -1.0], 44), hacer: ({ m }) => { m.hoy(); } },
   // 33 · en ese ático... ni cuánto tiempo llevaba ahí.  (el ático a oscuras: la cámara avanza hacia el rincón; ahí, alguien)
-  { w: 235, lugar: "atico", foco: 6, cInf: 6, ini: c(AT(-2.0, 1.5, 0.6), AT(6.0, 1.1, 0.6), 46), fin: c(AT(2.4, 1.45, 0.6), AT(6.0, 1.1, 0.6), 44), hacer: ({ f, m }) => { m.rincon(f); } },
+  { w: 242, lugar: "atico", foco: 6, cInf: 6, ini: c(AT(-2.0, 1.5, 0.6), AT(6.0, 1.1, 0.6), 46), fin: c(AT(2.4, 1.45, 0.6), AT(6.0, 1.1, 0.6), 44), hacer: ({ f, m }) => { m.rincon(f); } },
   // 34 · ¿Tú qué crees que pasó?  (más cerca de la silueta)
-  { w: 243, lugar: "atico", foco: 2.4, cInf: 7, ini: c(AT(3.3, 1.45, 0.6), AT(6.0, 1.2, 0.6), 46), fin: c(AT(3.7, 1.45, 0.6), AT(6.0, 1.2, 0.6), 44), hacer: ({ f, m }) => { m.rincon(f); } },
+  { w: 250, lugar: "atico", foco: 2.4, cInf: 7, ini: c(AT(3.3, 1.45, 0.6), AT(6.0, 1.2, 0.6), 46), fin: c(AT(3.7, 1.45, 0.6), AT(6.0, 1.2, 0.6), 44), hacer: ({ f, m }) => { m.rincon(f); } },
 ];
 const inicioPlano = (i: number) => (i === 0 ? 0 : fw(PLANOS[i].w) - 2);
 export const planoEn = (f: number) => { let i = 0; while (i + 1 < PLANOS.length && f >= inicioPlano(i + 1)) i++; return i; };
@@ -209,20 +211,20 @@ class Mundo {
     void f;
   }
   seVa(f: number) {
-    const u = Math.min(1, (f - fw(39) + 2) / (fw(44) - fw(39)));
+    const u = Math.min(1, (f - fw(46) + 2) / (fw(51) - fw(46)));
     this.ver("vieja", [lerp(-12.5, -16.5, u), 0, lerp(-7.0, -7.5, u)], { ...NOCHE, ...CAMINA(f, 0), abraza: "#7a6a50", boca: "triste", giro: -0.6, mirarX: 0.8, cejasMiedo: 0.5 }, [-1, 0]);
   }
   cerca(f: number) {
-    this.ver("andreas", [-12.1, 0, -10.3], { ...NOCHE, boca: "abierta", bocaAbre: habla(f, 58, 65), mirarX: 0.4, brazoDer: [1.2 + 0.2 * Math.sin(f * 0.2), -0.3], cejasMiedo: 0.4 });
+    this.ver("andreas", [-12.1, 0, -10.3], { ...NOCHE, boca: "abierta", bocaAbre: habla(f, 65, 72), mirarX: 0.4, brazoDer: [1.2 + 0.2 * Math.sin(f * 0.2), -0.3], cejasMiedo: 0.4 });
     this.ver("v1", [-13.3, 0, -10.0], { ...NOCHE, boca: "linea", mirarX: 0.6, brazoIzq: [0.2, 0.2] });
     this.ver("v2", [-10.9, 0, -10.6], { ...NOCHE, boca: "o", mirarX: -0.6, brazoIzq: [0.3, -0.5], brazoDer: [0.3, -0.5] });
     this.luz(-12, 3, -12.5, 3, "#b8c8ff");
   }
   /** «alguien los mató»: el farol adentro del granero, y una sombra que pasa por la rendija */
   granEnLuz(f: number) {
-    const parpadeo = [fw(136), fw(139) - 4, fw(140), fw(142)].some((t) => f >= t && f < t + 3) ? 0.2 : 1;
+    const parpadeo = [fw(143), fw(146) - 4, fw(147), fw(149)].some((t) => f >= t && f < t + 3) ? 0.2 : 1;
     this.luz(4, 1.4, G.z0 + 0.3, 5 * parpadeo, "#ffb870");
-    const u = ((f - fw(136)) % 40) / 40; if (u < 0.6) this.ver("sombra", [lerp(3.2, 4.8, u / 0.6), 0, G.z0 + 0.25], { ...SILUETA, ...CAMINA(f, 0), borde: "#ffb870" });
+    const u = ((f - fw(143)) % 40) / 40; if (u < 0.6) this.ver("sombra", [lerp(3.2, 4.8, u / 0.6), 0, G.z0 + 0.25], { ...SILUETA, ...CAMINA(f, 0), borde: "#ffb870" });
     this.cartas.sombra.contacto.visible = false;
   }
   vecinosHumo(f: number) {
@@ -231,14 +233,14 @@ class Mundo {
     void f;
   }
   vecinosVan(f: number) {
-    const u = Math.min(1, (f - fw(190) + 2) / (fw(203) - fw(190)));
+    const u = Math.min(1, (f - fw(197) + 2) / (fw(210) - fw(197)));
     const base: V3 = [lerp(-15.5, -11.2, u), 0, lerp(-15.5, -11.6, u)];
     (["v1", "v2", "v3"] as Quien[]).forEach((q, k) => this.ver(q, [base[0] + [0, -1.0, 0.9][k], 0, base[2] + [0, 0.7, -0.8][k]], { ...DIA, ...CAMINA(f, k * 1.3), ...MIEDO(f, 0.15), boca: "linea", mirarX: 0.2 }, [1, 1]));
   }
   derribada() { const h = this.h; h.granja.visible = false; h.ruinas.visible = true; h.huellas.forEach((x) => (x.visible = false)); h.humoOn.v = 0; }
   hoy() { const h = this.h; h.granja.visible = false; h.ruinas.visible = false; h.cruz.visible = true; h.huellas.forEach((x) => (x.visible = false)); h.humoOn.v = 0; this.luz(1, 2.5, -3.5, 3, "#b8c8ff"); }
   llegaMaria(f: number) {
-    const u = Math.min(1, (f - fw(114) + 2) / (fw(121) - fw(114)));
+    const u = Math.min(1, (f - fw(121) + 2) / (fw(128) - fw(121)));
     this.ver("maria", [lerp(-8.6, -6.3, u), 0, lerp(-9.6, -6.0, u)], { ...CALIDA, ...(u < 1 ? CAMINA(f, 0) : {}), abraza: "#6a4a2a", boca: "amable", mirarY: 0.2 }, [0.5, 1]);
     this.luz(PUERTA_CASA.x, 2.2, G.z0 - 1.2, 3);
   }
@@ -265,13 +267,13 @@ class Mundo {
   }
   // ---------------- el ático
   subeAtico(f: number) {
-    const T = ATICO.trampa, u = suave(fw(90) - 4, fw(94), f), y = lerp(-1.1, 0, u);
+    const T = ATICO.trampa, u = suave(fw(97) - 4, fw(101), f), y = lerp(-1.1, 0, u);
     this.ver("andreas", AT(T.x, y, T.z), { ...CALIDA, ...MIEDO(f, 0.2), boca: "linea", mirarX: 0.5, brazoDer: [1.3, 0.6] });
     this.cartas.andreas.contacto.visible = u > 0.95;
     this.farol(AT(T.x - 0.42, y + 1.12, T.z - 0.15), 2.5);
   }
   buscaAtico(f: number) {
-    const mira = Math.sin((f - fw(95)) * 0.06);
+    const mira = Math.sin((f - fw(102)) * 0.06);
     this.ver("andreas", AT(-3.0, 0, 0.6), { ...CALIDA, ...MIEDO(f, 0.2), boca: "linea", mirarX: mira, brazoDer: [2.0, 0.3], giro: 0.3 * mira });
     this.farol(AT(-3.0 - 0.45, 1.6, 0.45), 4.5);
   }
@@ -283,7 +285,7 @@ class Mundo {
   // ---------------- el granero
   daComer(f: number) { this.ver("sombra", GA(0.4, 0, 0.9), { ...SILUETA, borde: "#ffc890", brazoIzq: [0.8, 0.6], brazoDer: [0.8, 0.6], cuerpoX: 0.05 * Math.sin(f * 0.1) }); }
   abren(f: number) {
-    const a = suave(fw(205) - 6, fw(206), f); this.h.hojasG.forEach((g, k) => (g.rotation.y = (k ? -1 : 1) * -1.4 * a));
+    const a = suave(fw(212) - 6, fw(213), f); this.h.hojasG.forEach((g, k) => (g.rotation.y = (k ? -1 : 1) * -1.4 * a));
     (["v1", "v2", "v3"] as Quien[]).forEach((q, k) => this.ver(q, GA([0, -0.9, 0.85][k], 0, GRANERO.z0 - 1.0 - [0, 0.4, 0.5][k]), { ...DIA, luzX: 0, borde: "#ffffff", ...MIEDO(f, 0.2), boca: "o" }));
     this.luz(GRANERO.x, 2.0, GRANERO.z0 + 1.0, 6 * a, "#dfe6f8");
   }
@@ -294,7 +296,7 @@ class Mundo {
   }
   // ---------------- la oficina
   interroga(f: number) {
-    this.ver("policia", SENTADO("policia", OFICINA.x + ESCRITORIO.x, OFICINA.z + ESCRITORIO.z + 0.75, 0.485), { ...CALIDA, sentado: 1, boca: "abierta", bocaAbre: habla(f, 210, 216), mirarY: -0.1, cejasMiedo: -0.2, cejasAlto: -0.3 });
+    this.ver("policia", SENTADO("policia", OFICINA.x + ESCRITORIO.x, OFICINA.z + ESCRITORIO.z + 0.75, 0.485), { ...CALIDA, sentado: 1, boca: "abierta", bocaAbre: habla(f, 217, 223), mirarY: -0.1, cejasMiedo: -0.2, cejasAlto: -0.3 });
     this.ver("interrogado", SENTADO("interrogado", OFICINA.x + ESCRITORIO.x + 0.05, OFICINA.z + ESCRITORIO.z - 0.75, 0.485), { ...CALIDA, sentado: 1 }, [0, 1]);
   }
 
@@ -330,8 +332,8 @@ const lutFrio = () => {
 };
 
 // ------------------------------------------------------------------ escena 3D
-const PORTADA_I = 25; // la sombra en la ventana de la cocina
-const PORTADA_F = () => fw(187);
+const PORTADA_I = 26; // la sombra en la ventana de la cocina
+const PORTADA_F = () => fw(194);
 const Escena: React.FC<{ portada?: boolean }> = ({ portada }) => {
   const f0 = useCurrentFrame();
   const f = portada ? PORTADA_F() : f0;
@@ -418,16 +420,16 @@ const Subtitulos: React.FC<{ f: number }> = ({ f }) => {
   );
 };
 /** fechas y datos en grande arriba (como en los documentales) */
-const TITULOS: [number, number, string][] = [[39, 44, "MESES ANTES"], [54, 66, "FINALES DE MARZO"], [114, 123, "31 DE MARZO DE 1922"], [190, 203, "4 DE ABRIL DE 1922"], [211, 217, "+100 INTERROGADOS"], [221, 227, "1923"], [227, 235, "HOY"]];
+const TITULOS: [number, number, string][] = [[0, 9, "CASO HINTERKAIFECK"], [46, 51, "MESES ANTES"], [61, 73, "FINALES DE MARZO"], [121, 130, "31 DE MARZO DE 1922"], [197, 210, "4 DE ABRIL DE 1922"], [218, 224, "+100 INTERROGADOS"], [228, 234, "1923"], [234, 242, "HOY"]];
 const Titulo: React.FC<{ f: number }> = ({ f }) => {
   const r = TITULOS.find(([a, b]) => f >= fw(a) - 2 && f < fw(b) - 2);
   if (!r) return null;
-  const k = Math.min(1, (f - fw(r[0]) + 2) / 5);
-  return <div style={{ position: "absolute", top: 150, width: "100%", textAlign: "center", fontFamily: "Titulo", fontSize: 72, color: "#ffffff", letterSpacing: 2, transform: `scale(${1.25 - 0.25 * k})`, opacity: k, ...contornoTexto(10) }}>{r[2]}</div>;
+  const k = r[0] === 0 ? 1 : Math.min(1, (f - fw(r[0]) + 2) / 5); // el del gancho ya está completo desde el primer cuadro
+  return <div style={{ position: "absolute", top: 150, width: "100%", textAlign: "center", fontFamily: "Titulo", fontSize: r[0] === 0 ? 88 : 72, color: "#ffffff", letterSpacing: 2, transform: `scale(${1.25 - 0.25 * k})`, opacity: k, ...contornoTexto(10) }}>{r[2]}</div>;
 };
 const Rotulo: React.FC<{ f: number }> = ({ f }) => {
-  const texto = "HINTERKAIFECK · BAVIERA, ALEMANIA · 1922", a = fw(15) - 2;
-  if (f < a || f >= fw(39) - 2) return null;
+  const texto = "HINTERKAIFECK · BAVIERA, ALEMANIA · 1922", a = fw(22) - 2;
+  if (f < a || f >= fw(46) - 2) return null;
   const n = Math.round(Math.min(1, (f - a + 4) / 26) * texto.length);
   return (
     <div style={{ position: "absolute", top: 70, left: 46, right: 46, padding: "10px 18px", borderRadius: 8, background: "rgba(10,6,8,0.82)", border: "3px solid #b3262f", fontFamily: "Mono", fontSize: 30, color: "#efe3da", letterSpacing: 1, textAlign: "center" }}>
@@ -436,7 +438,7 @@ const Rotulo: React.FC<{ f: number }> = ({ f }) => {
   );
 };
 const Pregunta: React.FC<{ f: number }> = ({ f }) => {
-  const a = fw(243) - 2; if (f < a) return null;
+  const a = fw(250) - 2; if (f < a) return null;
   const u = Math.min(1, (f - a) / 6), pop = 1 + 0.15 * Math.sin(u * Math.PI) * (1 - u);
   return <div style={{ position: "absolute", top: 160, width: "100%", textAlign: "center", fontFamily: "Titulo", fontSize: 82, lineHeight: 1.05, color: "#ffd23a", transform: `scale(${pop})`, opacity: u, ...contornoTexto(12) }}>¿TÚ QUÉ CREES<br />QUE PASÓ?</div>;
 };
