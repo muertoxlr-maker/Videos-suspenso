@@ -138,6 +138,25 @@ poner(golpe("sello", -5), fw(226) + 0.2)                     # SIN RESOLVER
 poner(golpe("derrumbe", -9), fw(231))                        # «derribaron la granja»
 poner(golpe("tabla_cruje", -5), fw(244))                     # el ático
 efectos = pista.copy(); pista[:] = 0
+# sonidos de suspenso (pedido del usuario: «más sonidos de suspenso»): golpes, subidas y notas cortas, solo en los
+# momentos fuertes; ninguno dura más de 3 s
+def sting():  # de los tres chillidos de violín del archivo, solo el primero (muchos golpes seguidos suenan mal)
+    x = golpe("cuerdas_sting", -7)[: int(0.55 * SR)].copy(); x[-int(0.3 * SR):] *= np.linspace(1, 0, int(0.3 * SR)); return x
+def subida(w):  # la subida termina justo en la palabra (el archivo se corta a los 1.5 s)
+    poner(golpe("riser", -8)[: int(1.5 * SR)], t(w) - 1.5)
+poner(golpe("piano_tetrico", -8), t(21))                     # «con la familia muerta»
+poner(golpe("piano_tetrico", -10), t(57))                    # «oía ruidos en el ático»
+subida(86); poner(sting(), t(86))                            # «y ninguna regresaba»
+poner(golpe("impacto", -7), t(104))                          # «No había nadie»
+poner(golpe("piano_tetrico", -9), t(120))                    # «nadie lo había comprado»
+subida(137)                                                  # «alguien los mató…
+poner(golpe("impacto", -6), t(142))                          # …a los seis»
+poner(golpe("reverso", -9), t(163) - 1.9); poner(sting(), t(163))  # «no fue lo más extraño»
+subida(196); poner(golpe("impacto", -6), t(196))             # «se quedó a vivir ahí… con ellos»
+poner(golpe("impacto", -7), t(215))                          # «y los encontraron»
+poner(golpe("piano_tetrico", -9), t(227))                    # «Nunca encontró al culpable»
+poner(sting(), t(250))                                       # ¿Tú qué crees que pasó?
+suspenso = pista.copy(); pista[:] = 0
 # letreros: golpe suave en cada fecha; fuerte en «encontraron» y en la pregunta final
 for w in (22, 46, 61, 121, 197, 218, 228, 234):
     poner(golpe("golpe_titulo", -12), t(w) - 0.07)
@@ -147,7 +166,7 @@ poner(golpe("golpe_titulo", -6), t(250) - 0.07)              # ¿Tú qué crees 
 # final (solo los últimos segundos): dron y latidos
 dron_f = tramo(sfx("dron"), fw(234), DUR, 3.0, 0.8)
 latidos = tramo(sfx("latidos"), fw(242), DUR, 1.0, 0.6)
-fondo_crudo = dron_f * db(-5) + latidos * db(-3) + pista * db(-14) + efectos * db(-11)
+fondo_crudo = dron_f * db(-5) + latidos * db(-3) + pista * db(-14) + efectos * db(-11) + suspenso * db(-11)
 
 # ------------------------------------------------------------------ voz y mezcla
 voz = sonido.leer_audio(AQUI / "voz" / "voz_final.mp3")

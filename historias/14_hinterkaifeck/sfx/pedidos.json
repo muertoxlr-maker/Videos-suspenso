@@ -1,79 +1,99 @@
 {
- "golpe_titulo": {
-  "texto": "(copiado de «El faro»)",
-  "seg": 2
- },
- "whoosh": {
-  "texto": "(copiado de «El faro»)",
-  "seg": 1
- },
- "dron": {
-  "texto": "(copiado de «El faro»)",
-  "seg": 22
- },
- "latidos": {
-  "texto": "(copiado de «El faro»)",
-  "seg": 10,
-  "loop": true
- },
- "porton_cruje": {
-  "texto": "Old heavy wooden barn door slowly creaking open on rusty hinges, short, no music",
-  "seg": 2.5
- },
- "pasos_nieve": {
-  "texto": "Slow heavy boot footsteps crunching in deep snow, a few steps, quiet night, no music",
-  "seg": 3
- },
- "candado": {
-  "texto": "Broken old iron padlock swinging and clinking against a wooden door, short",
-  "seg": 1.5
- },
- "pasos_techo": {
-  "texto": "Slow heavy footsteps walking on old creaking wooden floorboards heard from the room below, muffled, short",
-  "seg": 3.5
- },
- "escalera": {
-  "texto": "Climbing an old wooden ladder into an attic, creaking rungs, short",
-  "seg": 2.5
- },
- "periodico": {
-  "texto": "Old newspaper being unfolded, paper rustle, short",
-  "seg": 1.5
- },
- "toc_puerta": {
-  "texto": "Three knocks on an old heavy wooden farmhouse door, short",
-  "seg": 1.5
- },
- "apaga_lampara": {
-  "texto": "Oil lamp flame being blown out, soft puff, short",
-  "seg": 1
- },
- "golpes_sordos": {
-  "texto": "Four dull heavy muffled thuds far away inside a wooden barn, evenly spaced, short, no screams",
-  "seg": 4
- },
- "mugido": {
-  "texto": "A cow mooing softly inside a barn, single moo, short",
-  "seg": 2
- },
- "cuchara": {
-  "texto": "Metal spoon clinking against a ceramic cup in a quiet kitchen, short",
-  "seg": 1.5
- },
- "maquina_escribir": {
-  "texto": "Old mechanical typewriter typing a few words and carriage bell ding, short",
-  "seg": 3
- },
- "sello": {
-  "texto": "Rubber stamp hitting paper on a wooden desk, single hard thump, short",
-  "seg": 1
- },
- "derrumbe": {
-  "texto": "Old wooden farmhouse walls collapsing in the distance, wood cracking and falling, short",
-  "seg": 3
- },
- "tabla_cruje": {
-  "texto": "Single slow creak of an old wooden floorboard in a silent attic, short",
-  "seg": 1.5
- }
+  "golpe_titulo": {
+    "texto": "(copiado de «El faro»)",
+    "seg": 2
+  },
+  "whoosh": {
+    "texto": "(copiado de «El faro»)",
+    "seg": 1
+  },
+  "dron": {
+    "texto": "(copiado de «El faro»)",
+    "seg": 22
+  },
+  "latidos": {
+    "texto": "(copiado de «El faro»)",
+    "seg": 10,
+    "loop": true
+  },
+  "porton_cruje": {
+    "texto": "Old heavy wooden barn door slowly creaking open on rusty hinges, short, no music",
+    "seg": 2.5
+  },
+  "pasos_nieve": {
+    "texto": "Slow heavy boot footsteps crunching in deep snow, a few steps, quiet night, no music",
+    "seg": 3
+  },
+  "candado": {
+    "texto": "Broken old iron padlock swinging and clinking against a wooden door, short",
+    "seg": 1.5
+  },
+  "pasos_techo": {
+    "texto": "Slow heavy footsteps walking on old creaking wooden floorboards heard from the room below, muffled, short",
+    "seg": 3.5
+  },
+  "escalera": {
+    "texto": "Climbing an old wooden ladder into an attic, creaking rungs, short",
+    "seg": 2.5
+  },
+  "periodico": {
+    "texto": "Old newspaper being unfolded, paper rustle, short",
+    "seg": 1.5
+  },
+  "toc_puerta": {
+    "texto": "Three knocks on an old heavy wooden farmhouse door, short",
+    "seg": 1.5
+  },
+  "apaga_lampara": {
+    "texto": "Oil lamp flame being blown out, soft puff, short",
+    "seg": 1
+  },
+  "golpes_sordos": {
+    "texto": "Four dull heavy muffled thuds far away inside a wooden barn, evenly spaced, short, no screams",
+    "seg": 4
+  },
+  "mugido": {
+    "texto": "A cow mooing softly inside a barn, single moo, short",
+    "seg": 2
+  },
+  "cuchara": {
+    "texto": "Metal spoon clinking against a ceramic cup in a quiet kitchen, short",
+    "seg": 1.5
+  },
+  "maquina_escribir": {
+    "texto": "Old mechanical typewriter typing a few words and carriage bell ding, short",
+    "seg": 3
+  },
+  "sello": {
+    "texto": "Rubber stamp hitting paper on a wooden desk, single hard thump, short",
+    "seg": 1
+  },
+  "derrumbe": {
+    "texto": "Old wooden farmhouse walls collapsing in the distance, wood cracking and falling, short",
+    "seg": 3
+  },
+  "tabla_cruje": {
+    "texto": "Single slow creak of an old wooden floorboard in a silent attic, short",
+    "seg": 1.5
+  },
+  "riser": {
+    "texto": "Short cinematic horror tension riser, dark strings swelling and building up, ends abruptly, no melody",
+    "seg": 3
+  },
+  "impacto": {
+    "texto": "Deep cinematic horror boom impact hit with dark reverb tail, single hit",
+    "seg": 2.5
+  },
+  "cuerdas_sting": {
+    "texto": "Short horror stinger, dissonant violins screech stab, single hit with short tail",
+    "seg": 2
+  },
+  "piano_tetrico": {
+    "texto": "Single low dissonant piano chord struck once in a dark empty room, long reverb, horror",
+    "seg": 3
+  },
+  "reverso": {
+    "texto": "Reversed ghostly cymbal swell rising into sudden silence, horror transition, short",
+    "seg": 2
+  }
 }
