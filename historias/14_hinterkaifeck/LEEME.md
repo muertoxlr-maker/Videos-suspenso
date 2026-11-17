@@ -44,3 +44,11 @@
   ni a los niños heridos.
 - Atajo: solo se dibujaron de nuevo los rangos de `salida/hinter/rangos.txt` (`scripts/render_rangos.sh`); lo demás
   sale del video v2. Final: `salida/hinter/hinterkaifeck_v3.mp4`, 4017 cuadros, 133.9 s, −14.0 LUFS.
+
+## Versión 4 (gancho que cuenta lo sucedido, pedido del usuario)
+- «Hinterkaifeck: el crimen sin resolver más famoso de Alemania. En 1922, seis personas fueron asesinadas en una
+  granja… y el asesino se quedó a vivir ahí tres días, con la familia muerta.» (`voz_gancho2/`). El resto de la voz se
+  corrió 130 cuadros (4.33 s) y los índices de palabra ≥22 subieron 10. Respaldo: `voz_final_v3.mp3`/`palabras_v3.json`.
+- Solo se dibujaron de nuevo los cuadros 0–420; lo demás es el video v3 desde su cuadro 291.
+- Arreglo de manos: al abrazar un bulto o cargar un bebé ya no salen 4 manos (`prueba_pasillo/personaje.ts`).
+- Final: `salida/hinter/hinterkaifeck_v4.mp4`, 4147 cuadros, 138.2 s, −14.0 LUFS.
