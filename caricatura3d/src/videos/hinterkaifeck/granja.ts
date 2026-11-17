@@ -438,6 +438,86 @@ export function crearEscenario() {
   oficina.add(cil(0.025, 0.025, 1.8, mMarco, O.x0 + 0.35, 0.9, O.z1 - 0.35, 6)); const casco = new THREE.Mesh(new THREE.SphereGeometry(0.13, 12, 8, 0, Math.PI * 2, 0, Math.PI / 2), lambert({ color: "#1e2a20" })); casco.position.set(O.x0 + 0.35, 1.82, O.z1 - 0.35); oficina.add(casco); oficina.add(cil(0.012, 0.004, 0.1, lambert({ color: "#a08a40" }), O.x0 + 0.35, 1.98, O.z1 - 0.35, 6));
   const vO = ventana(0.9, 1.0, mMarco, null); vO.g.position.set(1.4, 1.6, O.z0 + 0.06); oficina.add(vO.g); vO.mVidrio.color.set("#5a6a8a");
 
+  // ================================================================ lo del crimen (el usuario pidió contarlo más crudo; sin heridas ni cuerpos a la vista)
+  const mSangre = (seed: number, oscura = false) => new THREE.MeshLambertMaterial({
+    map: lienzo((c, w, h) => {
+      c.clearRect(0, 0, w, h); c.filter = "blur(2px)"; c.fillStyle = oscura ? "rgba(62,6,8,0.95)" : "rgba(104,10,12,0.92)";
+      c.beginPath(); c.ellipse(w / 2, h / 2, w * 0.3, h * 0.22, rz(seed) * 3, 0, 7); c.fill();
+      for (let k = 0; k < 12; k++) { const a = rz(seed + k) * 6.28, r = w * (0.2 + rz(seed + k + 20) * 0.22); c.beginPath(); c.ellipse(w / 2 + Math.cos(a) * r, h / 2 + Math.sin(a) * r * 0.8, 6 + rz(seed + k + 40) * 16, 4 + rz(seed + k + 60) * 10, a, 0, 7); c.fill(); }
+      c.filter = "none";
+    }, 256, 256, [1, 1]), transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2,
+  });
+  const mancha = (w: number, d: number, seed: number, x: number, y: number, z: number, oscura = false) => { const m = suelo(w, d, mSangre(seed, oscura), x, y, z); m.rotation.z = rz(seed + 3) * 3; return m; };
+  /** el azadón (Reuthaue): mango de madera y cabeza de fierro con pala y pico; con sangre en la pala */
+  const azadon = () => {
+    const g = new THREE.Group(), mF = lambert({ color: "#3a3a3e" }), mS = lambert({ color: "#4a0a0c" });
+    g.add(cil(0.025, 0.03, 1.0, lambert({ color: "#7a5a38" }), 0, 0.5, 0, 8));
+    const cab = new THREE.Group(); cab.position.y = 1.0; g.add(cab);
+    cab.add(caja(0.08, 0.1, 0.1, mF, 0, 0, 0));
+    const pala = caja(0.14, 0.02, 0.28, mF, 0, -0.03, 0.17); pala.rotation.x = 0.3; cab.add(pala);
+    const filo = caja(0.145, 0.022, 0.12, mS, 0, -0.065, 0.28); filo.rotation.x = 0.3; cab.add(filo);
+    const pico = caja(0.035, 0.035, 0.3, mF, 0, -0.02, -0.17); pico.rotation.x = -0.25; cab.add(pico);
+    return g;
+  };
+  // en el granero: montones de paja que tapan los cuerpos (solo se asoman botas), sangre, el azadón tirado
+  const crimenG = new THREE.Group(); crimenG.visible = false; granero.add(crimenG);
+  const mBota = lambert({ color: "#3a2a1e" });
+  for (const [x, z, s, r] of [[-1.75, -0.2, 0.95, 0.3], [-0.45, 0.75, 0.85, -0.2], [0.85, -0.35, 0.95, 0.5]] as [number, number, number, number][]) {
+    const mon = new THREE.Group(); mon.position.set(x, 0, z); mon.rotation.y = r; crimenG.add(mon);
+    const p = new THREE.Mesh(new THREE.SphereGeometry(1, 14, 8, 0, Math.PI * 2, 0, Math.PI / 2), mPaja); p.scale.set(0.95 * s, 0.42 * s, 0.55 * s); mon.add(p);
+    for (const dz of [-0.11, 0.11]) { mon.add(caja(0.42, 0.14, 0.14, mBota, 0.98 * s, 0.08, dz * 1.3), caja(0.12, 0.2, 0.15, mBota, 1.17 * s, 0.17, dz * 1.3)); }
+    mon.add(mancha(1.5, 1.2, x * 7 + 1, 0.4, 0.008, 0.1, true));
+  }
+  crimenG.add(mancha(1.1, 0.9, 31, 0.3, 0.009, -1.4), mancha(0.7, 0.6, 37, -1.3, 0.009, -1.3), mancha(0.5, 0.4, 41, 1.6, 0.009, -1.1));
+  const azadonG = azadon(); azadonG.rotation.set(Math.PI / 2, 0, 0.9); azadonG.position.set(0.2, 0.05, -1.5); crimenG.add(azadonG);
+  // el listón rojo y mechones de pelo de la niña en la paja (sin ella)
+  const cabelloG = new THREE.Group(); cabelloG.visible = false; cabelloG.position.set(3.0, 0, -1.8); granero.add(cabelloG);
+  const liston = suelo(0.3, 0.2, new THREE.MeshLambertMaterial({ map: lienzo((c, w, h) => {
+    c.clearRect(0, 0, w, h); c.fillStyle = "#c8402a"; c.strokeStyle = "#7a1e14"; c.lineWidth = 3;
+    for (const s2 of [-1, 1]) { c.beginPath(); c.moveTo(w / 2, h / 2); c.bezierCurveTo(w / 2 + s2 * w * 0.45, h * 0.05, w / 2 + s2 * w * 0.48, h * 0.62, w / 2, h / 2); c.fill(); c.stroke(); }
+    for (const s2 of [-1, 1]) { c.beginPath(); c.moveTo(w / 2, h / 2); c.lineTo(w / 2 + s2 * w * 0.18, h * 0.98); c.lineTo(w / 2 + s2 * w * 0.06, h * 0.98); c.closePath(); c.fill(); c.stroke(); }
+    c.beginPath(); c.arc(w / 2, h / 2, w * 0.05, 0, 7); c.fill(); c.stroke();
+  }, 128, 84, [1, 1]), transparent: true, depthWrite: false }), 0.02, 0.016, -0.02); liston.rotation.z = 0.4; cabelloG.add(liston);
+  const mPelo = new THREE.MeshLambertMaterial({ map: lienzo((c, w, h) => { // un mechón: muchos pelos finos que salen de una raíz y se abren
+    c.clearRect(0, 0, w, h); c.lineCap = "round";
+    for (let k = 0; k < 140; k++) { const a = (rz(k) - 0.5) * 0.9, L = w * (0.45 + rz(k + 7) * 0.4), x1 = w * 0.1 + Math.cos(a) * L, y1 = h / 2 + Math.sin(a) * L * 0.9; c.strokeStyle = `rgba(${70 + rz(k + 3) * 30},${40 + rz(k + 4) * 20},20,${0.5 + rz(k + 5) * 0.45})`; c.lineWidth = 0.8 + rz(k + 6) * 0.8; c.beginPath(); c.moveTo(w * 0.1, h / 2 + (rz(k + 9) - 0.5) * 6); c.quadraticCurveTo(w * 0.1 + Math.cos(a) * L * 0.5, h / 2 + Math.sin(a) * L * 0.4 + (rz(k + 11) - 0.5) * 30, x1, y1); c.stroke(); }
+  }, 128, 128, [1, 1]), transparent: true, depthWrite: false });
+  for (const [x, z, r] of [[0.3, 0.06, 0.4], [-0.26, 0.14, -0.8], [0.06, -0.24, 1.6], [-0.42, -0.16, 2.4], [0.38, -0.2, -1.2]] as [number, number, number][]) { const m = suelo(0.3, 0.2, mPelo, x, 0.012 + (x + 1) * 0.001, z); m.rotation.z = r; cabelloG.add(m); }
+  cabelloG.add(mancha(0.8, 0.6, 53, 0.1, 0.009, 0.05), mancha(0.35, 0.3, 57, -0.45, 0.009, 0.3));
+  // la sombra del asesino con el azadón en alto, proyectada en la pared del granero por el farol
+  const sombraMuro = new THREE.Mesh(new THREE.PlaneGeometry(1.8, 3.0), new THREE.MeshBasicMaterial({
+    map: lienzo((c, w, h) => {
+      c.clearRect(0, 0, w, h); c.filter = "blur(3px)"; c.fillStyle = "rgba(8,6,6,0.88)"; c.strokeStyle = "rgba(8,6,6,0.88)"; c.lineCap = "round";
+      // de perfil, mirando a la derecha, con el azadón echado para atrás por encima de la cabeza (a punto de bajarlo)
+      const cx = w * 0.5;
+      c.beginPath(); c.arc(cx + w * 0.02, h * 0.3, w * 0.07, 0, 7); c.fill(); // cabeza
+      c.beginPath(); c.ellipse(cx + w * 0.02, h * 0.255, w * 0.11, h * 0.014, 0, 0, 7); c.fill(); c.fillRect(cx - w * 0.045, h * 0.2, w * 0.13, h * 0.055); // sombrero
+      c.beginPath(); c.moveTo(cx - w * 0.1, h * 0.36); c.lineTo(cx + w * 0.11, h * 0.36); c.lineTo(cx + w * 0.1, h * 0.66); c.lineTo(cx - w * 0.12, h * 0.66); c.fill(); // cuerpo (chamarra)
+      c.lineWidth = w * 0.065; c.beginPath(); c.moveTo(cx - w * 0.05, h * 0.65); c.lineTo(cx - w * 0.17, h * 0.98); c.moveTo(cx + w * 0.05, h * 0.65); c.lineTo(cx + w * 0.16, h * 0.98); c.stroke(); // piernas abiertas
+      c.lineWidth = w * 0.05; c.beginPath(); c.moveTo(cx + w * 0.02, h * 0.39); c.quadraticCurveTo(cx - w * 0.02, h * 0.24, cx - w * 0.07, h * 0.15); c.moveTo(cx + w * 0.07, h * 0.4); c.quadraticCurveTo(cx + w * 0.04, h * 0.25, cx - w * 0.02, h * 0.14); c.stroke(); // brazos arriba y atrás
+      c.lineWidth = w * 0.028; c.beginPath(); c.moveTo(cx, h * 0.15); c.lineTo(cx - w * 0.36, h * 0.07); c.stroke(); // mango
+      c.beginPath(); c.moveTo(cx - w * 0.33, h * -0.01); c.lineTo(cx - w * 0.38, h * 0.0); c.lineTo(cx - w * 0.42, h * 0.17); c.lineTo(cx - w * 0.36, h * 0.16); c.fill(); // la cabeza del azadón
+      c.filter = "none";
+    }, 256, 420, [1, 1]), transparent: true, depthWrite: false, toneMapped: false,
+  }));
+  sombraMuro.rotation.y = Math.PI / 2; sombraMuro.position.set(GR.x0 + 0.02, 1.7, 0.6); sombraMuro.visible = false; sombraMuro.layers.set(NOINK); granero.add(sombraMuro);
+  // en la casa: la cuna de Josef, vacía, con la cobija revuelta y una mancha
+  const cuna = new THREE.Group(); cuna.visible = false; cuna.position.set(C.x0 + 0.75, 0, 1.0); cocina.add(cuna);
+  const mCuna = lambert({ color: "#7a5a3a" });
+  cuna.add(caja(0.5, 0.04, 0.95, mCuna, 0, 0.32, 0)); for (const s of [-1, 1]) { cuna.add(caja(0.04, 0.32, 0.95, mCuna, s * 0.25, 0.5, 0)); cuna.add(caja(0.5, 0.42, 0.04, mCuna, 0, 0.53, s * 0.47)); }
+  for (const s of [-1, 1]) { const r = new THREE.Mesh(new THREE.TorusGeometry(1.2, 0.03, 6, 24, 0.85), mCuna); r.rotation.y = Math.PI / 2; r.rotation.x = 0; r.position.set(s * 0.2, 1.25, 0); r.rotateZ(-Math.PI / 2 - 0.425); cuna.add(r); for (const t of [-1, 1]) cuna.add(cil(0.02, 0.02, 0.26, mCuna, s * 0.2, 0.2, t * 0.38, 6)); } // balancines curvos y patas
+  for (let k = 0; k < 7; k++) cuna.add(cil(0.012, 0.012, 0.3, mCuna, -0.25 + 0.0, 0.5, -0.36 + k * 0.12, 6), cil(0.012, 0.012, 0.3, mCuna, 0.25, 0.5, -0.36 + k * 0.12, 6));
+  const cobija = new THREE.Mesh(new THREE.SphereGeometry(1, 12, 6, 0, Math.PI * 2, 0, Math.PI / 2), lambert({ color: "#c8b890" })); cobija.scale.set(0.2, 0.08, 0.36); cobija.position.set(0.02, 0.34, 0.12); cobija.rotation.y = 0.3; cuna.add(cobija);
+  cuna.add(suelo(0.32, 0.4, mSangre(61, true), 0.0, 0.43, -0.05), mancha(0.5, 0.4, 67, 0.15, 0.012, -0.55, true));
+  // al derribar la granja: el azadón entre los escombros; y la caja de los cráneos que se mandó a Múnich
+  const azadonR = azadon(); azadonR.rotation.set(Math.PI / 2, 0, -0.6); azadonR.position.set(-5.0, 0.17, -2.6); ruinas.add(azadonR);
+  ruinas.add(caja(0.9, 0.08, 0.18, mMarco, -4.7, 0.12, -2.25).rotateY(0.4), caja(0.18, 0.18, 1.1, mMarco, -5.5, 0.14, -2.9).rotateY(0.2));
+  const cajaM = new THREE.Group(); cajaM.position.set(1.4, 0, -0.7); cajaM.rotation.y = 0.55; oficina.add(cajaM);
+  cajaM.add(caja(0.62, 0.42, 0.46, lambert({ map: texTablas("#8a6a44", [1, 1]) }), 0, 0.21, 0));
+  const letrero = new THREE.Mesh(new THREE.PlaneGeometry(0.56, 0.3), new THREE.MeshLambertMaterial({ map: lienzo((c, w, h) => { c.clearRect(0, 0, w, h); c.fillStyle = "rgba(20,16,14,0.9)"; c.textAlign = "center"; c.font = "bold 46px monospace"; c.fillText("MÜNCHEN", w / 2, h * 0.42); c.font = "bold 26px monospace"; c.fillText("HINTERKAIFECK  6", w / 2, h * 0.75); }, 256, 128, [1, 1]), transparent: true }));
+  letrero.position.set(0, 0.22, -0.232); letrero.rotation.y = Math.PI; cajaM.add(letrero);
+  const tapaM = caja(0.62, 0.03, 0.46, lambert({ map: texTablas("#7a5a3a", [1, 1]) }), 0.1, 0.5, 0.3); tapaM.rotation.set(0.9, 0, 0.1); cajaM.add(tapaM); cajaM.visible = false;
+
   // ================================================================ la sombra de la lámpara de mano (farol de Andreas / de los vecinos)
   const farolMano = farol(); raiz.add(farolMano);
   const luzMano = new THREE.PointLight("#ffcf8a", 0, 7, 1.5); farolMano.add(luzMano); luzMano.position.y = 0.14;
@@ -452,7 +532,7 @@ export function crearEscenario() {
   return {
     raiz, amb, hemi, luna, luzExtra, luzExtra2, afuera, granja, adentro, ventanas, portonI, portonD, puertita, huellas, humo, humoOn, ruinas, cruz, bosque, vecino,
     cocina, lamparaC, luzC, haloC, vidrioC, periodico, comida, vapor, silla, fuegoC, atico, tapaG, rendijas, luzAtico, granero, hojasG, afueraDia, cieloDia, luzG, farolG, vacas,
-    oficina, expediente, luzO, farolMano, luzMano, farolMano2, animar,
+    oficina, expediente, luzO, farolMano, luzMano, farolMano2, animar, crimenG, cabelloG, sombraMuro, cuna, azadonR, cajaM,
   };
 }
 export type Escenario = ReturnType<typeof crearEscenario>;

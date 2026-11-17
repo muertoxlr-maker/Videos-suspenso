@@ -20,7 +20,7 @@ import sonido  # noqa: E402
 SR = sonido.SR
 FPS = 30
 P = json.load(open(AQUI / "voz" / "palabras.json"))
-CUADROS = int(np.ceil(101.4 * FPS))  # = HINTER_CUADROS del video (3042)
+CUADROS = int(np.ceil(133.9 * FPS))  # = HINTER_CUADROS del video (4017)
 DUR = CUADROS / FPS
 N = int(DUR * SR)
 rng = np.random.default_rng(49)
@@ -125,18 +125,18 @@ poner(golpe("pasos_techo", -4), fw(91))                      # «oyó pasos arri
 poner(golpe("escalera", -6), fw(98))                         # «subió»
 poner(golpe("periodico", -6), fw(111))                       # el periódico
 poner(golpe("toc_puerta", -6), fw(125))                      # llega María
-for k in range(3):
-    poner(golpe("apaga_lampara", -8), fw(137) + 26 * k / FPS)  # las ventanas se apagan
+for k in range(2):
+    poner(golpe("apaga_lampara", -8), fw(137) + 26 * k / FPS)  # se apagan la ventana de arriba y la de la cocina
 poner(golpe("golpes_sordos", -9), fw(143) + 0.2)             # «uno por uno» (lejos, apagados)
-poner(golpe("apaga_lampara", -8), fw(154))             # la ventana de la casa
-poner(golpe("mugido", -9), fw(179))                          # los animales
-poner(golpe("cuchara", -7), fw(184))                         # «comía en la cocina»
-poner(golpe("pasos_nieve", -8), fw(197) + 0.5)               # los vecinos caminan
-poner(golpe("porton_cruje", -5), fw(212) - 0.2)              # «entraron»
-poner(golpe("maquina_escribir", -8), fw(218))                # la policía
-poner(golpe("sello", -5), fw(226) + 0.2)                     # SIN RESOLVER
-poner(golpe("derrumbe", -9), fw(231))                        # «derribaron la granja»
-poner(golpe("tabla_cruje", -5), fw(244))                     # el ático
+poner(golpe("apaga_lampara", -8), fw(195))                  # la ventana del cuarto de María
+poner(golpe("mugido", -9), fw(233))                          # los animales
+poner(golpe("cuchara", -7), fw(238))                         # «comía en la cocina»
+poner(golpe("pasos_nieve", -8), fw(251) + 0.5)               # los vecinos caminan
+poner(golpe("porton_cruje", -5), fw(266) - 0.2)              # «entraron»
+poner(golpe("maquina_escribir", -8), fw(272))                # la policía
+poner(golpe("sello", -5), fw(280) + 0.2)                     # SIN RESOLVER
+poner(golpe("derrumbe", -9), fw(285))                        # «derribaron la granja»
+poner(golpe("tabla_cruje", -5), fw(322))                     # el ático
 efectos = pista.copy(); pista[:] = 0
 # sonidos de suspenso (pedido del usuario: «más sonidos de suspenso»): golpes, subidas y notas cortas, solo en los
 # momentos fuertes; ninguno dura más de 3 s
@@ -149,23 +149,30 @@ poner(golpe("piano_tetrico", -10), t(57))                    # «oía ruidos en 
 subida(86); poner(sting(), t(86))                            # «y ninguna regresaba»
 poner(golpe("impacto", -7), t(104))                          # «No había nadie»
 poner(golpe("piano_tetrico", -9), t(120))                    # «nadie lo había comprado»
-subida(137)                                                  # «alguien los mató…
-poner(golpe("impacto", -6), t(142))                          # …a los seis»
-poner(golpe("reverso", -9), t(163) - 1.9); poner(sting(), t(163))  # «no fue lo más extraño»
-subida(196); poner(golpe("impacto", -6), t(196))             # «se quedó a vivir ahí… con ellos»
-poner(golpe("impacto", -7), t(215))                          # «y los encontraron»
-poner(golpe("piano_tetrico", -9), t(227))                    # «Nunca encontró al culpable»
-poner(sting(), t(250))                                       # ¿Tú qué crees que pasó?
+subida(137)                                                  # «alguien los fue llevando al granero»
+poner(golpe("impacto", -6), t(150))                          # «los mató a golpes»
+poner(golpe("piano_tetrico", -10), t(161))                   # «la pequeña Cäzilia»
+poner(golpe("reverso", -9), t(170) - 1.9)                    # «La autopsia reveló algo peor: …
+poner(sting(), t(180))                                       # …arrancándose el cabello»
+poner(golpe("impacto", -7), t(190))                          # «Mató a María»
+poner(golpe("piano_tetrico", -9), t(199))                    # «el pequeño Josef»
+poner(golpe("impacto", -7), t(292))                          # «el azadón escondido adentro»
+poner(golpe("piano_tetrico", -9), t(305))                    # «videntes en Múnich»
+poner(golpe("reverso", -9), t(217) - 1.9); poner(sting(), t(217))  # «no fue lo más extraño»
+subida(250); poner(golpe("impacto", -6), t(250))             # «se quedó a vivir ahí… con ellos»
+poner(golpe("impacto", -7), t(269))                          # «y los encontraron»
+poner(golpe("piano_tetrico", -9), t(281))                    # «Nunca encontró al culpable»
+poner(sting(), t(328))                                       # ¿Tú qué crees que pasó?
 suspenso = pista.copy(); pista[:] = 0
 # letreros: golpe suave en cada fecha; fuerte en «encontraron» y en la pregunta final
-for w in (22, 46, 61, 121, 197, 218, 228, 234):
+for w in (22, 46, 61, 121, 251, 272, 282, 312):
     poner(golpe("golpe_titulo", -12), t(w) - 0.07)
     poner(golpe("whoosh", -14), t(w) - 0.4)
-poner(golpe("golpe_titulo", -6), t(214) - 0.07)              # «y los encontraron»
-poner(golpe("golpe_titulo", -6), t(250) - 0.07)              # ¿Tú qué crees que pasó?
+poner(golpe("golpe_titulo", -6), t(268) - 0.07)              # «y los encontraron»
+poner(golpe("golpe_titulo", -6), t(328) - 0.07)              # ¿Tú qué crees que pasó?
 # final (solo los últimos segundos): dron y latidos
-dron_f = tramo(sfx("dron"), fw(234), DUR, 3.0, 0.8)
-latidos = tramo(sfx("latidos"), fw(242), DUR, 1.0, 0.6)
+dron_f = tramo(sfx("dron"), fw(312), DUR, 3.0, 0.8)
+latidos = tramo(sfx("latidos"), fw(320), DUR, 1.0, 0.6)
 fondo_crudo = dron_f * db(-5) + latidos * db(-3) + pista * db(-14) + efectos * db(-11) + suspenso * db(-11)
 
 # ------------------------------------------------------------------ voz y mezcla
