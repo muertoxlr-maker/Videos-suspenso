@@ -418,7 +418,7 @@ export function crearEscenario() {
   // pared de enfrente con la puerta a la cubierta (gira hacia adentro)
   const PX = 1.4;
   camarote.add(caja(PX - 0.45 - CA.x0, CA.alto, 0.08, mPared, (CA.x0 + PX - 0.45) / 2, CA.alto / 2, CA.z1 + 0.04), caja(CA.x1 - PX - 0.45, CA.alto, 0.08, mPared, (CA.x1 + PX + 0.45) / 2, CA.alto / 2, CA.z1 + 0.04), caja(0.9, CA.alto - 1.85, 0.08, mPared, PX, (CA.alto + 1.85) / 2, CA.z1 + 0.04));
-  const luzPuerta = caja(0.9, 1.85, 0.02, brillo("#c8d0d8"), PX, 0.925, CA.z1 + 0.65); camarote.add(luzPuerta); // la cubierta allá afuera (luz del día)
+  const luzPuerta = caja(2.4, 2.2, 0.02, brillo("#c8d0d8"), PX, 1.1, CA.z1 + 1.1); camarote.add(luzPuerta); // la cubierta allá afuera (luz del día)
   const puertaCam = new THREE.Group(); puertaCam.position.set(PX - 0.45, 0, CA.z1); camarote.add(puertaCam);
   puertaCam.add(caja(0.88, 1.84, 0.05, lambert({ color: "#7a5a3c" }), 0.44, 0.92, -0.03), cil(0.03, 0.03, 0.05, mLaton, 0.78, 0.95, -0.08, 8).rotateX(Math.PI / 2));
   // mesa con patas, sillas, lámpara colgada
@@ -514,8 +514,8 @@ export function crearEscenario() {
   for (const [x, z] of [[-0.3, 1.9], [-0.12, 1.88]]) { rancho.add(caja(0.1, 0.32, 0.12, lambert({ color: "#1e1e1e" }), x, 0.16, z), caja(0.1, 0.06, 0.24, lambert({ color: "#1e1e1e" }), x, 0.03, z - 0.06)); }
   // repisa con las pipas, la bolsa de tabaco y una taza
   rancho.add(caja(1.0, 0.04, 0.2, mMueble, 0.0, 1.45, R.z0 + 0.1), caja(1.0, 0.18, 0.03, mOscuro, 0.0, 1.38, R.z0 + 0.02));
-  const pipa = (x: number, giro: number) => { const p = new THREE.Group(); p.position.set(x, 1.49, R.z0 + 0.12); p.rotation.y = giro; p.add(cil(0.038, 0.03, 0.08, lambert({ color: "#6a3e20" }), 0, 0.04, 0, 12), cil(0.03, 0.03, 0.005, lambert({ color: "#1a1008" }), 0, 0.081, 0, 12), palo(V(0.03, 0.015, 0), V(0.24, 0.05, 0), 0.011, lambert({ color: "#2a1a10" }), 6)); rancho.add(p); };
-  pipa(-0.35, 0.2); pipa(-0.12, -0.3); pipa(0.1, 0.5);
+  const pipa = (x: number, giro: number) => { const p = new THREE.Group(); p.position.set(x, 1.49, R.z0 + 0.12); p.rotation.y = giro; p.add(cil(0.038, 0.03, 0.08, lambert({ color: "#6a3e20" }), 0, 0.04, 0, 12), cil(0.03, 0.03, 0.005, lambert({ color: "#1a1008" }), 0, 0.081, 0, 12), palo(V(0.03, 0.015, 0), V(0.24, 0.05, 0), 0.014, lambert({ color: "#2a1a10" }), 6)); rancho.add(p); };
+  pipa(-0.42, 0.1); pipa(-0.12, -0.12); pipa(0.12, 0.15);
   rancho.add(new THREE.Mesh(new THREE.SphereGeometry(0.06, 10, 8), lambert({ color: "#8a6a40" })).translateX(0.32).translateY(1.51).translateZ(R.z0 + 0.12), cil(0.04, 0.035, 0.08, lambert({ color: "#d8d4c8" }), 0.42, 1.51, R.z0 + 0.12, 10));
   const farolR = new THREE.Group(); farolR.position.set(0, R.alto - 0.15, 0.2); rancho.add(farolR);
   farolR.add(caja(0.14, 0.2, 0.14, lambert({ color: "#2a2a2a" }), 0, -0.25, 0), caja(0.1, 0.14, 0.1, brillo("#ffd090"), 0, -0.25, 0));
