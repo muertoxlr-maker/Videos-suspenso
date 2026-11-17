@@ -186,6 +186,17 @@ export function dibujarPersonaje(ctx: CanvasRenderingContext2D, a: Aspecto, p: P
     const hx = cx + s * anchoHombro * 0.5;
     const ex = hx + s * Math.sin(aH) * seg, ey = hombroY + Math.cos(aH) * seg;
     const a2 = aH + aC;
+    if (p.abraza && p.vista === "frente") { // abraza un bulto: el brazo baja y dobla hasta la mano que lo sostiene (no hay manos de más)
+      const tx = cx + s * anchoBajo * 0.78 * 0.47, ty = torsoTop + torsoH * 0.36 + torsoH * 0.62 * 0.55;
+      linea([[hx, hombroY], [hx + s * D * 0.12, (hombroY + ty) / 2 + D * 0.05], [tx, ty]], sombra(a.ropa, 0.12), 10);
+      return;
+    }
+    if (p.bebe && p.vista === "frente") { // carga un bebé: el brazo llega a la mano que lo sostiene (las manos las dibuja el bebé)
+      const r0 = D * 0.2, bcx = cx - D * 0.36, bcy = torsoTop + torsoH * 0.4;
+      const [tx, ty] = s < 0 ? [bcx - r0 * 0.6, bcy + r0 * 0.75] : [cx + D * 0.27, bcy + r0 * 0.95];
+      linea([[hx, hombroY], [hx + s * D * 0.12, (hombroY + ty) / 2 + D * 0.05], [tx, ty]], sombra(a.ropa, 0.12), 10);
+      return;
+    }
     const mx = ex + s * Math.sin(a2) * seg, my = ey + Math.cos(a2) * seg;
     linea([[hx, hombroY], [ex, ey], [mx, my]], sombra(a.ropa, 0.12), 10);
     manos.push([mx, my]);
