@@ -14,7 +14,7 @@
   original: no correr `voz_elevenlabs.py` sobre `voz/`.
 - `sfx/` — efectos cortos (`pedidos.json`); `mezcla.py` → `audio/mezcla.wav`: cada efecto solo en su palabra, dron y
   latidos solo al final (guía §5). −14 LUFS.
-- Animación: `caricatura3d/src/videos/hinterkaifeck/` (composición `Hinterkaifeck`, 3042 cuadros, acabado §8.9):
+- Animación: `caricatura3d/src/videos/hinterkaifeck/` (composición `Hinterkaifeck`, 4017 cuadros, acabado §8.9):
   granja con casa y granero bajo un techo de nieve, bosque, huellas, cocina con Kachelofen, ático con trampilla,
   granero con vacas, oficina de policía con el expediente. Personajes caricatura que no se parecen a los reales.
 - Portada para TikTok: composición `HinterkaifeckPortada` (falta probarla).
@@ -23,7 +23,8 @@
 - Nadie atraviesa paredes; las puertas y el portón se abren; nada tapa bocas.
 - `revisar_parpadeo.py` en el video completo: lo marcado son personajes que se mueven y bordes del techo y la ventana
   cuando la cámara avanza (revisado cuadro por cuadro: se desplazan parejo, no brincan). Las rayitas de la puerta y la
-  textura del techo que sí parpadeaban se corrigieron antes del render.
+  textura del techo que sí parpadeaban se corrigieron antes del render (v3: el techo ahora es nieve pareja y
+  sale limpio; solo marcan personajes, ojos, huellas y bordes cuando la cámara avanza).
 
 ## Video final
 - 3042 cuadros, 1080×1920, 101.4 s (`caricatura3d/salida/hinter/hinterkaifeck.mp4`, no se sube a git).
@@ -34,3 +35,12 @@
 - La toma del granero («uno por uno», cuadros 1761–1843) se dibujó de nuevo aparte: la sombra va adentro, detrás de
   las hojas abiertas (antes atravesaba las puertas, que abren hacia adentro).
 - Audio: −14.0 LUFS, pico −1.9 dBFS.
+
+## Versión 3 («más explícito», pedido del usuario)
+- Bloque nuevo del crimen (`voz_crimen/`) y del azadón y los cráneos (`voz_final_extra/`) pegados en `voz/voz_final.mp3`
+  (134.2 s, 333 palabras); respaldos `voz_final_v2.mp3`/`palabras_v2.json`.
+- Se ve: sombra del asesino con el azadón alzado, sangre en paja, piso y azadón, botas saliendo de la paja, moño y
+  cabello de la niña, la cuna vacía, el azadón en las ruinas y la caja de cráneos para Múnich. Nunca se ve un golpe
+  ni a los niños heridos.
+- Atajo: solo se dibujaron de nuevo los rangos de `salida/hinter/rangos.txt` (`scripts/render_rangos.sh`); lo demás
+  sale del video v2. Final: `salida/hinter/hinterkaifeck_v3.mp4`, 4017 cuadros, 133.9 s, −14.0 LUFS.
