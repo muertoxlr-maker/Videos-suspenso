@@ -118,7 +118,7 @@ const PLANOS: Plano[] = [
   // 18 · Esa misma noche, alguien los mató a los seis.  (la granja de noche: las ventanas se apagan una por una)
   { w: 134, lugar: "afuera", foco: 14, cInf: 5, ini: c([-14, 3.2, -22], [-2, 2.5, 0], 44), fin: c([-13, 3.1, -19.5], [-2, 2.5, 0], 42), hacer: () => {} },
   // 19 · Cuatro en el granero, uno por uno.  (el portón entreabierto: adentro, un farol y una sombra)
-  { w: 143, lugar: "afuera", foco: 5, cInf: 7, ini: c([4.3, 1.5, -10.2], [4, 1.4, -4.5], 42), fin: c([4.2, 1.45, -9.0], [4, 1.4, -4.5], 40), hacer: ({ f, m }) => { m.porton(0.3); m.granEnLuz(f); } },
+  { w: 143, lugar: "afuera", foco: 5, cInf: 7, ini: c([4.3, 1.5, -10.2], [4, 1.4, -4.5], 42), fin: c([4.2, 1.45, -9.0], [4, 1.4, -4.5], 40), hacer: ({ f, m }) => { m.porton(0.9); m.granEnLuz(f); } },
   // 20 · Los otros dos, dentro de la casa.  (una ventana de abajo se apaga)
   { w: 150, lugar: "afuera", foco: 3.5, cInf: 7, ini: c([-8.8, 1.5, -8.2], [-8.8, 1.5, -4.5], 40), fin: c([-8.8, 1.5, -7.3], [-8.8, 1.5, -4.5], 38), hacer: ({ f, m }) => { m.ventana(0, f < fw(154) ? 1 : 0); } },
   // 21 · Pero eso no fue lo más extraño.  (la cocina a oscuras; la silla echada para atrás)
@@ -164,7 +164,7 @@ class Mundo {
     this.cam = cam;
     for (const c of Object.values(this.cartas)) { c.grupo.visible = false; c.contacto.visible = true; c.grupo.rotation.set(0, 0, 0); }
     const h = this.h;
-    h.luzExtra.intensity = 0; h.luzExtra2.intensity = 0;
+    h.luzExtra.intensity = 0; h.luzExtra2.intensity = 0; h.adentro.position.z = 0.2; h.adentro.scale.z = 1;
     h.portonI.rotation.y = 0; h.portonD.rotation.y = 0; h.puertita.rotation.y = -0.12;
     h.granja.visible = true; h.ruinas.visible = false; h.cruz.visible = false; h.huellas.forEach((x) => (x.visible = true)); h.humoOn.v = 1;
     h.periodico.visible = false; h.comida.visible = false; h.luzC.intensity = 4; h.haloC.visible = true; h.vidrioC.visible = true;
@@ -223,8 +223,9 @@ class Mundo {
   /** «alguien los mató»: el farol adentro del granero, y una sombra que pasa por la rendija */
   granEnLuz(f: number) {
     const parpadeo = [fw(143), fw(146) - 4, fw(147), fw(149)].some((t) => f >= t && f < t + 3) ? 0.2 : 1;
-    this.luz(4, 1.4, G.z0 + 0.3, 5 * parpadeo, "#ffb870");
-    const u = ((f - fw(143)) % 40) / 40; if (u < 0.6) this.ver("sombra", [lerp(3.2, 4.8, u / 0.6), 0, G.z0 + 0.25], { ...SILUETA, ...CAMINA(f, 0), borde: "#ffb870" });
+    this.h.adentro.scale.z = 5.7 / 8.4; this.h.adentro.position.z = 1.35; // lo oscuro empieza 3 m adentro: hay lugar detrás de las hojas (abren hacia adentro)
+    this.luz(4, 1.6, G.z0 + 2.6, 6 * parpadeo, "#ffb870");
+    const u = ((f - fw(143)) % 40) / 40; if (u < 0.6) this.ver("sombra", [lerp(3.55, 4.45, u / 0.6), 0, G.z0 + 2.0], { ...SILUETA, ...CAMINA(f, 0), borde: "#ffb870" });
     this.cartas.sombra.contacto.visible = false;
   }
   vecinosHumo(f: number) {

@@ -212,7 +212,8 @@ export function crearEscenario() {
   granja.add(caja(largoCasa, G.alto, 0.2, mRev, (G.x0 + G.casaX1) / 2, G.alto / 2, G.z1 - 0.1), caja(largoGr, G.alto, 0.2, mTab, (G.casaX1 + G.x1) / 2, G.alto / 2, G.z1 - 0.1));
   granja.add(caja(0.2, G.alto, fondo, mRev, G.x0 + 0.1, G.alto / 2, 0), caja(0.2, G.alto, fondo, mTab, G.x1 - 0.1, G.alto / 2, 0));
   granja.add(caja(largoCasa + largoGr - 0.4, 0.2, fondo - 0.4, lambert({ color: "#1a1612" }), (G.x0 + G.x1) / 2, G.alto - 0.1, 0)); // techo interior (oscuro)
-  granja.add(caja(largoCasa + largoGr - 0.4, G.alto - 0.2, fondo - 0.6, lambert({ color: "#0c0a0a" }), (G.x0 + G.x1) / 2, G.alto / 2, 0.2)); // adentro oscuro (lo que se ve por las puertas)
+  const adentro = caja(largoCasa + largoGr - 0.4, G.alto - 0.2, fondo - 0.6, lambert({ color: "#0c0a0a" }), (G.x0 + G.x1) / 2, G.alto / 2, 0.2); granja.add(adentro); // adentro oscuro (lo que se ve por las puertas); en «uno por uno» se recorre hacia atrás
+  granja.add(caja(largoGr - 0.4, 0.02, fondo - 0.4, lambert({ color: "#3a2a1c" }), (G.casaX1 + G.x1) / 2, 0.02, 0)); // piso de tierra del granero (para que no se vea nieve adentro)
   granja.add(caja(0.12, G.alto, 0.12, mMarco, G.casaX1, G.alto / 2, G.z0 - 0.02)); // esquina casa / granero
   // hastiales (triángulos de los extremos) de tablas
   for (const [x, rot] of [[G.x0, -Math.PI / 2], [G.x1, Math.PI / 2]] as [number, number][]) {
@@ -449,7 +450,7 @@ export function crearEscenario() {
   };
   const humoOn = { v: 1 };
   return {
-    raiz, amb, hemi, luna, luzExtra, luzExtra2, afuera, granja, ventanas, portonI, portonD, puertita, huellas, humo, humoOn, ruinas, cruz, bosque, vecino,
+    raiz, amb, hemi, luna, luzExtra, luzExtra2, afuera, granja, adentro, ventanas, portonI, portonD, puertita, huellas, humo, humoOn, ruinas, cruz, bosque, vecino,
     cocina, lamparaC, luzC, haloC, vidrioC, periodico, comida, vapor, silla, fuegoC, atico, tapaG, rendijas, luzAtico, granero, hojasG, afueraDia, cieloDia, luzG, farolG, vacas,
     oficina, expediente, luzO, farolMano, luzMano, farolMano2, animar,
   };
