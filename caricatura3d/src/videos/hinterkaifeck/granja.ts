@@ -67,11 +67,10 @@ const texTablas = (base = "#5a4632", rep: [number, number] = [6, 1]) => lienzo((
   }
   manchas(c, w, h, 16, "20,14,8", 0.3);
 }, 512, 512, rep);
-const texTejas = () => lienzo((c, w, h) => { // tejas oscuras con nieve encima (más nieve abajo, donde se junta)
-  c.fillStyle = "#3a3634"; c.fillRect(0, 0, w, h);
-  for (let y = 0; y < h; y += 24) for (let x = (y / 24) % 2 ? 0 : 16; x < w; x += 32) { c.fillStyle = "#2a2624"; c.fillRect(x, y + 18, 30, 6); }
-  c.filter = "blur(3px)"; for (let k = 0; k < 90; k++) { c.fillStyle = `rgba(220,228,240,${0.6 + rz(k) * 0.3})`; c.beginPath(); c.ellipse(rz(k + 4) * w, rz(k + 8) * h, 40 + rz(k + 2) * 60, 10 + rz(k + 6) * 12, 0, 0, 7); c.fill(); } c.filter = "none";
-}, 512, 512, [3, 1]);
+const texTejas = () => lienzo((c, w, h) => { // techo cubierto de nieve pareja (las manchas claras/oscuras «brillaban» al mover la cámara)
+  c.fillStyle = "#c4cede"; c.fillRect(0, 0, w, h);
+  c.filter = "blur(40px)"; for (let k = 0; k < 8; k++) { c.fillStyle = `rgba(150,162,184,${0.12 + rz(k) * 0.08})`; c.beginPath(); c.ellipse(rz(k + 4) * w, rz(k + 8) * h, 120, 60, 0, 0, 7); c.fill(); } c.filter = "none";
+}, 256, 256, [1, 1]);
 const texPiso = () => lienzo((c, w, h) => { // duela ancha gastada
   c.fillStyle = "#5e4a36"; c.fillRect(0, 0, w, h);
   for (let i = 0; i < 6; i++) { c.fillStyle = i % 2 ? "rgba(0,0,0,0.12)" : "rgba(255,230,200,0.05)"; c.fillRect(0, i * h / 6, w, h / 6); c.fillStyle = "rgba(18,12,8,0.8)"; c.fillRect(0, i * h / 6, w, 3); }
