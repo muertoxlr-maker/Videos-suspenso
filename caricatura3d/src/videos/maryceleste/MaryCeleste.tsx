@@ -103,36 +103,36 @@ const PLANOS: Plano[] = [
   // 15 · No había nadie. Ni vivos...  (los tres en la cubierta vacía, buscando)
   { w: 112, lugar: "mar", hora: "dia", balanceo: 0.6, foco: 5, cInf: 7, ini: c([2.5, 4.0, 1.2], [-0.8, 3.1, -3.4], 54), fin: c([2.4, 3.95, 0.8], [-0.8, 3.1, -3.4], 52), hacer: ({ f, m }) => { m.buscan(f); } },
   // 16 · ni muertos.  (la puerta del camarote se abre: el marinero se asoma; adentro, nadie)
-  { w: 117, lugar: "camarote", foco: 3.2, cInf: 7, ini: c(CA(-1.5, 1.5, -1.2), CA(1.4, 1.1, 1.9), 56), fin: c(CA(-1.3, 1.45, -0.95), CA(1.4, 1.1, 1.9), 54), hacer: ({ f, k, m }) => { m.seAsoma(f, k); } },
+  { w: 117, lugar: "camarote", foco: 3.2, cInf: 7, ini: c(CA(0.0, 1.5, -1.45), CA(1.4, 1.15, 2.0), 54), fin: c(CA(0.1, 1.48, -1.2), CA(1.4, 1.15, 2.0), 52), hacer: ({ f, k, m }) => { m.seAsoma(f, k); } },
   // 17 · Había comida y agua para seis meses.  (los víveres en la bodega)
-  { w: 119, lugar: "bodega", foco: 2.6, cInf: 7, ini: c(BO(1.4, 1.55, -2.5), BO(-0.3, 0.6, -5.2), 52), fin: c(BO(1.2, 1.45, -2.9), BO(-0.3, 0.6, -5.2), 50), hacer: () => {} },
+  { w: 119, lugar: "bodega", foco: 2.6, cInf: 7, ini: c(BO(0.9, 1.5, -2.7), BO(-0.2, 0.6, -5.2), 54), fin: c(BO(0.8, 1.42, -3.1), BO(-0.2, 0.6, -5.2), 52), hacer: ({ m }) => { m.luz(BODEGA.x + 0.3, 1.6, BODEGA.z - 3.6, 4, "#ffc888"); } },
   // 18 · La ropa de los marineros,  (la ropa colgada en el rancho)
   { w: 126, lugar: "rancho", foco: 2.2, cInf: 7, ini: c(RA(0.25, 1.4, -0.7), RA(-0.2, 1.2, 2.2), 54), fin: c(RA(0.05, 1.38, -0.3), RA(-0.2, 1.2, 2.2), 52), hacer: () => {} },
   // 19 · sus pipas,  (la repisa con las pipas)
-  { w: 131, lugar: "rancho", foco: 0.75, cInf: 8, ini: c(RA(0.15, 1.66, -1.25), RA(0, 1.5, -2.1), 46), fin: c(RA(0.05, 1.62, -1.45), RA(0, 1.5, -2.1), 44), hacer: () => {} },
+  { w: 131, lugar: "rancho", foco: 0.75, cInf: 8, ini: c(RA(0.1, 1.7, -1.4), RA(-0.05, 1.5, -2.15), 46), fin: c(RA(0.0, 1.67, -1.55), RA(-0.05, 1.5, -2.15), 44), hacer: () => {} },
   // 20 · sus cosas... todo estaba en su lugar.  (los baúles y las literas; luego el camarote con los juguetes de la niña)
   { w: 133, lugar: "rancho", foco: 2.0, cInf: 7, ini: c(RA(0.3, 1.35, 0.9), RA(-0.9, 0.35, -1.5), 54), fin: c(RA(0.2, 1.3, 0.6), RA(-0.9, 0.35, -1.5), 52), hacer: () => {} },
-  { w: 135, lugar: "camarote", foco: 1.6, cInf: 7, ini: c(CA(0.45, 1.2, 0.9), CA(-0.7, 0.4, -1.3), 50), fin: c(CA(0.25, 1.15, 0.6), CA(-0.7, 0.4, -1.3), 48), hacer: () => {} },
+  { w: 135, lugar: "camarote", foco: 1.6, cInf: 7, ini: c(CA(0.15, 1.05, 0.25), CA(-1.0, 0.45, -1.45), 52), fin: c(CA(0.05, 1.0, 0.05), CA(-1.0, 0.45, -1.45), 50), hacer: () => {} },
   // 21 · Pero faltaban tres cosas:  (el marinero ve los calzos vacíos)
-  { w: 140, lugar: "mar", hora: "dia", balanceo: 0.6, foco: 3.2, cInf: 7, ini: c([2.1, 3.8, -1.4], [-0.6, 2.9, -4.2], 50), fin: c([1.9, 3.75, -1.7], [-0.6, 2.9, -4.2], 48), hacer: ({ f, m }) => { m.ver("deveau", [-1.5, Y, -2.6], { ...DIA, ...MIEDO(f, 0.15), boca: "linea", mirarY: -0.3, mirarX: 0.4 }); } },
+  { w: 140, lugar: "mar", hora: "dia", balanceo: 0.6, foco: 3.2, cInf: 7, ini: c([2.1, 3.8, -1.4], [-0.6, 2.9, -4.2], 50), fin: c([1.9, 3.75, -1.7], [-0.6, 2.9, -4.2], 48), hacer: ({ f, m }) => { m.ver("deveau", m.delante(140, 2.0, -0.3, Y), { ...DIA, ...MIEDO(f, 0.15), boca: "linea", mirarY: -0.3, mirarX: -0.5 }); } },
   // 22 · el bote salvavidas,  (los calzos vacíos y las trincas cortadas)
   { w: 144, lugar: "mar", hora: "dia", balanceo: 0.5, foco: 2.2, cInf: 8, ini: c([1.9, 3.7, -2.2], [0, 2.7, -4.2], 46), fin: c([1.7, 3.5, -2.6], [0, 2.7, -4.2], 44), hacer: () => {} },
   // 23 · los instrumentos para navegar...  (la caja del sextante, abierta y vacía)
-  { w: 147, lugar: "camarote", foco: 0.7, cInf: 8, ini: c(CA(0.78, 1.28, -0.88), CA(0.66, 0.82, -1.5), 44), fin: c(CA(0.72, 1.17, -1.03), CA(0.66, 0.82, -1.5), 42), hacer: () => {} },
+  { w: 147, lugar: "camarote", foco: 0.7, cInf: 8, ini: c(CA(0.95, 1.4, -0.65), CA(0.7, 0.84, -1.5), 46), fin: c(CA(0.88, 1.32, -0.8), CA(0.7, 0.84, -1.5), 44), hacer: () => {} },
   // 24 · y los papeles del barco.  (los casilleros del escritorio, vacíos)
-  { w: 151, lugar: "camarote", foco: 0.9, cInf: 8, ini: c(CA(1.05, 1.36, -0.75), CA(0.91, 1.12, -1.75), 46), fin: c(CA(0.98, 1.3, -0.9), CA(0.91, 1.12, -1.75), 44), hacer: () => {} },
+  { w: 151, lugar: "camarote", foco: 0.9, cInf: 8, ini: c(CA(1.2, 1.3, -0.4), CA(0.91, 1.05, -1.75), 50), fin: c(CA(1.12, 1.27, -0.55), CA(0.91, 1.05, -1.75), 48), hacer: () => {} },
   // 25 · La última anotación era del 25 de noviembre. Todo parecía normal.  (la pizarra del diario)
-  { w: 156, lugar: "camarote", foco: 0.45, cInf: 9, ini: c(CA(0.95, 1.2, -1.04), CA(0.91, 0.83, -1.44), 42), fin: c(CA(0.93, 1.12, -1.14), CA(0.91, 0.83, -1.44), 40), hacer: () => {} },
+  { w: 156, lugar: "camarote", foco: 0.45, cInf: 9, ini: c(CA(0.95, 1.32, -0.88), CA(0.91, 0.83, -1.44), 44), fin: c(CA(0.93, 1.26, -0.98), CA(0.91, 0.83, -1.44), 42), hacer: () => {} },
   // 26 · Durante diez días, el barco navegó solo.  (la cámara le da la vuelta)
   { w: 167, lugar: "mar", hora: "niebla", mece: 1, foco: 40, cInf: 5, ini: c([30, 8, -30], [0, 6, 0], 44), fin: c([-12, 8, -42], [0, 6, 0], 44), hacer: () => {} },
   // 27 · En la bodega había casi un metro de agua.
-  { w: 174, lugar: "bodega", foco: 3, cInf: 7, ini: c(BO(0.4, 1.55, 0.6), BO(0, 0.6, 4.5), 54), fin: c(BO(0.3, 1.5, 1.2), BO(0, 0.6, 4.5), 52), hacer: ({ m }) => { m.h.aguaB.visible = true; } },
+  { w: 174, lugar: "bodega", foco: 3, cInf: 7, ini: c(BO(0.2, 1.45, -1.6), BO(0, 0.7, 3.0), 56), fin: c(BO(0.1, 1.4, -0.9), BO(0, 0.7, 3.0), 54), hacer: ({ m }) => { m.h.aguaB.visible = true; } },
   // 28 · Nueve barriles de alcohol estaban vacíos.  (los barriles sin tapa, desde arriba)
   { w: 183, lugar: "bodega", foco: 2.2, cInf: 8, ini: c(BO(-0.3, 2.3, 2.5), BO(-0.3, 0.4, 4.4), 50), fin: c(BO(-0.3, 2.2, 2.8), BO(-0.3, 0.4, 4.4), 48), hacer: () => {} },
   // 29 · Y encontraron una espada con manchas que parecían sangre.  (el marinero la ve debajo de la litera)
-  { w: 189, lugar: "camarote", foco: 1.6, cInf: 7, ini: c(CA(0.65, 0.72, -0.45), CA(-1.2, 0.35, 0.3), 54), fin: c(CA(0.55, 0.62, -0.35), CA(-1.2, 0.35, 0.3), 52), hacer: ({ f, m }) => { m.ver("deveau", CA(-0.55, 0, 0.95), { ...CALIDA, ...MIEDO(f, 0.3), boca: "o", mirarY: -0.6, mirarX: -0.5, agacha: 0.35 }); } },
+  { w: 189, lugar: "camarote", foco: 1.6, cInf: 7, ini: c(CA(-0.85, 0.6, -0.95), CA(-0.95, 0.65, 0.9), 60), fin: c(CA(-0.85, 0.55, -0.8), CA(-0.95, 0.65, 0.9), 58), hacer: ({ f, m }) => { m.ver("deveau", CA(-0.45, 0, 1.0), { ...CALIDA, ...MIEDO(f, 0.3), boca: "o", mirarY: -0.7, mirarX: -0.5, agacha: 0.6 }); } },
   // 30 · Los análisis dijeron que no lo era.  (la espada de cerca)
-  { w: 198, lugar: "camarote", foco: 0.75, cInf: 8, ini: c(CA(-1.0, 0.5, 0.85), CA(-1.45, 0.04, 0.2), 40), fin: c(CA(-1.08, 0.38, 0.68), CA(-1.45, 0.04, 0.2), 38), hacer: () => {} },
+  { w: 198, lugar: "camarote", foco: 0.75, cInf: 8, ini: c(CA(-1.12, 0.42, 0.6), CA(-1.38, 0.03, 0.1), 38), fin: c(CA(-1.17, 0.34, 0.5), CA(-1.38, 0.03, 0.1), 36), hacer: () => {} },
   // 31 · A ninguno de los diez se le volvió a ver.  (el barco se pierde en la neblina)
   { w: 205, lugar: "mar", hora: "niebla", mece: 1, foco: 60, cInf: 4, ini: c([-30, 5, -58], [0, 4, 0], 32), fin: c([-31, 5, -64], [0, 4, 0], 30), hacer: () => {} },
   // 32 · Algunos creen que el alcohol soltó vapores,  (la bodega de noche: vapores verdosos)
@@ -140,9 +140,9 @@ const PLANOS: Plano[] = [
   // 33 · el capitán temió una explosión...  (Briggs en la escotilla de proa; sale vapor)
   { w: 222, lugar: "mar", hora: "noche", balanceo: 0.8, foco: 3.2, cInf: 7, ini: c([1.7, 3.75, 6.0], [0.2, 3.1, 10.2], 48), fin: c([1.6, 3.7, 6.5], [0.2, 3.1, 10.2], 46), hacer: ({ f, m }) => { m.escotillaVapor(f); } },
   // 34 · y todos subieron al bote, atado al barco con una cuerda.  (el bote junto a la popa, con todos adentro)
-  { w: 227, lugar: "mar", hora: "noche", foco: 9, cInf: 6, ini: c([-9, 3.4, -32], [0.6, 1.0, -24], 44), fin: c([-7.5, 3.0, -30], [0.6, 1.0, -24], 42), hacer: ({ f, m }) => { m.enElBote(f, 0, false); } },
+  { w: 227, lugar: "mar", hora: "noche", foco: 9, cInf: 6, ini: c([3.2, 3.9, -38.5], [0.6, 2.4, -20], 46), fin: c([2.8, 3.6, -37], [0.6, 2.4, -20], 44), hacer: ({ f, m }) => { m.enElBote(f, 0, false); } },
   // 35 · Si la cuerda se rompió,  (la cuerda tensa... y se rompe)
-  { w: 238, lugar: "mar", hora: "noche", foco: 8, cInf: 6, ini: c([-8, 2.6, -24], [0.8, 1.6, -22], 44), fin: c([-7.4, 2.5, -23], [0.8, 1.6, -22], 42), hacer: ({ f, m }) => { m.enElBote(f, 0, f >= fw(242)); } },
+  { w: 238, lugar: "mar", hora: "noche", foco: 8, cInf: 6, ini: c([-3.2, 2.8, -31], [0.8, 2.2, -20], 44), fin: c([-3.0, 2.7, -30.5], [0.8, 2.2, -20], 42), hacer: ({ f, m }) => { m.enElBote(f, 0, f >= fw(242)); } },
   // 36 · el barco se fue con el viento...  (el barco se aleja; el bote se queda)
   { w: 243, lugar: "mar", hora: "noche", foco: 14, cInf: 6, ini: c([3.0, 2.2, -37], [0, 4, -10], 46), fin: c([3.0, 2.2, -37], [0, 4, -10], 46), hacer: ({ f, k, m }) => { m.enElBote(f, k, true); } },
   // 37 · y ellos se quedaron solos en medio del mar.  (el bote solo, desde arriba)
@@ -231,9 +231,9 @@ class Mundo {
     this.cartas.d1.contacto.visible = false;
   }
   buscan(f: number) {
-    this.ver("deveau", [-0.6, Y, -3.0], { ...DIA, ...MIEDO(f, 0.2), boca: "o", mirarX: -0.6, giro: -0.4 });
-    this.ver("d1", [1.1, Y, -1.3], { ...DIA, ...MIEDO(f, 0.2), boca: "linea", mirarX: 0.7, giro: 0.5 });
-    this.ver("d2", [-2.0, Y, -1.0], { ...DIA, ...MIEDO(f, 0.25), boca: "o", mirarY: 0.6, brazoDer: [0.6, -0.4] });
+    this.ver("deveau", this.delante(112, 3.0, 0, Y), { ...DIA, ...MIEDO(f, 0.2), boca: "o", mirarX: -0.6, giro: -0.4 });
+    this.ver("d1", this.delante(112, 2.4, 0.6, Y), { ...DIA, ...MIEDO(f, 0.2), boca: "linea", mirarX: 0.7, giro: 0.5 });
+    this.ver("d2", this.delante(112, 4.2, -1.1, Y), { ...DIA, ...MIEDO(f, 0.25), boca: "o", mirarY: 0.6, brazoDer: [0.6, -0.4] });
   }
   vaporesBodega(f: number) {
     const t = f / FPS;
@@ -274,7 +274,7 @@ class Mundo {
     this.luz(0.2, Y + 2.0, 0.6, 2.2 + 0.4 * Math.sin(f * 0.9), "#ffb870");
   }
   monstruo(k: number) {
-    const tg = this.h.tentaculos; tg.g.visible = true; tg.tents.forEach((t, i) => { t.position.y = lerp(-9, -0.4, suave(0, 1, k * 1.6 - i * 0.18)); t.rotation.z = 0.1 * Math.sin(k * 6 + i); });
+    const tg = this.h.tentaculos; tg.g.visible = true; this.luz(-7, 6, 4, 6, "#b8c8ff"); tg.tents.forEach((t, i) => { t.position.y = lerp(-9, -0.4, suave(0, 1, k * 1.6 - i * 0.18)); t.rotation.z = 0.1 * Math.sin(k * 6 + i); });
   }
   // ---------------- adentro
   seAsoma(f: number, k: number) {
@@ -306,8 +306,8 @@ class Mundo {
       if (m) { h.mc.g.position.y = 0.12 * m * Math.sin(t * 0.8); h.mc.g.rotation.z = 0.035 * m * Math.sin(t * 0.6); h.mc.g.rotation.x += 0.012 * m * Math.sin(t * 0.7 + 1); }
       if (h.otro.g.visible) { h.otro.g.rotation.z = 0.02 * Math.sin(t * 0.7 + 2); }
     } else {
-      h.luzB.intensity = noche ? 1.4 : 4; h.amb.intensity = Lg === "bodega" ? (noche ? 0.2 : 0.4) : Lg === "estudio" ? 0.18 : 0.35;
-      h.hemi.intensity = Lg === "bodega" ? 0.3 : Lg === "estudio" ? 0.12 : 0.3;
+      h.luzB.intensity = noche ? 1.4 : 4; h.amb.intensity = Lg === "bodega" ? (noche ? 0.2 : 0.4) : Lg === "estudio" ? 0.18 : 0.6;
+      h.hemi.intensity = Lg === "bodega" ? 0.3 : Lg === "estudio" ? 0.12 : 0.55;
       h.sol.intensity = 0;
       h.luzLamp.intensity = Lg === "camarote" && tarde ? 3.5 : 2.5;
     }

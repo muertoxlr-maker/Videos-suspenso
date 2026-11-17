@@ -124,7 +124,7 @@ const texPizarra = () => lienzo((c, w, h) => { // la pizarra del diario: la últ
 }, 512, 320);
 const texEspada = () => lienzo((c, w, h) => { // hoja de la espada con manchas oscuras
   c.fillStyle = "#b8bcc0"; c.fillRect(0, 0, w, h); c.fillStyle = "rgba(255,255,255,0.4)"; c.fillRect(0, h * 0.35, w, h * 0.12);
-  for (let k = 0; k < 7; k++) { const g = c.createRadialGradient(w * (0.15 + k * 0.11), h * (0.3 + rz(k) * 0.4), 1, w * (0.15 + k * 0.11), h * 0.5, 14 + rz(k + 2) * 20); g.addColorStop(0, "rgba(90,24,18,0.85)"); g.addColorStop(1, "rgba(90,24,18,0)"); c.fillStyle = g; c.fillRect(0, 0, w, h); }
+  for (let k = 0; k < 7; k++) { const g = c.createRadialGradient(w * (0.15 + k * 0.11), h * (0.3 + rz(k) * 0.4), 1, w * (0.15 + k * 0.11), h * 0.5, 14 + rz(k + 2) * 20); g.addColorStop(0, "rgba(110,26,18,0.95)"); g.addColorStop(1, "rgba(90,24,18,0)"); c.fillStyle = g; c.fillRect(0, 0, w, h); }
 }, 512, 64);
 const texLibros = () => lienzo((c, w, h) => { // librero: lomos de colores
   c.fillStyle = "#3a2a1c"; c.fillRect(0, 0, w, h);
@@ -223,7 +223,9 @@ export const crearBarco = (nombre: string, negro = false) => {
   // ---- escotilla grande con los calzos vacíos del bote (aquí iba el bote salvavidas)
   const E = ESCOTILLA;
   g.add(caja(2.1, 0.45, 2.4, mMad, 0, yb + 0.22, E.z), caja(1.9, 0.06, 2.2, lambert({ color: "#5a4632" }), 0, yb + 0.47, E.z));
-  for (const zz of [-0.7, 0.7]) { const calzo = new THREE.Group(); calzo.position.set(0, yb + 0.5, E.z + zz); g.add(calzo); calzo.add(caja(1.9, 0.12, 0.22, mOsc, 0, 0.06, 0)); for (const s of [-1, 1]) calzo.add(caja(0.5, 0.32, 0.22, mOsc, s * 0.7, 0.2, 0)); }
+  { const cu2 = new THREE.Shape(); cu2.moveTo(-0.95, 0); cu2.lineTo(0.95, 0); cu2.lineTo(0.95, 0.42); for (let k = 0; k <= 12; k++) { const a = k / 12; cu2.lineTo(0.85 - a * 1.7, 0.42 - 0.3 * Math.sin(a * Math.PI)); } cu2.lineTo(-0.95, 0.42); cu2.lineTo(-0.95, 0);
+    const gcu = new THREE.ExtrudeGeometry(cu2, { depth: 0.2, bevelEnabled: false });
+    for (const zz of [-0.75, 0.75]) { const calzo = new THREE.Mesh(gcu, lambert({ color: "#7a5a3c" })); calzo.position.set(0, yb + 0.5, E.z + zz - 0.1); g.add(calzo); } }
   for (const s of [-1, 1]) { // trincas del bote: cuerdas cortadas que cuelgan
     g.add(palo(V(s * 1.0, yb + 0.55, E.z - 1.0), V(s * 0.8, yb + 0.85, E.z - 0.4), 0.025, mCuerda), palo(V(s * 1.0, yb + 0.55, E.z + 1.0), V(s * 1.05, yb + 0.05, E.z + 1.3), 0.025, mCuerda));
   }
@@ -344,11 +346,11 @@ export const crearBote = () => {
 
 /** tentáculos (la teoría del monstruo): salen del agua junto al barco */
 const crearTentaculos = () => {
-  const g = new THREE.Group(), m = lambert({ color: "#3a2a38", emissive: "#120a12" }), mv = lambert({ color: "#8a6a7a" });
+  const g = new THREE.Group(), m = lambert({ color: "#6a4a62", emissive: "#1e0e1a" }), mv = lambert({ color: "#c8a0b0" });
   const tent = (x: number, z: number, alto: number, giro: number, semilla: number) => {
     const t = new THREE.Group(); t.position.set(x, -0.5, z); t.rotation.y = giro; g.add(t);
     const c = new THREE.CatmullRomCurve3([V(0, 0, 0), V(0.3, alto * 0.35, 0.2), V(-0.2, alto * 0.7, 0.6 + rz(semilla)), V(0.5, alto, 1.4), V(1.2, alto * 0.92, 1.9)]);
-    const geo = new THREE.TubeGeometry(c, 40, 0.5, 10, false); const p = geo.attributes.position;
+    const geo = new THREE.TubeGeometry(c, 40, 0.75, 10, false); const p = geo.attributes.position;
     for (let i = 0; i < p.count; i++) { const k = Math.floor(i / 11) / 40, q = c.getPoint(k), r = 1 - k * 0.85; p.setXYZ(i, q.x + (p.getX(i) - q.x) * r, q.y + (p.getY(i) - q.y) * r, q.z + (p.getZ(i) - q.z) * r); }
     geo.computeVertexNormals(); t.add(new THREE.Mesh(geo, m));
     for (let k = 2; k < 14; k++) { const q = c.getPoint(k / 16); const v = new THREE.Mesh(new THREE.SphereGeometry(0.11 * (1 - k / 18), 8, 6), mv); v.position.set(q.x - 0.4 * (1 - k / 16), q.y, q.z); v.scale.z = 0.4; t.add(v); }
@@ -441,12 +443,12 @@ export function crearEscenario() {
   const cortina = new THREE.Mesh(new THREE.PlaneGeometry(0.6, 1.0), mTela); cortina.position.set(L.x + 0.44, 1.2, L.z - 0.6); cortina.rotation.y = Math.PI / 2; camarote.add(cortina);
   for (let k = 0; k < 2; k++) camarote.add(caja(0.7, 0.03, 0.85, mOscuro, L.x + 0.05, 0.12 + k * 0.2, L.z + (k ? 0.45 : -0.45)).translateX(0.42).translateX(-0.4)); // cajones (frente)
   const espada = new THREE.Group(); espada.position.set(L.x + 0.55, 0.035, L.z + 0.35); espada.rotation.y = 0.35; camarote.add(espada);
-  { const hoja = new THREE.Mesh(new THREE.BoxGeometry(0.85, 0.015, 0.05), lambert({ map: texEspada() })); hoja.position.x = -0.2; espada.add(hoja); espada.add(caja(0.03, 0.03, 0.18, mLaton, 0.24, 0, 0), caja(0.16, 0.035, 0.035, lambert({ color: "#2a1e18" }), 0.33, 0, 0), new THREE.Mesh(new THREE.SphereGeometry(0.025, 8, 6), mLaton).translateX(0.42)); }
+  { const hoja = new THREE.Mesh(new THREE.BoxGeometry(0.85, 0.015, 0.06), lambert({ map: texEspada() })); hoja.position.x = -0.2; espada.add(hoja); espada.add(caja(0.03, 0.03, 0.18, mLaton, 0.24, 0, 0), caja(0.16, 0.035, 0.035, lambert({ color: "#2a1e18" }), 0.33, 0, 0), new THREE.Mesh(new THREE.SphereGeometry(0.025, 8, 6), mLaton).translateX(0.42)); }
   // cama de la niña con barandal y su muñeca; juguetes en el piso
   const cama = new THREE.Group(); cama.position.set(-1.0, 0, -1.45); camarote.add(cama);
   cama.add(caja(1.1, 0.3, 0.6, mMueble, 0, 0.2, 0), caja(1.04, 0.08, 0.54, lambert({ color: "#e0d8c4" }), 0, 0.38, 0), caja(0.7, 0.07, 0.56, lambert({ color: "#a8606a" }), 0.15, 0.44, 0));
   for (let k = 0; k <= 8; k++) cama.add(caja(0.03, 0.32, 0.03, mOscuro, -0.52 + k * 0.13, 0.55, 0.29)); cama.add(caja(1.1, 0.04, 0.04, mOscuro, 0, 0.72, 0.29));
-  const muneca = new THREE.Group(); muneca.position.set(-0.3, 0.45, 0.05); cama.add(muneca);
+  const muneca = new THREE.Group(); muneca.position.set(-0.3, 0.45, 0.05); muneca.scale.setScalar(1.6); cama.add(muneca);
   muneca.add(new THREE.Mesh(new THREE.SphereGeometry(0.07, 12, 10), lambert({ color: "#f0d8c0" })).translateY(0.2), caja(0.14, 0.18, 0.09, lambert({ color: "#3a6aa0" }), 0, 0.08, 0), new THREE.Mesh(new THREE.SphereGeometry(0.075, 12, 8, 0, Math.PI * 2, 0, 1.6), lambert({ color: "#e0b040" })).translateY(0.21));
   muneca.rotation.z = -0.4;
   const caballito = new THREE.Group(); caballito.position.set(-0.2, 0, -0.55); camarote.add(caballito); // caballito de madera con ruedas
@@ -512,7 +514,7 @@ export function crearEscenario() {
   for (const [x, z] of [[-0.3, 1.9], [-0.12, 1.88]]) { rancho.add(caja(0.1, 0.32, 0.12, lambert({ color: "#1e1e1e" }), x, 0.16, z), caja(0.1, 0.06, 0.24, lambert({ color: "#1e1e1e" }), x, 0.03, z - 0.06)); }
   // repisa con las pipas, la bolsa de tabaco y una taza
   rancho.add(caja(1.0, 0.04, 0.2, mMueble, 0.0, 1.45, R.z0 + 0.1), caja(1.0, 0.18, 0.03, mOscuro, 0.0, 1.38, R.z0 + 0.02));
-  const pipa = (x: number, giro: number) => { const p = new THREE.Group(); p.position.set(x, 1.49, R.z0 + 0.12); p.rotation.y = giro; p.add(cil(0.025, 0.02, 0.06, lambert({ color: "#5a3a22" }), 0, 0.03, 0, 10), palo(V(0, 0.01, 0), V(0.17, 0.03, 0), 0.007, lambert({ color: "#2a1a10" }), 5)); rancho.add(p); };
+  const pipa = (x: number, giro: number) => { const p = new THREE.Group(); p.position.set(x, 1.49, R.z0 + 0.12); p.rotation.y = giro; p.add(cil(0.038, 0.03, 0.08, lambert({ color: "#6a3e20" }), 0, 0.04, 0, 12), cil(0.03, 0.03, 0.005, lambert({ color: "#1a1008" }), 0, 0.081, 0, 12), palo(V(0.03, 0.015, 0), V(0.24, 0.05, 0), 0.011, lambert({ color: "#2a1a10" }), 6)); rancho.add(p); };
   pipa(-0.35, 0.2); pipa(-0.12, -0.3); pipa(0.1, 0.5);
   rancho.add(new THREE.Mesh(new THREE.SphereGeometry(0.06, 10, 8), lambert({ color: "#8a6a40" })).translateX(0.32).translateY(1.51).translateZ(R.z0 + 0.12), cil(0.04, 0.035, 0.08, lambert({ color: "#d8d4c8" }), 0.42, 1.51, R.z0 + 0.12, 10));
   const farolR = new THREE.Group(); farolR.position.set(0, R.alto - 0.15, 0.2); rancho.add(farolR);
@@ -521,7 +523,7 @@ export function crearEscenario() {
   const luzR = new THREE.PointLight("#ffc080", 1.6, 5, 1.6); luzR.position.set(0, -0.3, 0); farolR.add(luzR);
   // escalera a la escotilla, con luz que baja
   for (let k = 0; k < 6; k++) rancho.add(caja(0.6, 0.04, 0.14, mMueble, -0.2, 0.25 + k * 0.3, R.z1 - 0.5 - k * 0.04));
-  const rayo = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 2.0), new THREE.MeshBasicMaterial({ map: lienzo((c, w, h) => { const gr = c.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, "rgba(220,228,236,0.45)"); gr.addColorStop(1, "rgba(220,228,236,0)"); c.fillStyle = gr; c.fillRect(0, 0, w, h); }, 16, 64), transparent: true, depthWrite: false, toneMapped: false })); rayo.position.set(-0.2, 1.0, R.z1 - 0.7); rayo.layers.set(NOINK); rancho.add(rayo);
+  const rayo = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 2.0), new THREE.MeshBasicMaterial({ map: lienzo((c, w, h) => { const gr = c.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, "rgba(220,228,236,0.45)"); gr.addColorStop(1, "rgba(220,228,236,0)"); c.fillStyle = gr; c.fillRect(0, 0, w, h); }, 16, 64), transparent: true, depthWrite: false, toneMapped: false })); rayo.position.set(-0.2, 1.0, R.z1 - 0.7); rayo.layers.set(NOINK); void rayo;
 
   // ================================================================ la bodega: barriles, agua, víveres
   const bodega = new THREE.Group(); bodega.position.set(BODEGA.x, 0, BODEGA.z); raiz.add(bodega);
@@ -555,14 +557,14 @@ export function crearEscenario() {
   for (const [x, y] of [[-0.6, 0.25], [-0.6, 0.75], [0.0, 0.25]]) viveres.add(caja(0.55, 0.5, 0.45, mCajaP, x, y, 0.55));
   for (const x of [-0.9, -0.5, 0.2]) { viveres.add(cil(0.006, 0.006, 0.4, mOscuro, x, BO.alto - 0.2, 0.2, 4)); const j = new THREE.Mesh(new THREE.SphereGeometry(0.13, 10, 8), lambert({ color: "#8a4a2a" })); j.scale.set(0.8, 1.4, 0.8); j.position.set(x, BO.alto - 0.55, 0.2); viveres.add(j); }
   // el agua que entró (casi un metro): plano transparente que sube y baja
-  const aguaB = new THREE.Mesh(new THREE.PlaneGeometry(BO.x1 - BO.x0 - 0.3, BO.z1 - BO.z0 - 0.2), new THREE.MeshLambertMaterial({ color: "#2a4a52", transparent: true, opacity: 0.78, emissive: "#0a1a1e", depthWrite: false }));
-  aguaB.rotation.x = -Math.PI / 2; aguaB.position.y = 0.9; aguaB.visible = false; bodega.add(aguaB);
+  const aguaB = new THREE.Mesh(new THREE.PlaneGeometry(BO.x1 - BO.x0 - 0.3, BO.z1 - BO.z0 - 0.2), new THREE.MeshLambertMaterial({ color: "#4a7a82", transparent: true, opacity: 0.62, emissive: "#0e2226", depthWrite: false }));
+  aguaB.rotation.x = -Math.PI / 2; aguaB.position.y = 0.72; aguaB.visible = false; bodega.add(aguaB);
   const farolB = new THREE.Group(); farolB.position.set(0.6, BO.alto - 0.1, 2.2); bodega.add(farolB);
   farolB.add(cil(0.006, 0.006, 0.3, mOscuro, 0, -0.15, 0, 4), caja(0.15, 0.22, 0.15, lambert({ color: "#2a2a2a" }), 0, -0.4, 0), caja(0.1, 0.15, 0.1, brillo("#ffd090"), 0, -0.4, 0));
   const haloB = destello(255, 200, 130, 1.2, 0.45); haloB.position.set(0, -0.4, 0); farolB.add(haloB);
   const luzB = new THREE.PointLight("#ffc080", 2.2, 7, 1.5); luzB.position.set(0, -0.45, 0); farolB.add(luzB);
   for (let k = 0; k < 7; k++) bodega.add(caja(0.6, 0.04, 0.14, mMueble, -1.9, 0.2 + k * 0.36, BO.z0 + 2.6 + k * 0.05)); // escalera
-  const rayoB = rayo.clone(); rayoB.position.set(-1.9, 1.4, BO.z0 + 2.9); rayoB.scale.set(1.2, 1.4, 1); bodega.add(rayoB);
+  
   const vapB: THREE.Sprite[] = []; // vapores (teoría): verdosos, suben de los barriles
   for (let k = 0; k < 8; k++) { const v = destello(160, 210, 160, 1.4, 0); v.material.blending = THREE.NormalBlending; bodega.add(v); vapB.push(v); }
 
