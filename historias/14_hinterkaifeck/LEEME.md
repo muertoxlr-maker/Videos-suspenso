@@ -31,4 +31,6 @@
   render anterior desde su cuadro 180 («Hinterkaifeck era…»), que cae justo en el corte de toma.
 - Sonidos de suspenso (pedido del usuario): subidas cortas, golpes graves, piano tétrico y un chillido de violín solo
   en los momentos fuertes (`mezcla.py`, bus `suspenso`); ninguno dura más de 3 s.
+- La toma del granero («uno por uno», cuadros 1761–1843) se dibujó de nuevo aparte: la sombra va adentro, detrás de
+  las hojas abiertas (antes atravesaba las puertas, que abren hacia adentro).
 - Audio: −14.0 LUFS, pico −1.9 dBFS.
