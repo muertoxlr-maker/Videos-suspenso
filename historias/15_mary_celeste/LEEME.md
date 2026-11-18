@@ -25,3 +25,9 @@
 
 ## Video final
 - 3815 cuadros, 1080×1920, 127.2 s (`caricatura3d/salida/mary/mary_celeste.mp4`, no se sube a git). −14.0 LUFS.
+
+## Versión 2 (color, pedido del usuario: «se ven muy opacos»)
+- Sin volver a dibujar: corrección de color sobre el video final con ffmpeg (más contraste sin aplastar las sombras,
+  más saturación, madera un poco más cálida, más nitidez) → `caricatura3d/salida/mary/mary_celeste_v2.mp4`. Filtro:
+  `curves=all='0/0.015 0.12/0.13 0.3/0.32 0.55/0.6 0.8/0.87 1/1',eq=contrast=1.06:saturation=1.3,colorbalance=rm=0.03:gm=0.01:bm=-0.03:rh=0.02:bh=-0.02,vibrance=intensity=0.3,unsharp=5:5:0.7`
+- Revisión de parpadeo repetida: solo marca movimiento (barco que se mece, farol que se balancea).
