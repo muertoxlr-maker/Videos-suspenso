@@ -31,3 +31,9 @@
   más saturación, madera un poco más cálida, más nitidez) → `caricatura3d/salida/mary/mary_celeste_v2.mp4`. Filtro:
   `curves=all='0/0.015 0.12/0.13 0.3/0.32 0.55/0.6 0.8/0.87 1/1',eq=contrast=1.06:saturation=1.3,colorbalance=rm=0.03:gm=0.01:bm=-0.03:rh=0.02:bh=-0.02,vibrance=intensity=0.3,unsharp=5:5:0.7`
 - Revisión de parpadeo repetida: solo marca movimiento (barco que se mece, farol que se balancea).
+
+## Versión 3
+- La toma «Un mes después, otro barco, el Dei Gratia…» (cuadros 886–1014) se veía rara: nuca enorme y una cuerda negra
+  cruzando. Ahora es una toma abierta desde el agua (Dei Gratia adelante, Mary Celeste a lo lejos), sin la tira de espuma
+  del Dei Gratia (se salía del casco). Se dibujó solo ese pedazo (`salida/mary/fix2/`), se pegó en `video_mudo3.mp4` y se
+  le puso la misma corrección de color → `mary_celeste_v3.mp4`. Parpadeo: limpio.
