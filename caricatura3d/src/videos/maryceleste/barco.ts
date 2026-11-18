@@ -102,7 +102,7 @@ const texVela = (rota: number) => lienzo((c, w, h) => { // lona: costuras suaves
     c.globalCompositeOperation = "source-over";
   }
 }, 512, 512);
-const texRed = () => lienzo((c, w, h) => { c.clearRect(0, 0, w, h); c.fillStyle = "rgba(60,50,40,0.95)"; for (let y = 6; y < h; y += 32) c.fillRect(0, y, w, 6); }, 64, 256); // flechates (escalones de cuerda)
+const texRed = () => lienzo((c, w, h) => { c.clearRect(0, 0, w, h); c.filter = "blur(3px)"; c.fillStyle = "rgba(60,50,40,0.8)"; for (let y = 10; y < h; y += 64) c.fillRect(0, y, w, 14); c.filter = "none"; }, 64, 256); // flechates (escalones de cuerda)
 const texMapaMar = () => lienzo((c, w, h) => { // carta náutica clavada en la pared del camarote
   c.fillStyle = "#d8ccaa"; c.fillRect(0, 0, w, h); manchas(c, w, h, 16, "120,90,50", 0.3);
   c.strokeStyle = "rgba(90,70,40,0.5)"; c.lineWidth = 2; for (let k = 1; k < 6; k++) { c.beginPath(); c.moveTo(k * w / 6, 0); c.lineTo(k * w / 6, h); c.stroke(); c.beginPath(); c.moveTo(0, k * h / 6); c.lineTo(w, k * h / 6); c.stroke(); }
@@ -281,22 +281,22 @@ export const crearBarco = (nombre: string, negro = false) => {
   g.add(palo(V(0, B.cubierta + 9.0, MM - 0.2), V(0, B.cubierta + 10.6, MM - 7.5), 0.09, mOsc));
   { const r = palo(V(0, B.cubierta + 1.85, MM - 0.6), V(0, B.cubierta + 2.0, B.popa + 1.2), 0.24, mBlanco, 10); g.add(r); }
   // jarcias (obenques) con flechates, de las cofas a la borda
-  const mJar = lambert({ color: "#2a241e" }), mFle = new THREE.MeshLambertMaterial({ map: texRed(), transparent: true, alphaTest: 0.35, side: THREE.DoubleSide });
+  const mJar = lambert({ color: "#2a241e" }), mFle = new THREE.MeshLambertMaterial({ map: texRed(), transparent: true, opacity: 0.85, depthWrite: false, side: THREE.DoubleSide });
   for (const zz of [MP, MM]) for (const s of [-1, 1]) {
     const u = (zz - 1.2 - B.popa) / (B.proa - B.popa), xb = s * (mitad(u) - 0.05), yr = arriba(u);
     const pts = [-0.8, -0.27, 0.27, 0.8].map((d) => [V(s * 0.55, B.cubierta + 9.1, zz + d * 0.4), V(xb, yr, zz - 1.2 + d)] as const);
-    pts.forEach(([a, b]) => g.add(palo(a, b, 0.025, mJar, 4)));
+    pts.forEach(([a, b]) => g.add(palo(a, b, 0.04, mJar, 5)));
     // flechates: un plano con escalones entre los obenques de en medio
     const a0 = pts[0][0], a1 = pts[3][0], b0 = pts[0][1], b1 = pts[3][1];
     const geo = new THREE.BufferGeometry(); geo.setAttribute("position", new THREE.Float32BufferAttribute([b0.x, b0.y, b0.z, b1.x, b1.y, b1.z, a0.x, a0.y, a0.z, a1.x, a1.y, a1.z], 3)); geo.setAttribute("uv", new THREE.Float32BufferAttribute([0, 0, 1, 0, 0, 1, 1, 1], 2)); geo.setIndex([0, 1, 2, 2, 1, 3]); geo.computeVertexNormals();
-    const fl = new THREE.Mesh(geo, mFle); (fl.material as THREE.MeshLambertMaterial).map!.repeat.set(1, 6); g.add(fl);
-    g.add(palo(V(s * 0.3, B.cubierta + 15.1, zz), V(xb, yr, zz - 2.4), 0.02, mJar, 4)); // obenque de arriba
+    const fl = new THREE.Mesh(geo, mFle); (fl.material as THREE.MeshLambertMaterial).map!.repeat.set(1, 3); g.add(fl);
+    g.add(palo(V(s * 0.3, B.cubierta + 15.1, zz), V(xb, yr, zz - 2.4), 0.035, mJar, 5)); // obenque de arriba
   }
   // estays: del tope del trinquete al bauprés; del mayor al trinquete
   const bauA = V(0, arriba(1) - 0.2, B.proa - 0.5), bauB = V(0, arriba(1) + 1.6, B.proa + 6.5);
   g.add(palo(bauA, bauB, 0.12, mOsc, 8), palo(V(0, arriba(1) + 0.8, B.proa + 3), V(0, arriba(1) + 1.25, B.proa + 9), 0.07, mOsc, 6));
-  g.add(palo(V(0, top - 1.5, MP), V(0, arriba(1) + 1.6, B.proa + 6.4), 0.025, mJar, 4), palo(V(0, B.cubierta + 9.2, MP), V(0, arriba(1) + 0.2, B.proa), 0.03, mJar, 4));
-  g.add(palo(V(0, top, MM), V(0, B.cubierta + 15.3, MP), 0.025, mJar, 4), palo(V(0, B.cubierta + 9.2, MM), V(0, B.cubierta + 2.3, MP - 0.5), 0.03, mJar, 4));
+  g.add(palo(V(0, top - 1.5, MP), V(0, arriba(1) + 1.6, B.proa + 6.4), 0.035, mJar, 5), palo(V(0, B.cubierta + 9.2, MP), V(0, arriba(1) + 0.2, B.proa), 0.04, mJar, 5));
+  g.add(palo(V(0, top, MM), V(0, B.cubierta + 15.3, MP), 0.035, mJar, 5), palo(V(0, B.cubierta + 9.2, MM), V(0, B.cubierta + 2.3, MP - 0.5), 0.04, mJar, 5));
   // foques: uno puesto (triángulo) y otro suelto, colgando roto
   const foque = (a: THREE.Vector3, b: THREE.Vector3, c: THREE.Vector3, m: THREE.Material, panza: number) => {
     const geo = new THREE.BufferGeometry(); const N = 6, p: number[] = [], uvv: number[] = [], ii: number[] = [];
@@ -321,8 +321,10 @@ export const crearBarco = (nombre: string, negro = false) => {
     }
   };
   // espuma donde el casco toca el agua (suave)
-  const mEsp = new THREE.MeshBasicMaterial({ map: lienzo((c, w, h) => { const gr = c.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, "rgba(210,220,224,0)"); gr.addColorStop(0.5, "rgba(210,220,224,0.55)"); gr.addColorStop(1, "rgba(210,220,224,0)"); c.fillStyle = gr; c.fillRect(0, 0, w, h); }, 16, 64), transparent: true, depthWrite: false });
-  for (const s of [-1, 1]) { const e = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 28), mEsp); e.rotation.x = -Math.PI / 2; e.position.set(s * (B.manga + 0.1), 0.04, 0); e.layers.set(NOINK); g.add(e); }
+  const mEsp = new THREE.MeshBasicMaterial({ map: lienzo((c, w, h) => { const gr = c.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, "rgba(210,220,224,0)"); gr.addColorStop(0.5, "rgba(210,220,224,0.55)"); gr.addColorStop(1, "rgba(210,220,224,0)"); c.fillStyle = gr; c.fillRect(0, 0, w, h); }, 16, 64), transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -8, polygonOffsetUnits: -8 });
+  for (const s of [-1, 1]) { const e = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 28), mEsp); e.rotation.x = -Math.PI / 2; e.position.set(s * (B.manga + 0.1), 0.15, 0); e.layers.set(NOINK); g.add(e); }
+  // las jarcias (cuerdas finas) sin contorno de tinta: las rayitas de tinta en líneas tan delgadas parpadean
+  g.traverse((o) => { const m = (o as THREE.Mesh).material; if (m === mJar || m === mFle || m === mEsp) o.layers.set(NOINK); });
   return { g, rueda, puerta, cuerdaRota, ondear, campana: bell, hueco };
 };
 export type Barco = ReturnType<typeof crearBarco>;
@@ -380,7 +382,7 @@ export function crearEscenario() {
   const mMar = lambert({ color: "#ffffff", map: aguas.dia, emissive: "#0a1418" });
   const mar = new THREE.Mesh(new THREE.PlaneGeometry(2400, 2400), mMar); mar.rotation.x = -Math.PI / 2; afuera.add(mar);
   const reflejo = new THREE.Mesh(new THREE.PlaneGeometry(30, 300), new THREE.MeshBasicMaterial({ map: lienzo((c, w, h) => { c.clearRect(0, 0, w, h); c.filter = "blur(3px)"; for (let k = 0; k < 60; k++) { const y = rz(k) * h, a = (1 - Math.abs(y / h - 0.5) * 2) * 0.6; const ww = w * (0.2 + rz(k + 3) * 0.6); c.fillStyle = `rgba(200,215,240,${a})`; c.fillRect(w / 2 - ww / 2, y, ww, 5); } }, 128, 512), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false, opacity: 0.5 }));
-  reflejo.rotation.x = -Math.PI / 2; reflejo.layers.set(NOINK); afuera.add(reflejo);
+  reflejo.rotation.x = -Math.PI / 2; reflejo.position.y = 0.1; reflejo.layers.set(NOINK); afuera.add(reflejo);
   const mc = crearBarco("MARY CELESTE"); afuera.add(mc.g);
   const otro = crearBarco("DEI GRATIA"); otro.g.visible = false; afuera.add(otro.g);
   const pirata = crearBarco("", true); pirata.g.visible = false; afuera.add(pirata.g);

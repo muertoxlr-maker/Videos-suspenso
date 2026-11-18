@@ -124,7 +124,7 @@ const PLANOS: Plano[] = [
   // 25 · La última anotación era del 25 de noviembre. Todo parecía normal.  (la pizarra del diario)
   { w: 156, lugar: "camarote", foco: 0.45, cInf: 9, ini: c(CA(0.82, 1.45, -0.75), CA(0.85, 0.83, -1.44), 52), fin: c(CA(0.82, 1.4, -0.85), CA(0.85, 0.83, -1.44), 50), hacer: () => {} },
   // 26 · Durante diez días, el barco navegó solo.  (la cámara le da la vuelta)
-  { w: 167, lugar: "mar", hora: "niebla", mece: 1, foco: 40, cInf: 5, ini: c([30, 8, -30], [0, 6, 0], 44), fin: c([-12, 8, -42], [0, 6, 0], 44), hacer: () => {} },
+  { w: 167, lugar: "mar", hora: "niebla", mece: 1, foco: 40, cInf: 5, ini: c([32, 8, -32], [0, 6, 0], 44), fin: c([20, 8, -40], [0, 6, 0], 44), hacer: () => {} },
   // 27 · En la bodega había casi un metro de agua.
   { w: 174, lugar: "bodega", foco: 3, cInf: 7, ini: c(BO(1.0, 1.45, -1.6), BO(0.4, 0.7, 3.0), 56), fin: c(BO(0.9, 1.4, -0.9), BO(0.4, 0.7, 3.0), 54), hacer: ({ m }) => { m.h.aguaB.visible = true; } },
   // 28 · Nueve barriles de alcohol estaban vacíos.  (los barriles sin tapa, desde arriba)
@@ -300,7 +300,7 @@ class Mundo {
       h.amb.intensity = noche ? 0.35 : tarde ? 0.5 : 0.6; h.hemi.intensity = noche ? 0.45 : tarde ? 0.6 : 0.8;
       h.sol.intensity = noche ? 1.1 : tarde ? 1.3 : 1.4; h.sol.color.set(noche ? "#9ab2e8" : tarde ? "#ffb88a" : "#d8dce4");
       h.sol.position.set(noche ? -120 : tarde ? 80 : -40, noche ? 110 : tarde ? 20 : 50, noche ? 330 : tarde ? -60 : 30);
-      if (noche) { const cp = this.cam.position, dx = -120 - cp.x, dz = 330 - cp.z, L = Math.hypot(dx, dz); h.reflejo.position.set(cp.x + dx / L * 160, 0.03, cp.z + dz / L * 160); h.reflejo.rotation.set(-Math.PI / 2, 0, Math.atan2(-dx / L, -dz / L)); }
+      if (noche) { const cp = this.cam.position, dx = -120 - cp.x, dz = 330 - cp.z, L = Math.hypot(dx, dz); h.reflejo.position.set(cp.x + dx / L * 160, 0.1, cp.z + dz / L * 160); h.reflejo.rotation.set(-Math.PI / 2, 0, Math.atan2(-dx / L, -dz / L)); }
       if (tarde) h.puerto.visible = true;
       const m = pl.mece ?? 0;
       if (m) { h.mc.g.position.y = 0.12 * m * Math.sin(t * 0.8); h.mc.g.rotation.z = 0.035 * m * Math.sin(t * 0.6); h.mc.g.rotation.x += 0.012 * m * Math.sin(t * 0.7 + 1); }
