@@ -474,8 +474,8 @@ export function crearEscenario() {
   esc.add(caja(1.2, 0.6, 0.06, mOscuro, 0, ESCRITORIO.alto + 0.33, -0.27));
   for (let r = 0; r < 2; r++) for (let k = 0; k < 5; k++) { esc.add(caja(0.2, 0.24, 0.24, mMueble, -0.46 + k * 0.23, ESCRITORIO.alto + 0.18 + r * 0.27, -0.14)); esc.add(caja(0.17, 0.2, 0.02, brillo("#140e0a"), -0.46 + k * 0.23, ESCRITORIO.alto + 0.18 + r * 0.27, -0.015)); }
   const cajaSext = new THREE.Group(); cajaSext.position.set(-0.25, ESCRITORIO.alto + 0.03, 0.12); esc.add(cajaSext);
-  cajaSext.add(caja(0.36, 0.1, 0.3, mMueble, 0, 0.05, 0), caja(0.31, 0.02, 0.25, lambert({ color: "#3a1a3a" }), 0, 0.09, 0));
-  const hueca = new THREE.Mesh(new THREE.CircleGeometry(0.1, 3, 0.4, 1.0), lambert({ color: "#1e0c1e" })); hueca.rotation.x = -Math.PI / 2; hueca.position.set(0, 0.105, 0); cajaSext.add(hueca); // la forma del sextante, sin sextante
+  cajaSext.add(caja(0.36, 0.1, 0.3, mMueble, 0, 0.05, 0), caja(0.31, 0.02, 0.25, lambert({ color: "#3a1a3a" }), 0, 0.098, 0));
+  const hueca = new THREE.Mesh(new THREE.CircleGeometry(0.1, 3, 0.4, 1.0), lambert({ color: "#1e0c1e" })); hueca.rotation.x = -Math.PI / 2; hueca.position.set(0, 0.114, 0); cajaSext.add(hueca); // la forma del sextante, sin sextante
   const tapaS = caja(0.36, 0.03, 0.3, mMueble, 0, 0.25, -0.17); tapaS.rotation.x = -1.3; cajaSext.add(tapaS);
   const cajaCrono = new THREE.Group(); cajaCrono.position.set(0.25, ESCRITORIO.alto + 0.03, 0.12); esc.add(cajaCrono);
   cajaCrono.add(caja(0.22, 0.14, 0.22, mMueble, 0, 0.07, 0), cil(0.07, 0.07, 0.02, lambert({ color: "#1e0c1e" }), 0, 0.14, 0, 16));
