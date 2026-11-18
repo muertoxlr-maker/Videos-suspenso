@@ -322,10 +322,11 @@ export const crearBarco = (nombre: string, negro = false) => {
   };
   // espuma donde el casco toca el agua (suave)
   const mEsp = new THREE.MeshBasicMaterial({ map: lienzo((c, w, h) => { const gr = c.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, "rgba(210,220,224,0)"); gr.addColorStop(0.5, "rgba(210,220,224,0.55)"); gr.addColorStop(1, "rgba(210,220,224,0)"); c.fillStyle = gr; c.fillRect(0, 0, w, h); }, 16, 64), transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -8, polygonOffsetUnits: -8 });
-  for (const s of [-1, 1]) { const e = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 28), mEsp); e.rotation.x = -Math.PI / 2; e.position.set(s * (B.manga + 0.1), 0.15, 0); e.layers.set(NOINK); g.add(e); }
+  const espuma: THREE.Mesh[] = [];
+  for (const s of [-1, 1]) { const e = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 28), mEsp); e.rotation.x = -Math.PI / 2; e.position.set(s * (B.manga + 0.1), 0.15, 0); e.layers.set(NOINK); g.add(e); espuma.push(e); }
   // las jarcias (cuerdas finas) sin contorno de tinta: las rayitas de tinta en líneas tan delgadas parpadean
   g.traverse((o) => { const m = (o as THREE.Mesh).material; if (m === mJar || m === mFle || m === mEsp) o.layers.set(NOINK); });
-  return { g, rueda, puerta, cuerdaRota, ondear, campana: bell, hueco };
+  return { g, rueda, puerta, cuerdaRota, ondear, campana: bell, hueco, espuma };
 };
 export type Barco = ReturnType<typeof crearBarco>;
 

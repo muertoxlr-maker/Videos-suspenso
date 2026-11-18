@@ -88,8 +88,8 @@ const PLANOS: Plano[] = [
   { w: 59, lugar: "mar", hora: "dia", balanceo: 0.6, foco: 4.4, cInf: 7, ini: c([2.0, 3.75, -0.8], [1.8, 3.0, -5.2], 48), fin: c([1.95, 3.7, -1.3], [1.8, 3.0, -5.2], 46), hacer: ({ f, m }) => { m.zarpa(); m.familia(f, 1); } },
   // 8 · y siete marineros.  (en la proa, en fila)
   { w: 68, lugar: "mar", hora: "dia", balanceo: 0.6, foco: 5.2, cInf: 7, ini: c([0.4, 4.2, 13.9], [0, 3.1, 8], 58), fin: c([0.3, 4.1, 13.5], [0, 3.1, 8], 56), hacer: ({ f, m }) => { m.zarpa(); m.marineros(f); } },
-  // 9 · Un mes después, otro barco, el Dei Gratia, lo vio a lo lejos,  (el capitán del Dei Gratia, de espaldas, ve al Mary Celeste)
-  { w: 71, lugar: "mar", hora: "dia", mece: 1, balanceo: 0.8, foco: 2.6, cInf: 6, ini: c(enDG(-0.9, 3.7, 9.6), [0, 5, 0], 34), fin: c(enDG(-0.8, 3.65, 10.2), [0, 5, 0], 30), hacer: ({ f, m }) => { m.deiGratia(f, "ve"); } },
+  // 9 · Un mes después, otro barco, el Dei Gratia, lo vio a lo lejos,  (toma abierta desde el agua: el Dei Gratia adelante y el Mary Celeste a lo lejos)
+  { w: 71, lugar: "mar", hora: "dia", mece: 1, balanceo: 0.8, foco: 2.6, cInf: 6, ini: c(enDG(10, 8.5, -38), enDG(5, 4, 60), 42), fin: c(enDG(9.6, 8.3, -35), enDG(5, 4, 60), 41), hacer: ({ f, m }) => { m.deiGratia(f, "ve"); } },
   // 10 · cerca de las islas Azores.  (mapa: de Nueva York a las Azores; aquí lo encontraron)
   { w: 84, lugar: "mar", hora: "dia", mapa: true, foco: 90, cInf: 4, ini: c([50, 60, -40], [0, 0, 0], 40), fin: c([50, 60, -40], [0, 0, 0], 40), hacer: () => {} },
   // 11 · Algo andaba mal: el Mary Celeste se movía raro, como si nadie lo manejara.  (da vueltas, las velas aletean)
@@ -215,8 +215,8 @@ class Mundo {
     });
   }
   deiGratia(f: number, que: "ve" | "grita") {
-    const h = this.h; h.otro.g.visible = true; h.otro.g.position.set(DG.x, 0, DG.z); h.otro.g.rotation.set(0, DG.giro, 0);
-    if (que === "ve") this.ver("morehouse", this.delante(71, 3.0, -0.3, Y), { ...DIA, boca: "o", brazoDer: [2.2, -0.6], mirarY: 0.1 }, [1, 0]);
+    const h = this.h; h.otro.g.visible = true; h.otro.g.position.set(DG.x, 0, DG.z); h.otro.g.rotation.set(0, DG.giro, 0); h.otro.espuma.forEach((e) => { e.visible = que !== "ve"; }); // la tira recta de espuma se sale del casco en la toma abierta
+    if (que === "ve") this.ver("morehouse", enDG(0.6, Y, 11.8), { ...DIA, boca: "o", brazoDer: [2.2, -0.6], mirarY: 0.1 }, [1, 0]);
     else {
       this.ver("deveau", enDG(-0.6, Y, 11.4), { ...DIA, boca: "grito", bocaAbre: 1, brazoIzq: [2.5, 0.4 + 0.3 * Math.sin(f * 0.5)], brazoDer: [2.5, 0.4 - 0.3 * Math.sin(f * 0.5)], giro: 0.6, mirarX: 0.8 });
       this.ver("morehouse", enDG(-1.6, Y, 10.7), { ...DIA, boca: "linea", mirarX: 0.8, giro: 0.5, cejasMiedo: 0.4 });
