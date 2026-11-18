@@ -19,3 +19,9 @@
 - Parpadeo: las jarcias finas iban con contorno y temblaban en la toma que rodea el barco. Se pasaron a la capa sin
   contorno, los flechastes con textura suave y la espuma con desfase; la vuelta de cámara es más lenta. Clips de prueba
   limpios antes del render largo.
+- En el video completo, el forro morado de la caja del sextante parpadeaba (misma altura que la tapa de la caja). Se
+  subió un poco y se volvieron a dibujar solo las tomas del escritorio (cuadros 1819–2082, `salida/mary/fix/`). Lo
+  demás que marca la herramienta es movimiento: velas que ondean, el barco que se mece, letreros que aparecen.
+
+## Video final
+- 3815 cuadros, 1080×1920, 127.2 s (`caricatura3d/salida/mary/mary_celeste.mp4`, no se sube a git). −14.0 LUFS.
