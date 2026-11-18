@@ -517,8 +517,8 @@ export function crearEscenario() {
   const pipa = (x: number, giro: number) => { const p = new THREE.Group(); p.position.set(x, 1.49, R.z0 + 0.12); p.rotation.y = giro; p.add(cil(0.038, 0.03, 0.08, lambert({ color: "#6a3e20" }), 0, 0.04, 0, 12), cil(0.03, 0.03, 0.005, lambert({ color: "#1a1008" }), 0, 0.081, 0, 12), palo(V(0.03, 0.015, 0), V(0.24, 0.05, 0), 0.014, lambert({ color: "#2a1a10" }), 6)); rancho.add(p); };
   pipa(-0.42, 0.1); pipa(-0.12, -0.12); pipa(0.12, 0.15);
   rancho.add(new THREE.Mesh(new THREE.SphereGeometry(0.06, 10, 8), lambert({ color: "#8a6a40" })).translateX(0.32).translateY(1.51).translateZ(R.z0 + 0.12), cil(0.04, 0.035, 0.08, lambert({ color: "#d8d4c8" }), 0.42, 1.51, R.z0 + 0.12, 10));
-  const farolR = new THREE.Group(); farolR.position.set(0, R.alto - 0.15, 0.2); rancho.add(farolR);
-  farolR.add(caja(0.14, 0.2, 0.14, lambert({ color: "#2a2a2a" }), 0, -0.25, 0), caja(0.1, 0.14, 0.1, brillo("#ffd090"), 0, -0.25, 0));
+  const farolR = new THREE.Group(); farolR.position.set(0.9, R.alto - 0.15, -1.3); rancho.add(farolR);
+  farolR.add(caja(0.16, 0.03, 0.16, lambert({ color: "#2a2a2a" }), 0, -0.14, 0), caja(0.16, 0.03, 0.16, lambert({ color: "#2a2a2a" }), 0, -0.36, 0), caja(0.12, 0.19, 0.12, brillo("#ffd090"), 0, -0.25, 0), cil(0.006, 0.006, 0.14, lambert({ color: "#2a2a2a" }), 0, -0.07, 0, 4));
   const haloR = destello(255, 200, 130, 1.0, 0.45); haloR.position.set(0, -0.25, 0); farolR.add(haloR);
   const luzR = new THREE.PointLight("#ffc080", 1.6, 5, 1.6); luzR.position.set(0, -0.3, 0); farolR.add(luzR);
   // escalera a la escotilla, con luz que baja
@@ -560,7 +560,7 @@ export function crearEscenario() {
   const aguaB = new THREE.Mesh(new THREE.PlaneGeometry(BO.x1 - BO.x0 - 0.3, BO.z1 - BO.z0 - 0.2), new THREE.MeshLambertMaterial({ color: "#4a7a82", transparent: true, opacity: 0.62, emissive: "#0e2226", depthWrite: false }));
   aguaB.rotation.x = -Math.PI / 2; aguaB.position.y = 0.72; aguaB.visible = false; bodega.add(aguaB);
   const farolB = new THREE.Group(); farolB.position.set(0.6, BO.alto - 0.1, 2.2); bodega.add(farolB);
-  farolB.add(cil(0.006, 0.006, 0.3, mOscuro, 0, -0.15, 0, 4), caja(0.15, 0.22, 0.15, lambert({ color: "#2a2a2a" }), 0, -0.4, 0), caja(0.1, 0.15, 0.1, brillo("#ffd090"), 0, -0.4, 0));
+  farolB.add(cil(0.006, 0.006, 0.3, mOscuro, 0, -0.15, 0, 4), caja(0.17, 0.03, 0.17, lambert({ color: "#2a2a2a" }), 0, -0.29, 0), caja(0.17, 0.03, 0.17, lambert({ color: "#2a2a2a" }), 0, -0.51, 0), caja(0.13, 0.2, 0.13, brillo("#ffd090"), 0, -0.4, 0));
   const haloB = destello(255, 200, 130, 1.2, 0.45); haloB.position.set(0, -0.4, 0); farolB.add(haloB);
   const luzB = new THREE.PointLight("#ffc080", 2.2, 7, 1.5); luzB.position.set(0, -0.45, 0); farolB.add(luzB);
   for (let k = 0; k < 7; k++) bodega.add(caja(0.6, 0.04, 0.14, mMueble, -1.9, 0.2 + k * 0.36, BO.z0 + 2.6 + k * 0.05)); // escalera
