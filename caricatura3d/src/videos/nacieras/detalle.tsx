@@ -199,41 +199,101 @@ export const SalaNoche: React.FC<{ f: number; id: string; desenfoque?: number }>
   );
 };
 
-// ───────────────────────── busto de adulto (CJ, diseño propio) ─────────────────────────
-export type Gesto = { mirarX?: number; mirarY?: number; cabeza?: number; cejas?: number; boca?: "seria" | "abierta" | "media" };
-const CAB = "M -100 -60 C -104 -190 -50 -224 2 -224 C 56 -224 106 -190 102 -60 C 102 40 100 112 84 156 C 64 192 30 200 2 200 C -26 200 -60 192 -80 156 C -98 112 -100 40 -100 -60 Z";
-// tonos de piel
-const PIEL = "#8a573a", SOM = "#653d27", PROF = "#45281a", LUZ = "#b67c52", BORDE = "#e7a46a";
+// ───────────────────────── busto de adulto (CJ, diseño propio, hecho desde cero) ─────────────────────────
+// Proporciones medidas sobre la cara del juego: ancho/alto ≈ 0.7; cejas al 36 % del alto, ojos al 44 %,
+// punta de la nariz al 62 %, boca al 77 %. Estilo: formas limpias, pocas rayas, sombras suaves pintadas,
+// contorno grueso solo en la silueta.
+export type Gesto = { mirarX?: number; mirarY?: number; cabeza?: number; cejas?: number; boca?: "seria" | "abierta" };
+const PIEL = "#8a573a", SOM = "#673f28", PROF = "#47291a", LUZ = "#b47b52", BORDE = "#e7a46a";
+const CARA = "M -140 -60 C -146 -170 -80 -205 0 -205 C 80 -205 146 -170 140 -60 C 142 10 136 70 118 112 C 100 160 60 198 0 202 C -60 198 -100 160 -118 112 C -136 70 -142 10 -140 -60 Z";
+
+const CabezaCJ: React.FC<{ f: number; p: (k: string) => string; g: Gesto; semilla: number }> = ({ f, p, g, semilla }) => {
+  const u = (k: string) => `url(#${p(k)})`;
+  const cerr = parpadea(f, semilla), mx = (g.mirarX ?? 0) * 8, my = (g.mirarY ?? 0) * 4, ce = g.cejas ?? 0.5;
+  const ojoD = (cx: number) => `M ${cx - 30} -24 Q ${cx - 6} -42 ${cx + 28} -27 Q ${cx + 2} -10 ${cx - 30} -24 Z`;
+  const ojo = (cx: number, k: string) => (
+    <g>
+      <path d={ojoD(cx)} fill="#e9dccb" />
+      <defs><clipPath id={p("o" + k)}><path d={ojoD(cx)} /></clipPath></defs>
+      {!cerr && <g clipPath={u("o" + k)}>
+        <circle cx={cx + mx} cy={-27 + my} r={12} fill="#3e2416" /><circle cx={cx + mx} cy={-27 + my} r={5.5} fill="#0d0705" />
+        <circle cx={cx + mx + 4} cy={-31 + my} r={2.8} fill="#fff" />
+        <path d={`M ${cx - 34} -46 H ${cx + 34} V -30 Q ${cx} -34 ${cx - 34} -26 Z`} fill={PROF} opacity={0.75} />
+      </g>}
+      {cerr ? <path d={`M ${cx - 30} -24 Q ${cx} -12 ${cx + 28} -26`} fill="none" stroke={T} strokeWidth={6} strokeLinecap="round" />
+        : <path d={`M ${cx - 32} -22 Q ${cx - 6} -44 ${cx + 30} -27`} fill="none" stroke={T} strokeWidth={7} strokeLinecap="round" />}
+      {/* párpado pesado y ojera */}
+      <path d={`M ${cx - 30} -36 Q ${cx - 4} -54 ${cx + 30} -38`} fill="none" stroke={PROF} strokeWidth={4} strokeLinecap="round" opacity={0.9} />
+      <path d={`M ${cx - 22} -12 Q ${cx} -6 ${cx + 22} -16`} fill="none" stroke={PROF} strokeWidth={3} strokeLinecap="round" opacity={0.55} />
+    </g>
+  );
+  return (
+    <g>
+      <defs>
+        <clipPath id={p("cara")}><path d={CARA} /></clipPath>
+        <filter id={p("suave")} x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation={9} /></filter>
+        <pattern id={p("pelo")} width="12" height="10" patternUnits="userSpaceOnUse"><rect width="12" height="10" fill="#15100c" /><path d="M 2 8 l 3 -5 M 8 9 l 3 -5" stroke="#2c2018" strokeWidth="1.8" strokeLinecap="round" /></pattern>
+      </defs>
+      {/* orejas */}
+      {[-1, 1].map((d) => <g key={d}>
+        <path d={`M ${d * 136} -46 C ${d * 176} -62 ${d * 186} 40 ${d * 140} 66 Q ${d * 128} 70 ${d * 128} 54 Z`} fill={d < 0 ? SOM : PIEL} stroke={T} strokeWidth={5} strokeLinejoin="round" />
+        <path d={`M ${d * 146} -30 Q ${d * 168} 6 ${d * 146} 46`} fill="none" stroke={PROF} strokeWidth={5} strokeLinecap="round" />
+      </g>)}
+      <path d={CARA} fill={PIEL} />
+      <g clipPath={u("cara")}>
+        {/* sombras y luces suaves (la lámpara está a la derecha) */}
+        <g filter={u("suave")}>
+          <path d="M -160 -220 L -84 -220 Q -104 -60 -88 60 Q -76 150 -32 220 L -160 220 Z" fill={PROF} opacity={0.55} />
+          <path d="M -130 -60 Q -70 -76 -10 -52 Q -10 -10 -30 0 Q -80 6 -130 -10 Z M 130 -60 Q 70 -76 10 -52 Q 10 -10 30 0 Q 80 6 130 -10 Z" fill={PROF} opacity={0.75} />
+          <path d="M -104 40 Q -84 90 -64 140 L -110 140 Z" fill={PROF} opacity={0.5} />
+          <path d="M 70 40 Q 96 70 98 120 Q 80 96 66 80 Z" fill={SOM} opacity={0.6} />
+          <path d="M -40 66 Q 0 82 40 66 L 34 84 Q 0 92 -34 84 Z" fill={PROF} opacity={0.7} />
+          <path d="M -50 148 Q 0 166 50 148 L 44 170 Q 0 178 -44 170 Z" fill={PROF} opacity={0.55} />
+          <ellipse cx={0} cy={-140} rx={70} ry={40} fill={LUZ} opacity={0.75} />
+          <path d="M 4 -40 Q 10 0 14 38" stroke={LUZ} strokeWidth={16} opacity={0.6} strokeLinecap="round" fill="none" />
+          <ellipse cx={74} cy={20} rx={28} ry={34} fill={LUZ} opacity={0.6} />
+          <path d="M 128 -120 Q 150 0 112 140 L 170 140 L 170 -120 Z" fill={LUZ} opacity={0.85} />
+        </g>
+        <path d="M 126 -110 Q 140 0 108 130" fill="none" stroke={BORDE} strokeWidth={6} opacity={0.85} strokeLinecap="round" />
+        {/* pelo al rape con entradas */}
+        <path d="M -150 -70 C -150 -180 -84 -220 0 -220 C 84 -220 150 -180 150 -70 L 134 -70 C 132 -110 120 -134 104 -144 Q 60 -152 0 -154 Q -60 -152 -104 -144 C -120 -134 -132 -110 -134 -70 Z" fill={u("pelo")} />
+        <path d="M 50 -196 Q 96 -184 120 -150" fill="none" stroke="#5a4636" strokeWidth={8} opacity={0.5} strokeLinecap="round" />
+        {/* sombra de barba en la quijada y barbilla */}
+        <path d="M -42 158 Q -46 190 0 200 Q 46 190 42 158 Q 20 170 0 170 Q -20 170 -42 158 Z" fill="#1a0f0a" opacity={0.6} filter={u("suave")} />
+      </g>
+      <path d={CARA} fill="none" stroke={T} strokeWidth={7} strokeLinejoin="round" />
+      {/* cejas gruesas y arqueadas */}
+      {[-1, 1].map((d) => <path key={d} transform="translate(0 12)" d={`M ${d * 124} ${-52 + ce * 2} Q ${d * 98} ${-82 - ce * 2} ${d * 56} ${-80 + ce * 2} Q ${d * 32} ${-78 + ce * 4} ${d * 16} ${-60 + ce * 6} L ${d * 18} ${-46 + ce * 6} Q ${d * 34} ${-62 + ce * 3} ${d * 58} ${-66 + ce * 2} Q ${d * 96} ${-70 - ce} ${d * 120} ${-40 + ce * 2} Z`} fill="#100906" />)}
+      {ojo(-60, "i")}{ojo(60, "d")}
+      {/* nariz: solo sombra, punta ancha y fosas */}
+      <path d="M -46 40 Q -62 62 -38 70 Q -18 74 0 66 Q 18 74 38 70 Q 62 62 46 40 Q 26 54 0 52 Q -26 54 -46 40 Z" fill={SOM} />
+      <circle cx={10} cy={44} r={12} fill={LUZ} opacity={0.7} />
+      <path d="M -16 -30 Q -24 10 -40 40 Q -26 30 -10 30 Z" fill={SOM} opacity={0.7} />
+      <path d="M -48 44 Q -60 62 -40 68 M 48 44 Q 60 62 40 68" fill="none" stroke={T} strokeWidth={4} strokeLinecap="round" />
+      <path d="M -28 64 q 10 -12 22 -1 Q -14 68 -28 64 Z M 6 63 q 12 -11 22 1 Q 14 68 6 63 Z" fill="#160b06" />
+      {/* bigote delgado */}
+      <path d="M -56 92 Q -28 80 0 84 Q 28 80 56 92 Q 28 88 0 90 Q -28 88 -56 92 Z" fill="#120a07" />
+      {/* labios gruesos */}
+      {g.boca === "abierta" ? <path d="M -60 100 Q 0 88 60 100 Q 40 146 0 148 Q -40 146 -60 100 Z" fill="#3a1410" stroke={T} strokeWidth={4} />
+        : <g>
+          <path d="M -64 104 Q -32 84 0 92 Q 32 84 64 104 Q 0 108 -64 104 Z" fill="#3c1f14" stroke={T} strokeWidth={3.5} strokeLinejoin="round" />
+          <path d="M -60 106 Q 0 110 60 106 Q 44 142 0 144 Q -44 142 -60 106 Z" fill="#9a5644" stroke={T} strokeWidth={3.5} strokeLinejoin="round" />
+          <path d="M -66 105 Q 0 102 66 105" fill="none" stroke={T} strokeWidth={5} strokeLinecap="round" />
+          <path d="M -22 124 Q 0 130 24 123" fill="none" stroke="#c98a72" strokeWidth={5} opacity={0.7} strokeLinecap="round" />
+        </g>}
+      {/* piocha chica */}
+      <path d="M -10 152 Q 0 164 10 152 L 8 170 Q 0 176 -8 170 Z" fill="#120a07" opacity={0.85} />
+    </g>
+  );
+};
 
 export const BustoCJ: React.FC<{ f: number; x: number; y: number; s?: number; id: string; g?: Gesto; semilla?: number }> = ({ f, x, y, s = 1, id, g = {}, semilla = 1 }) => {
   const p = (k: string) => `${id}-${k}`;
   const u = (k: string) => `url(#${p(k)})`;
   const resp = Math.sin(f * 0.1) * 4;
-  const cerr = parpadea(f, semilla), mx = (g.mirarX ?? 0) * 7, my = (g.mirarY ?? 0) * 4, ce = g.cejas ?? 0.3;
-  const ojoD = (cx: number) => `M ${cx - 27} 0 Q ${cx - 4} -17 ${cx + 25} -2 Q ${cx} 13 ${cx - 27} 0 Z`;
-  const ojo = (cx: number, lado: 1 | -1) => (
-    <g>
-      <path d={`M ${cx - 32} -6 Q ${cx} -24 ${cx + 30} -8 L ${cx + 28} 4 Q ${cx} 14 ${cx - 30} 6 Z`} fill={PROF} opacity={0.45} />
-      <path d={ojoD(cx)} fill="#e6d8c4" />
-      <defs><clipPath id={p("ojo" + lado)}><path d={ojoD(cx)} /></clipPath></defs>
-      {!cerr && <g clipPath={u("ojo" + lado)}>
-        <circle cx={cx + mx} cy={-1 + my} r={11} fill={u("iris")} /><circle cx={cx + mx} cy={-1 + my} r={5} fill="#0c0604" />
-        <circle cx={cx + mx + 3.5} cy={-3 + my} r={2.4} fill="#fff" />
-        <rect x={cx - 30} y={-14} width={60} height={7} fill="#000" opacity={0.3} />
-      </g>}
-      {cerr ? <path d={`M ${cx - 28} 1 Q ${cx} 9 ${cx + 26} 0`} fill="none" stroke={T} strokeWidth={6} strokeLinecap="round" />
-        : <path d={`M ${cx - 30} 2 Q ${cx - 4} -12 ${cx + 28} -2`} fill="none" stroke={T} strokeWidth={7.5} strokeLinecap="round" />}
-      <path d={`M ${cx - 22} 10 Q ${cx} 16 ${cx + 20} 7`} fill="none" stroke={PROF} strokeWidth={2.5} strokeLinecap="round" opacity={0.7} />
-      <path d={`M ${cx - 30} -10 Q ${cx} -30 ${cx + 28} -12`} fill="none" stroke={PROF} strokeWidth={4} strokeLinecap="round" opacity={0.85} />
-      <path d={`M ${cx - 20} 18 Q ${cx} 26 ${cx + 18} 16`} fill="none" stroke={SOM} strokeWidth={3} strokeLinecap="round" opacity={0.6} />
-    </g>
-  );
-  const boca = g.boca ?? "seria";
   return (
     <g transform={`translate(${x} ${y}) scale(${s})`}>
       <defs>
-        <clipPath id={p("cab")}><path d={CAB} /></clipPath>
-        <filter id={p("suave")} x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation={7} /></filter>
         <clipPath id={p("tor")}><path d="M -360 720 L -350 430 Q -340 310 -250 280 Q -160 250 -90 240 L 90 240 Q 160 250 250 280 Q 340 310 350 430 L 360 720 Z" /></clipPath>
         <clipPath id={p("cam")}><path d="M -206 720 L -202 420 Q -206 306 -158 262 L -104 254 Q -56 372 0 376 Q 56 372 104 254 L 158 262 Q 206 306 202 420 L 206 720 Z" /></clipPath>
         <linearGradient id={p("camiseta")} x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#a8a092" /><stop offset="0.3" stopColor="#d9d2c4" /><stop offset="0.6" stopColor="#efe9dd" /><stop offset="1" stopColor="#ded6c6" /></linearGradient>
@@ -242,6 +302,8 @@ export const BustoCJ: React.FC<{ f: number; x: number; y: number; s?: number; id
         <pattern id={p("pelo")} width="14" height="12" patternUnits="userSpaceOnUse"><rect width="14" height="12" fill="#17100c" /><path d="M 2 9 l 3 -5 M 9 11 l 3 -5" stroke="#2e2119" strokeWidth="2" strokeLinecap="round" /></pattern>
         <pattern id={p("barba")} width="9" height="8" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" fill="#1a0f0a" /><circle cx="6.5" cy="6" r="1.1" fill="#1a0f0a" /></pattern>
         <pattern id={p("rib")} width="13" height="40" patternUnits="userSpaceOnUse"><rect width="13" height="40" fill="#fff" opacity="0" /><path d="M 3 0 V 40" stroke="#8a8274" strokeWidth="2" opacity="0.35" /></pattern>
+        <linearGradient id={p("camiseta")} x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#a8a092" /><stop offset="0.3" stopColor="#d9d2c4" /><stop offset="0.6" stopColor="#efe9dd" /><stop offset="1" stopColor="#ded6c6" /></linearGradient>
+        <linearGradient id={p("piel")} x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor={PROF} /><stop offset="0.25" stopColor={SOM} /><stop offset="0.5" stopColor={PIEL} /><stop offset="0.85" stopColor={PIEL} /><stop offset="1" stopColor={LUZ} /></linearGradient>
       </defs>
       {/* ── hombros, brazos y pecho ── */}
       <g transform={`translate(0 ${resp})`}>
@@ -287,73 +349,15 @@ export const BustoCJ: React.FC<{ f: number; x: number; y: number; s?: number; id
       <path d="M -50 200 Q -34 248 -12 276 M 50 200 Q 34 248 12 276" fill="none" stroke={PROF} strokeWidth={4} opacity={0.75} />
       <path d="M -6 208 Q 0 226 6 208" fill="none" stroke={SOM} strokeWidth={4} />
       <path d="M 56 170 Q 66 220 62 260" fill="none" stroke={BORDE} strokeWidth={5} opacity={0.6} strokeLinecap="round" />
+      {/* ── cuello delgado ── */}
+      <path d="M -78 100 L -88 262 Q 0 296 88 262 L 78 100 Z" fill={PIEL} stroke={T} strokeWidth={LW} strokeLinejoin="round" />
+      <path d="M -88 262 L -78 100 L -34 100 Q -52 200 -44 280 Z" fill={SOM} opacity={0.65} />
+      <path d="M -78 130 Q 0 236 78 130 L 78 100 L -78 100 Z" fill={PROF} opacity={0.8} />
+      <path d="M -6 200 Q 0 218 6 200" fill="none" stroke={SOM} strokeWidth={4} />
+      <path d="M 60 170 Q 70 220 66 260" fill="none" stroke={BORDE} strokeWidth={5} opacity={0.6} strokeLinecap="round" />
       {/* ── cabeza ── */}
-      <g transform={`translate(0 6) scale(1.4 1.14) rotate(${(g.cabeza ?? 0) + 1.2 * Math.sin(f * 0.045)})`}>
-        {/* orejas grandes */}
-        {[-1, 1].map((d) => <g key={d}>
-          <path d={`M ${d * 96} -40 C ${d * 136} -56 ${d * 146} 40 ${d * 104} 76 Q ${d * 94} 82 ${d * 92} 66 Z`} fill={d < 0 ? SOM : PIEL} stroke={T} strokeWidth={LW + 1.5} />
-          <path d={`M ${d * 108} -24 Q ${d * 130} 10 ${d * 108} 54 M ${d * 104} -6 Q ${d * 118} 12 ${d * 104} 34`} fill="none" stroke={PROF} strokeWidth={4.5} strokeLinecap="round" />
-          {d > 0 && <path d="M 128 -20 Q 140 20 118 60" fill="none" stroke={BORDE} strokeWidth={4} opacity={0.8} />}
-        </g>)}
-        <path d={CAB} fill={PIEL} />
-        <g clipPath={u("cab")}>
-          <g filter={u("suave")}>
-          {/* frente alta con brillo, mejillas hundidas, lado izquierdo en sombra */}
-          <ellipse cx={-4} cy={-130} rx={56} ry={40} fill={LUZ} opacity={0.5} />
-          <path d="M -120 -240 L -58 -240 Q -80 -100 -70 0 Q -58 110 -34 210 L -120 210 Z" fill={SOM} opacity={0.7} />
-          <path d="M -120 -240 L -84 -240 Q -100 0 -76 210 L -120 210 Z" fill={PROF} opacity={0.45} />
-          <path d="M -80 40 Q -58 90 -40 150 Q -70 140 -86 90 Z" fill={PROF} opacity={0.4} />
-          <path d="M 44 40 Q 70 70 76 130 Q 58 100 42 80 Z" fill={SOM} opacity={0.55} />
-          <path d="M 92 -150 Q 116 0 80 170 L 130 170 L 130 -150 Z" fill={LUZ} opacity={0.6} />
-          <path d="M 100 -120 Q 112 0 88 140" fill="none" stroke={BORDE} strokeWidth={7} opacity={0.85} strokeLinecap="round" />
-                    </g>
-          {/* sombra de rasurado en quijada */}
-          <path d="M -86 70 Q -70 176 2 200 Q 76 176 90 70 Q 64 166 2 172 Q -60 166 -86 70 Z" fill={u("barba")} opacity={0.3} />
-          {/* pelo al rape: casquete delgado */}
-          <path d="M -112 -60 C -110 -200 -52 -236 2 -236 C 58 -236 114 -200 112 -60 C 110 -110 104 -150 92 -160 L 54 -170 Q 30 -188 2 -190 Q -26 -188 -50 -170 L -88 -160 C -100 -150 -108 -110 -112 -60 Z" fill={u("pelo")} />
-          <path d="M -112 -60 Q -104 -20 -98 10 L -90 10 Q -92 -40 -96 -80 Z M 112 -60 Q 104 -20 98 10 L 90 10 Q 92 -40 96 -80 Z" fill={u("pelo")} />
-          
-          <path d="M 40 -210 Q 78 -196 98 -164" fill="none" stroke="#5a4636" strokeWidth={8} opacity={0.5} strokeLinecap="round" />
-        </g>
-        <path d={CAB} fill="none" stroke={T} strokeWidth={LW + 5} strokeLinejoin="round" />
-        <g transform="translate(0 -44) scale(1.1 1.3) translate(0 30)">
-        {/* cejas gruesas, bajas y en ángulo (cara seria) */}
-        {[-1, 1].map((d) => <g key={d}>
-          <path d={`M ${d * 90} ${-36 + ce * 2} Q ${d * 66} ${-66 - ce * 2} ${d * 34} ${-60 + ce * 2} Q ${d * 18} ${-56 + ce * 4} ${d * 10} ${-40 + ce * 6} L ${d * 12} ${-28 + ce * 6} Q ${d * 24} ${-44 + ce * 3} ${d * 36} ${-46 + ce * 2} Q ${d * 64} ${-50 - ce} ${d * 88} ${-24 + ce * 2} Z`} fill="#0f0806" />
-          {[0, 1, 2, 3, 4].map((i) => <path key={i} d={`M ${d * (22 + i * 12)} ${-34 + ce * 4 - i * 2} l ${d * 8} ${-8}`} stroke="#3a2a20" strokeWidth={2} />)}
-        </g>)}
-        <path d="M -92 -70 Q -44 -86 -8 -62 Q -10 -30 -20 -22 Q -50 -14 -86 -28 Z M 94 -70 Q 46 -86 10 -62 Q 12 -30 22 -22 Q 52 -14 88 -28 Z" fill={PROF} opacity={0.42} />
-        <path d="M -88 -86 Q -44 -100 -6 -78 M 90 -86 Q 46 -100 8 -78" fill="none" stroke={LUZ} strokeWidth={8} opacity={0.35} strokeLinecap="round" />
-        <g transform="translate(0 -40)"><g transform="translate(-44 0) scale(1.3) translate(44 0)">{ojo(-44, -1)}</g><g transform="translate(46 0) scale(1.3) translate(-46 0)">{ojo(46, 1)}</g></g>
-        </g>
-        <g transform="translate(0 -88) scale(1.15 1.25)">
-        {/* nariz larga, ancha en la punta */}
-        <path d="M -12 -20 Q -20 40 -40 80 Q -18 100 0 94 Z" fill={SOM} opacity={0.65} />
-        <path d="M 6 -10 Q 12 30 16 64" fill="none" stroke={LUZ} strokeWidth={10} opacity={0.35} strokeLinecap="round" />
-        <circle cx={12} cy={82} r={10} fill={LUZ} opacity={0.6} />
-        <path d="M -44 74 Q -60 96 -34 104 Q -16 106 0 100 Q 16 106 34 104 Q 60 96 44 74 Q 30 92 0 90 Q -30 92 -44 74 Z" fill={SOM} opacity={0.7} />
-                <path d="M -26 98 q 9 -11 20 -1 Q -14 100 -26 98 Z M 6 97 q 11 -10 20 1 Q 14 100 6 97 Z" fill="#1a0c06" stroke="#1a0c06" strokeWidth={2} />
-        <path d="M -30 104 Q 0 112 30 104" fill="none" stroke={PROF} strokeWidth={6} opacity={0.35} />
-                </g>
-        <g transform="translate(0 106) scale(1.2 1.7) translate(0 -134)">
-        {/* labios gruesos: arriba oscuro, abajo rosado */}
-        <path d="M -50 124 Q -26 106 0 110 Q 26 106 50 124 Q 26 114 0 116 Q -26 114 -50 124 Z" fill="#0f0806" />
-        {[-40, -28, -16, -4, 8, 20, 32].map((x0, i) => <path key={i} d={`M ${x0} 112 l 3 5`} stroke="#3a2a20" strokeWidth={1.5} />)}
-        {boca === "abierta" ? <path d="M -40 124 Q 0 112 40 124 Q 24 158 0 160 Q -24 158 -40 124 Z" fill="#3a1410" stroke={T} strokeWidth={3} />
-          : <g>
-            <path d="M -52 132 Q -26 110 0 116 Q 26 110 52 132 Q 0 128 -52 132 Z" fill="#3b1e13" stroke={T} strokeWidth={3} strokeLinejoin="round" />
-            <path d={boca === "media" ? "M -44 128 Q 0 142 44 128 Q 30 158 0 160 Q -30 158 -44 128 Z" : "M -46 132 Q 0 130 46 132 Q 32 156 0 158 Q -32 156 -46 132 Z"} fill="#94523f" stroke={T} strokeWidth={3} strokeLinejoin="round" />
-            <path d="M -54 134 Q 0 126 54 134" fill="none" stroke={T} strokeWidth={4.5} strokeLinecap="round" />
-            <path d="M -16 140 Q 0 144 18 139" stroke="#c07a64" strokeWidth={4} opacity={0.7} fill="none" strokeLinecap="round" />
-            <path d="M -56 134 q -4 6 0 12 M 56 134 q 4 6 0 12" fill="none" stroke={PROF} strokeWidth={3} strokeLinecap="round" />
-          </g>}
-        </g>
-        <g transform="translate(0 -30)">
-        {/* piocha chica */}
-        <path d="M -40 172 Q -42 196 -20 204 Q 0 210 20 204 Q 42 196 40 172 Q 20 184 0 184 Q -20 184 -40 172 Z" fill="#150c08" opacity={0.5} />
-        <path d="M -8 166 Q 0 176 8 166 L 6 182 L -6 182 Z" fill="#150c08" opacity={0.8} />
-        <path d="M -30 168 Q 0 178 30 168" fill="none" stroke={PROF} strokeWidth={3} opacity={0.6} />
-</g>
+      <g transform={`translate(0 -12) scale(1.18) rotate(${(g.cabeza ?? 0) + 1.2 * Math.sin(f * 0.045)})`}>
+        <CabezaCJ f={f} p={p} g={g} semilla={semilla} />
       </g>
     </g>
   );
