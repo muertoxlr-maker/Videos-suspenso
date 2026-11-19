@@ -12,7 +12,7 @@ export const PruebaDetalle: React.FC = () => {
         <defs><radialGradient id="vin" cx="50%" cy="50%" r="75%"><stop offset="0.55" stopColor="#000" stopOpacity={0} /><stop offset="1" stopColor="#000" stopOpacity={0.5} /></radialGradient></defs>
         <g transform={`translate(540 1100) scale(${z}) translate(-540 -1100)`}>
           <SalaNoche f={f} id="sd" desenfoque={2.2} />
-          <BustoCJ f={f} x={540} y={1170} s={1.05} id="cjb" g={{ mirarX: -0.2, cejas: 0.5 }} />
+          <BustoCJ f={f} x={540} y={1170} s={1.05} id="cjb" g={{ mirarX: -0.2, cejas: 1.2 }} />
         </g>
         <rect width={1080} height={1920} fill="url(#vin)" />
       </svg>

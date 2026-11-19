@@ -306,9 +306,9 @@ export const BustoCJ: React.FC<{ f: number; x: number; y: number; s?: number; id
           {/* sombra de rasurado en quijada */}
           <path d="M -86 70 Q -70 176 2 200 Q 76 176 90 70 Q 64 166 2 172 Q -60 166 -86 70 Z" fill={u("barba")} opacity={0.6} />
           {/* pelo al rape: casquete delgado */}
-          <path d="M -112 -60 C -110 -200 -52 -236 2 -236 C 58 -236 114 -200 112 -60 C 108 -110 98 -140 82 -152 Q 2 -164 -78 -152 C -96 -140 -106 -110 -112 -60 Z" fill={u("pelo")} />
+          <path d="M -112 -60 C -110 -200 -52 -236 2 -236 C 58 -236 114 -200 112 -60 C 110 -100 104 -120 96 -128 L 70 -132 L 66 -150 Q 2 -162 -62 -150 L -66 -132 L -92 -128 C -102 -120 -108 -100 -112 -60 Z" fill={u("pelo")} />
           <path d="M -112 -60 Q -104 -20 -98 10 L -90 10 Q -92 -40 -96 -80 Z M 112 -60 Q 104 -20 98 10 L 90 10 Q 92 -40 96 -80 Z" fill={u("pelo")} />
-          <path d="M -78 -152 Q 2 -164 82 -152" fill="none" stroke="#3a2a20" strokeWidth={5} opacity={0.6} />
+          <path d="M -62 -150 Q 2 -162 66 -150" fill="none" stroke="#3a2a20" strokeWidth={5} opacity={0.6} />
           <path d="M 40 -210 Q 78 -196 98 -164" fill="none" stroke="#5a4636" strokeWidth={8} opacity={0.5} strokeLinecap="round" />
         </g>
         <path d={CAB} fill="none" stroke={T} strokeWidth={LW + 5} strokeLinejoin="round" />
@@ -317,27 +317,31 @@ export const BustoCJ: React.FC<{ f: number; x: number; y: number; s?: number; id
           <path d={`M ${d * 84} ${-46 + ce * 2} Q ${d * 52} ${-56 - ce} ${d * 14} ${-36 + ce * 6} L ${d * 14} ${-24 + ce * 6} Q ${d * 50} ${-40 - ce} ${d * 82} ${-32 + ce * 2} Z`} fill="#0f0806" />
           {[0, 1, 2, 3, 4].map((i) => <path key={i} d={`M ${d * (22 + i * 12)} ${-34 + ce * 4 - i * 2} l ${d * 8} ${-8}`} stroke="#3a2a20" strokeWidth={2} />)}
         </g>)}
+        <path d="M -90 -30 Q -44 -44 -8 -24 Q -10 6 -20 14 Q -50 22 -84 8 Z M 92 -30 Q 46 -44 10 -24 Q 12 6 22 14 Q 52 22 86 8 Z" fill={PROF} opacity={0.38} />
         <g transform="translate(0 -4)">{ojo(-44, -1)}{ojo(46, 1)}</g>
         {/* nariz larga, ancha en la punta */}
         <path d="M -12 -20 Q -20 40 -40 80 Q -18 100 0 94 Z" fill={SOM} opacity={0.65} />
         <path d="M 8 -14 Q 14 30 22 66" fill="none" stroke={LUZ} strokeWidth={6} opacity={0.75} strokeLinecap="round" />
         <circle cx={12} cy={82} r={10} fill={LUZ} opacity={0.6} />
-        <path d="M -40 74 Q -54 94 -30 102 Q -14 106 0 98 Q 14 106 30 102 Q 54 94 40 74" fill="none" stroke={T} strokeWidth={4.5} strokeLinecap="round" />
-        <path d="M -22 96 q 8 -8 16 0 M 6 96 q 8 -8 16 0" fill="none" stroke="#1a0c06" strokeWidth={4} />
+        <path d="M -44 74 Q -60 96 -34 104 Q -16 106 0 100 Q 16 106 34 104 Q 60 96 44 74 Q 30 92 0 90 Q -30 92 -44 74 Z" fill={SOM} opacity={0.7} />
+        <path d="M -46 78 Q -56 96 -36 102 M 46 78 Q 56 96 36 102" fill="none" stroke={T} strokeWidth={3.5} strokeLinecap="round" />
+        <path d="M -26 98 q 9 -11 20 -1 Q -14 100 -26 98 Z M 6 97 q 11 -10 20 1 Q 14 100 6 97 Z" fill="#1a0c06" stroke="#1a0c06" strokeWidth={2} />
         <path d="M -34 104 Q 0 116 34 104" fill="none" stroke={PROF} strokeWidth={6} opacity={0.5} />
-        <path d="M -48 86 Q -62 116 -56 140 M 50 86 Q 64 114 58 138" fill="none" stroke={SOM} strokeWidth={4} opacity={0.8} strokeLinecap="round" />
+        <path d="M -50 92 Q -62 116 -58 138 M 52 92 Q 64 114 60 136" fill="none" stroke={SOM} strokeWidth={5} opacity={0.55} strokeLinecap="round" />
         {/* labios gruesos: arriba oscuro, abajo rosado */}
-        <path d="M -40 112 Q -20 106 0 110 Q 20 106 40 112" fill="none" stroke="#1a0f0a" strokeWidth={3} opacity={0.6} />
+        <path d="M -50 124 Q -26 106 0 110 Q 26 106 50 124 Q 26 114 0 116 Q -26 114 -50 124 Z" fill="#0f0806" />
+        {[-40, -28, -16, -4, 8, 20, 32].map((x0, i) => <path key={i} d={`M ${x0} 112 l 3 5`} stroke="#3a2a20" strokeWidth={1.5} />)}
         {boca === "abierta" ? <path d="M -40 124 Q 0 112 40 124 Q 24 158 0 160 Q -24 158 -40 124 Z" fill="#3a1410" stroke={T} strokeWidth={3} />
           : <g>
             <path d="M -52 132 Q -26 110 0 116 Q 26 110 52 132 Q 0 128 -52 132 Z" fill="#3b1e13" stroke={T} strokeWidth={3} strokeLinejoin="round" />
-            <path d={boca === "media" ? "M -44 128 Q 0 142 44 128 Q 30 158 0 160 Q -30 158 -44 128 Z" : "M -48 132 Q 0 130 48 132 Q 36 164 0 166 Q -36 164 -48 132 Z"} fill="#b06656" stroke={T} strokeWidth={3} strokeLinejoin="round" />
+            <path d={boca === "media" ? "M -44 128 Q 0 142 44 128 Q 30 158 0 160 Q -30 158 -44 128 Z" : "M -46 132 Q 0 130 46 132 Q 32 156 0 158 Q -32 156 -46 132 Z"} fill="#94523f" stroke={T} strokeWidth={3} strokeLinejoin="round" />
             <path d="M -54 134 Q 0 126 54 134" fill="none" stroke={T} strokeWidth={4.5} strokeLinecap="round" />
-            <path d="M -16 140 Q 0 144 18 139" stroke="#e0a090" strokeWidth={4} opacity={0.8} fill="none" strokeLinecap="round" />
+            <path d="M -16 140 Q 0 144 18 139" stroke="#c07a64" strokeWidth={4} opacity={0.7} fill="none" strokeLinecap="round" />
             <path d="M -56 134 q -4 6 0 12 M 56 134 q 4 6 0 12" fill="none" stroke={PROF} strokeWidth={3} strokeLinecap="round" />
           </g>}
         {/* piocha chica */}
-        <path d="M -14 172 Q 0 196 14 172 L 8 166 Q 0 176 -8 166 Z" fill="#100906" />
+        <path d="M -6 168 L 6 168 L 8 186 Q 0 196 -8 186 Z" fill="#100906" />
+        <path d="M -16 182 Q 0 200 16 182 L 12 192 Q 0 204 -12 192 Z" fill="#100906" />
         <path d="M -30 168 Q 0 178 30 168" fill="none" stroke={PROF} strokeWidth={3} opacity={0.6} />
       </g>
     </g>
