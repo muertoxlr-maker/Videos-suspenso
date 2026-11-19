@@ -210,20 +210,22 @@ export const BustoCJ: React.FC<{ f: number; x: number; y: number; s?: number; id
   const u = (k: string) => `url(#${p(k)})`;
   const resp = Math.sin(f * 0.1) * 4;
   const cerr = parpadea(f, semilla), mx = (g.mirarX ?? 0) * 7, my = (g.mirarY ?? 0) * 4, ce = g.cejas ?? 0.3;
-  const ojoD = (cx: number) => `M ${cx - 25} 0 Q ${cx - 4} -12 ${cx + 23} -1 Q ${cx} 10 ${cx - 25} 0 Z`;
+  const ojoD = (cx: number) => `M ${cx - 27} 0 Q ${cx - 4} -17 ${cx + 25} -2 Q ${cx} 13 ${cx - 27} 0 Z`;
   const ojo = (cx: number, lado: 1 | -1) => (
     <g>
       <path d={`M ${cx - 32} -6 Q ${cx} -24 ${cx + 30} -8 L ${cx + 28} 4 Q ${cx} 14 ${cx - 30} 6 Z`} fill={PROF} opacity={0.45} />
       <path d={ojoD(cx)} fill="#e6d8c4" />
       <defs><clipPath id={p("ojo" + lado)}><path d={ojoD(cx)} /></clipPath></defs>
       {!cerr && <g clipPath={u("ojo" + lado)}>
-        <circle cx={cx + mx} cy={0 + my} r={9.5} fill={u("iris")} /><circle cx={cx + mx} cy={0 + my} r={4.5} fill="#0c0604" />
+        <circle cx={cx + mx} cy={-1 + my} r={11} fill={u("iris")} /><circle cx={cx + mx} cy={-1 + my} r={5} fill="#0c0604" />
         <circle cx={cx + mx + 3.5} cy={-3 + my} r={2.4} fill="#fff" />
-        <rect x={cx - 30} y={-12} width={60} height={8} fill="#000" opacity={0.35} />
+        <rect x={cx - 30} y={-14} width={60} height={7} fill="#000" opacity={0.3} />
       </g>}
       {cerr ? <path d={`M ${cx - 28} 1 Q ${cx} 9 ${cx + 26} 0`} fill="none" stroke={T} strokeWidth={6} strokeLinecap="round" />
         : <path d={`M ${cx - 30} 2 Q ${cx - 4} -12 ${cx + 28} -2`} fill="none" stroke={T} strokeWidth={7.5} strokeLinecap="round" />}
-      <path d={`M ${cx - 22} 9 Q ${cx} 14 ${cx + 20} 6`} fill="none" stroke={PROF} strokeWidth={2.5} strokeLinecap="round" opacity={0.7} />
+      <path d={`M ${cx - 22} 10 Q ${cx} 16 ${cx + 20} 7`} fill="none" stroke={PROF} strokeWidth={2.5} strokeLinecap="round" opacity={0.7} />
+      <path d={`M ${cx - 30} -10 Q ${cx} -30 ${cx + 28} -12`} fill="none" stroke={PROF} strokeWidth={4} strokeLinecap="round" opacity={0.85} />
+      <path d={`M ${cx - 20} 18 Q ${cx} 26 ${cx + 18} 16`} fill="none" stroke={SOM} strokeWidth={3} strokeLinecap="round" opacity={0.6} />
     </g>
   );
   const boca = g.boca ?? "seria";
@@ -231,6 +233,7 @@ export const BustoCJ: React.FC<{ f: number; x: number; y: number; s?: number; id
     <g transform={`translate(${x} ${y}) scale(${s})`}>
       <defs>
         <clipPath id={p("cab")}><path d={CAB} /></clipPath>
+        <filter id={p("suave")} x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation={7} /></filter>
         <clipPath id={p("tor")}><path d="M -360 720 L -350 430 Q -340 310 -250 280 Q -160 250 -90 240 L 90 240 Q 160 250 250 280 Q 340 310 350 430 L 360 720 Z" /></clipPath>
         <clipPath id={p("cam")}><path d="M -206 720 L -202 420 Q -206 306 -158 262 L -104 254 Q -56 372 0 376 Q 56 372 104 254 L 158 262 Q 206 306 202 420 L 206 720 Z" /></clipPath>
         <linearGradient id={p("camiseta")} x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#a8a092" /><stop offset="0.3" stopColor="#d9d2c4" /><stop offset="0.6" stopColor="#efe9dd" /><stop offset="1" stopColor="#ded6c6" /></linearGradient>
@@ -278,14 +281,14 @@ export const BustoCJ: React.FC<{ f: number; x: number; y: number; s?: number; id
         <path d="M 158 262 Q 206 306 202 420" fill="none" stroke="#a49c8e" strokeWidth={10} />
       </g>
       {/* ── cuello ── */}
-      <path d="M -96 110 L -104 262 Q 0 296 104 262 L 96 110 Z" fill={PIEL} stroke={T} strokeWidth={LW} strokeLinejoin="round" />
-      <path d="M -104 262 L -96 110 L -40 110 Q -60 200 -50 280 Z" fill={SOM} opacity={0.65} />
-      <path d="M -96 140 Q 0 236 96 140 L 96 110 L -96 110 Z" fill={PROF} opacity={0.8} />
+      <path d="M -76 110 L -86 262 Q 0 296 86 262 L 76 110 Z" fill={PIEL} stroke={T} strokeWidth={LW} strokeLinejoin="round" />
+      <path d="M -86 262 L -76 110 L -34 110 Q -52 200 -44 280 Z" fill={SOM} opacity={0.65} />
+      <path d="M -76 140 Q 0 236 76 140 L 76 110 L -76 110 Z" fill={PROF} opacity={0.8} />
       <path d="M -50 200 Q -34 248 -12 276 M 50 200 Q 34 248 12 276" fill="none" stroke={PROF} strokeWidth={4} opacity={0.75} />
       <path d="M -6 208 Q 0 226 6 208" fill="none" stroke={SOM} strokeWidth={4} />
       <path d="M 56 170 Q 66 220 62 260" fill="none" stroke={BORDE} strokeWidth={5} opacity={0.6} strokeLinecap="round" />
       {/* ── cabeza ── */}
-      <g transform={`translate(0 6) scale(1.36 1.14) rotate(${(g.cabeza ?? 0) + 1.2 * Math.sin(f * 0.045)})`}>
+      <g transform={`translate(0 6) scale(1.4 1.14) rotate(${(g.cabeza ?? 0) + 1.2 * Math.sin(f * 0.045)})`}>
         {/* orejas grandes */}
         {[-1, 1].map((d) => <g key={d}>
           <path d={`M ${d * 96} -40 C ${d * 136} -56 ${d * 146} 40 ${d * 104} 76 Q ${d * 94} 82 ${d * 92} 66 Z`} fill={d < 0 ? SOM : PIEL} stroke={T} strokeWidth={LW + 1.5} />
@@ -294,40 +297,45 @@ export const BustoCJ: React.FC<{ f: number; x: number; y: number; s?: number; id
         </g>)}
         <path d={CAB} fill={PIEL} />
         <g clipPath={u("cab")}>
+          <g filter={u("suave")}>
           {/* frente alta con brillo, mejillas hundidas, lado izquierdo en sombra */}
-          <ellipse cx={-6} cy={-118} rx={70} ry={44} fill={LUZ} opacity={0.55} />
+          <ellipse cx={-4} cy={-130} rx={56} ry={40} fill={LUZ} opacity={0.5} />
           <path d="M -120 -240 L -58 -240 Q -80 -100 -70 0 Q -58 110 -34 210 L -120 210 Z" fill={SOM} opacity={0.7} />
           <path d="M -120 -240 L -84 -240 Q -100 0 -76 210 L -120 210 Z" fill={PROF} opacity={0.45} />
           <path d="M -80 40 Q -58 90 -40 150 Q -70 140 -86 90 Z" fill={PROF} opacity={0.4} />
           <path d="M 44 40 Q 70 70 76 130 Q 58 100 42 80 Z" fill={SOM} opacity={0.55} />
           <path d="M 92 -150 Q 116 0 80 170 L 130 170 L 130 -150 Z" fill={LUZ} opacity={0.6} />
           <path d="M 100 -120 Q 112 0 88 140" fill="none" stroke={BORDE} strokeWidth={7} opacity={0.85} strokeLinecap="round" />
-          <path d="M 30 20 Q 56 26 70 46" fill="none" stroke={LUZ} strokeWidth={9} opacity={0.6} strokeLinecap="round" />
+                    </g>
           {/* sombra de rasurado en quijada */}
-          <path d="M -86 70 Q -70 176 2 200 Q 76 176 90 70 Q 64 166 2 172 Q -60 166 -86 70 Z" fill={u("barba")} opacity={0.6} />
+          <path d="M -86 70 Q -70 176 2 200 Q 76 176 90 70 Q 64 166 2 172 Q -60 166 -86 70 Z" fill={u("barba")} opacity={0.3} />
           {/* pelo al rape: casquete delgado */}
-          <path d="M -112 -60 C -110 -200 -52 -236 2 -236 C 58 -236 114 -200 112 -60 C 110 -100 104 -120 96 -128 L 70 -132 L 66 -150 Q 2 -162 -62 -150 L -66 -132 L -92 -128 C -102 -120 -108 -100 -112 -60 Z" fill={u("pelo")} />
+          <path d="M -112 -60 C -110 -200 -52 -236 2 -236 C 58 -236 114 -200 112 -60 C 110 -110 104 -150 92 -160 L 54 -170 Q 30 -188 2 -190 Q -26 -188 -50 -170 L -88 -160 C -100 -150 -108 -110 -112 -60 Z" fill={u("pelo")} />
           <path d="M -112 -60 Q -104 -20 -98 10 L -90 10 Q -92 -40 -96 -80 Z M 112 -60 Q 104 -20 98 10 L 90 10 Q 92 -40 96 -80 Z" fill={u("pelo")} />
-          <path d="M -62 -150 Q 2 -162 66 -150" fill="none" stroke="#3a2a20" strokeWidth={5} opacity={0.6} />
+          
           <path d="M 40 -210 Q 78 -196 98 -164" fill="none" stroke="#5a4636" strokeWidth={8} opacity={0.5} strokeLinecap="round" />
         </g>
         <path d={CAB} fill="none" stroke={T} strokeWidth={LW + 5} strokeLinejoin="round" />
+        <g transform="translate(0 -44) scale(1.1 1.3) translate(0 30)">
         {/* cejas gruesas, bajas y en ángulo (cara seria) */}
         {[-1, 1].map((d) => <g key={d}>
-          <path d={`M ${d * 84} ${-46 + ce * 2} Q ${d * 52} ${-56 - ce} ${d * 14} ${-36 + ce * 6} L ${d * 14} ${-24 + ce * 6} Q ${d * 50} ${-40 - ce} ${d * 82} ${-32 + ce * 2} Z`} fill="#0f0806" />
+          <path d={`M ${d * 90} ${-36 + ce * 2} Q ${d * 66} ${-66 - ce * 2} ${d * 34} ${-60 + ce * 2} Q ${d * 18} ${-56 + ce * 4} ${d * 10} ${-40 + ce * 6} L ${d * 12} ${-28 + ce * 6} Q ${d * 24} ${-44 + ce * 3} ${d * 36} ${-46 + ce * 2} Q ${d * 64} ${-50 - ce} ${d * 88} ${-24 + ce * 2} Z`} fill="#0f0806" />
           {[0, 1, 2, 3, 4].map((i) => <path key={i} d={`M ${d * (22 + i * 12)} ${-34 + ce * 4 - i * 2} l ${d * 8} ${-8}`} stroke="#3a2a20" strokeWidth={2} />)}
         </g>)}
-        <path d="M -90 -30 Q -44 -44 -8 -24 Q -10 6 -20 14 Q -50 22 -84 8 Z M 92 -30 Q 46 -44 10 -24 Q 12 6 22 14 Q 52 22 86 8 Z" fill={PROF} opacity={0.38} />
-        <g transform="translate(0 -4)">{ojo(-44, -1)}{ojo(46, 1)}</g>
+        <path d="M -92 -70 Q -44 -86 -8 -62 Q -10 -30 -20 -22 Q -50 -14 -86 -28 Z M 94 -70 Q 46 -86 10 -62 Q 12 -30 22 -22 Q 52 -14 88 -28 Z" fill={PROF} opacity={0.42} />
+        <path d="M -88 -86 Q -44 -100 -6 -78 M 90 -86 Q 46 -100 8 -78" fill="none" stroke={LUZ} strokeWidth={8} opacity={0.35} strokeLinecap="round" />
+        <g transform="translate(0 -40)"><g transform="translate(-44 0) scale(1.3) translate(44 0)">{ojo(-44, -1)}</g><g transform="translate(46 0) scale(1.3) translate(-46 0)">{ojo(46, 1)}</g></g>
+        </g>
+        <g transform="translate(0 -88) scale(1.15 1.25)">
         {/* nariz larga, ancha en la punta */}
         <path d="M -12 -20 Q -20 40 -40 80 Q -18 100 0 94 Z" fill={SOM} opacity={0.65} />
-        <path d="M 8 -14 Q 14 30 22 66" fill="none" stroke={LUZ} strokeWidth={6} opacity={0.75} strokeLinecap="round" />
+        <path d="M 6 -10 Q 12 30 16 64" fill="none" stroke={LUZ} strokeWidth={10} opacity={0.35} strokeLinecap="round" />
         <circle cx={12} cy={82} r={10} fill={LUZ} opacity={0.6} />
         <path d="M -44 74 Q -60 96 -34 104 Q -16 106 0 100 Q 16 106 34 104 Q 60 96 44 74 Q 30 92 0 90 Q -30 92 -44 74 Z" fill={SOM} opacity={0.7} />
-        <path d="M -46 78 Q -56 96 -36 102 M 46 78 Q 56 96 36 102" fill="none" stroke={T} strokeWidth={3.5} strokeLinecap="round" />
-        <path d="M -26 98 q 9 -11 20 -1 Q -14 100 -26 98 Z M 6 97 q 11 -10 20 1 Q 14 100 6 97 Z" fill="#1a0c06" stroke="#1a0c06" strokeWidth={2} />
-        <path d="M -34 104 Q 0 116 34 104" fill="none" stroke={PROF} strokeWidth={6} opacity={0.5} />
-        <path d="M -50 92 Q -62 116 -58 138 M 52 92 Q 64 114 60 136" fill="none" stroke={SOM} strokeWidth={5} opacity={0.55} strokeLinecap="round" />
+                <path d="M -26 98 q 9 -11 20 -1 Q -14 100 -26 98 Z M 6 97 q 11 -10 20 1 Q 14 100 6 97 Z" fill="#1a0c06" stroke="#1a0c06" strokeWidth={2} />
+        <path d="M -30 104 Q 0 112 30 104" fill="none" stroke={PROF} strokeWidth={6} opacity={0.35} />
+                </g>
+        <g transform="translate(0 106) scale(1.2 1.7) translate(0 -134)">
         {/* labios gruesos: arriba oscuro, abajo rosado */}
         <path d="M -50 124 Q -26 106 0 110 Q 26 106 50 124 Q 26 114 0 116 Q -26 114 -50 124 Z" fill="#0f0806" />
         {[-40, -28, -16, -4, 8, 20, 32].map((x0, i) => <path key={i} d={`M ${x0} 112 l 3 5`} stroke="#3a2a20" strokeWidth={1.5} />)}
@@ -339,10 +347,13 @@ export const BustoCJ: React.FC<{ f: number; x: number; y: number; s?: number; id
             <path d="M -16 140 Q 0 144 18 139" stroke="#c07a64" strokeWidth={4} opacity={0.7} fill="none" strokeLinecap="round" />
             <path d="M -56 134 q -4 6 0 12 M 56 134 q 4 6 0 12" fill="none" stroke={PROF} strokeWidth={3} strokeLinecap="round" />
           </g>}
+        </g>
+        <g transform="translate(0 -30)">
         {/* piocha chica */}
-        <path d="M -6 168 L 6 168 L 8 186 Q 0 196 -8 186 Z" fill="#100906" />
-        <path d="M -16 182 Q 0 200 16 182 L 12 192 Q 0 204 -12 192 Z" fill="#100906" />
+        <path d="M -40 172 Q -42 196 -20 204 Q 0 210 20 204 Q 42 196 40 172 Q 20 184 0 184 Q -20 184 -40 172 Z" fill="#150c08" opacity={0.5} />
+        <path d="M -8 166 Q 0 176 8 166 L 6 182 L -6 182 Z" fill="#150c08" opacity={0.8} />
         <path d="M -30 168 Q 0 178 30 168" fill="none" stroke={PROF} strokeWidth={3} opacity={0.6} />
+</g>
       </g>
     </g>
   );
