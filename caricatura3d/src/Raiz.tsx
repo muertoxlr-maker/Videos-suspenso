@@ -19,6 +19,7 @@ import { HINTER_CUADROS, Hinterkaifeck, HinterkaifeckPortada } from "./videos/hi
 import { MARY_CUADROS, MaryCeleste } from "./videos/maryceleste/MaryCeleste";
 import { HojaMovimiento, HojaPersonajes } from "./videos/hoja/HojaPersonajes";
 import { PRUEBA_CJ_CUADROS, PruebaCJ } from "./videos/nacieras/PruebaCJ";
+import { DETALLE_CUADROS, PruebaDetalle } from "./videos/nacieras/PruebaDetalle";
 import { GASO_CUADROS, Gasolinera, GasolineraPortada } from "./videos/gasolinera/Gasolinera";
 
 // Registra cada short aquí, con su propio id (ver tutorial-caricatura/plantillas/alejandro/Root_ejemplo.tsx).
@@ -47,6 +48,7 @@ export const Raiz: React.FC = () => (
     <Composition id="Hinterkaifeck" component={Hinterkaifeck} durationInFrames={HINTER_CUADROS} fps={30} width={1080} height={1920} />
     {/* Serie «Si nacieras como…»: prueba de animación 2D (CJ), 21 s sin voz */}
     <Composition id="NacierasPruebaCJ" component={PruebaCJ} durationInFrames={PRUEBA_CJ_CUADROS} fps={30} width={1080} height={1920} />
+    <Composition id="NacierasDetalle" component={PruebaDetalle} durationInFrames={DETALLE_CUADROS} fps={30} width={1080} height={1920} />
     <Composition id="MaryCeleste" component={MaryCeleste} durationInFrames={MARY_CUADROS} fps={30} width={1080} height={1920} />
     <Composition id="HinterkaifeckPortada" component={HinterkaifeckPortada} durationInFrames={HINTER_CUADROS} fps={30} width={1080} height={1920} />
     <Composition id="Autobus" component={Autobus} durationInFrames={AUTOBUS_CUADROS} fps={30} width={1080} height={1920} />
