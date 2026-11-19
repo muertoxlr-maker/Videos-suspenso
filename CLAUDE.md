@@ -1,5 +1,12 @@
 # Videos de suspenso — instrucciones para Claude
 
+> **Serie nueva (desde nov. 2026): «Si nacieras como…»** — para esos videos manda la skill
+> `.claude/skills/borninlore-videos/SKILL.md` (gancho «Si nacieras como [nombre]…», segunda persona, 2D cartoon,
+> música continua bajo la voz, fichas → guion → fotograma de prueba → voz → animación). Las reglas de abajo que
+> chocan con ella (gancho «Imagina que…», solo efectos cortos sin música, true crime) son de la serie de suspenso.
+> Siguen valiendo para las dos: nada parpadea ni atraviesa nada, no tardar de más, preguntar antes de generar, no
+> copiar frases ni tomas de otros creadores, −14 LUFS.
+
 - **Antes de escribir guiones, diseñar escenas, personajes, cámara, subtítulos, voz o sonido, lee
   `GUIA_DE_ESTILO_SUSPENSO.md`.** Tiene las medidas de los videos de referencia y lo que ya está comprobado o
   pendiente. Si contradice a `tutorial-caricatura/` (cortes, subtítulos, ritmo de la voz, brillo), manda la guía.
