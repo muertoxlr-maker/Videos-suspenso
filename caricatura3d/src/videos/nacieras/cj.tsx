@@ -10,7 +10,7 @@ const S0 = "#8b502b", S1 = "#7a4426", S2 = "#5d2f18", S3 = "#3e1c0b", SH = "#a86
 const LINEA = "#4a2414"; // líneas internas teñidas
 
 // cabeza calcada por coordenadas (cuadrícula sobre la imagen de alta resolución que mandó el usuario); origen en el centro de la cara
-const CABEZA = "M 0 -265 C 70 -266 128 -232 142 -180 C 150 -120 150 0 146 100 C 142 140 134 160 122 173 C 90 210 50 245 3 250 C -40 248 -90 210 -140 167 C -148 140 -158 100 -158 40 C -160 -40 -166 -130 -165 -180 C -150 -235 -80 -266 0 -265 Z";
+const CABEZA = "M 0 -265 C 66 -266 120 -236 134 -186 C 146 -130 158 -40 156 40 C 154 110 140 150 124 172 C 92 210 50 245 3 250 C -40 248 -92 210 -142 166 C -158 130 -168 70 -168 10 C -168 -70 -160 -140 -156 -186 C -140 -238 -78 -266 0 -265 Z";
 const CUELLO = "M -140 150 C -136 240 -140 330 -150 420 L 104 420 C 96 330 94 240 98 170 Z";
 
 export type GestoCJ = { mirarX?: number; mirarY?: number; cabeza?: number; boca?: "seria" | "abierta" };
@@ -48,9 +48,9 @@ export const CabezaCJ2: React.FC<{ f: number; id: string; g?: GestoCJ; semilla?:
       {/* orejas */}
       <path d="M -156 -42 C -222 -50 -222 112 -150 110 Z" fill={S1} stroke={K} strokeWidth={9} strokeLinejoin="round" />
       <path d="M -168 -6 C -194 6 -192 74 -164 86" fill="none" stroke={S2} strokeWidth={10} strokeLinecap="round" />
-      <path d="M 148 -58 C 214 -66 214 116 144 110 Z" fill={S0} stroke={K} strokeWidth={9} strokeLinejoin="round" />
-      <path d="M 160 -20 C 188 -8 186 74 158 88" fill="none" stroke={S2} strokeWidth={10} strokeLinecap="round" />
-      <path d="M 186 -40 C 204 -10 204 70 186 96" fill="none" stroke={RIM} strokeWidth={5} strokeLinecap="round" />
+      <path d="M 146 -50 C 196 -58 198 108 142 106 Z" fill={S0} stroke={K} strokeWidth={9} strokeLinejoin="round" />
+      <path d="M 156 -14 C 178 -4 176 70 154 84" fill="none" stroke={S2} strokeWidth={9} strokeLinecap="round" />
+      <path d="M 176 -34 C 190 -6 190 66 176 90" fill="none" stroke={RIM} strokeWidth={5} strokeLinecap="round" />
       {/* cara */}
       <path d={CABEZA} fill={u("piel")} />
       <g clipPath={u("cab")}>
@@ -77,17 +77,18 @@ export const CabezaCJ2: React.FC<{ f: number; id: string; g?: GestoCJ; semilla?:
         {/* rim light a la derecha */}
         <path d="M 128 -200 C 144 -140 146 -40 144 40 C 142 100 132 150 116 180" fill="none" stroke={RIM} strokeWidth={6} strokeLinecap="round" />
         {/* pelo */}
-        <path d="M -168 -80 C -175 -150 -165 -230 -90 -258 C -40 -274 40 -274 100 -252 C 130 -238 148 -212 150 -180 L 132 -190 L -108 -190 Q -130 -150 -140 -83 Q -156 -78 -168 -80 Z" fill={PELO} />
-        <path d="M -108 -190 L 132 -190" fill="none" stroke="#3a2416" strokeWidth={3} strokeDasharray="2 5" />
+        <path d="M -168 -80 C -175 -150 -165 -230 -90 -258 C -40 -274 40 -274 100 -252 C 130 -238 148 -212 150 -170 L 128 -168 L -104 -168 Q -128 -130 -140 -76 Q -156 -72 -170 -74 Z" fill={PELO} />
+        <path d="M -104 -168 L 128 -168" fill="none" stroke="#3a2416" strokeWidth={3} strokeDasharray="2 5" />
       </g>
       <path d={CABEZA} fill="none" stroke={K} strokeWidth={16} strokeLinejoin="round" opacity={0.35} filter={u("leve")} />
       <path d={CABEZA} fill="none" stroke={K} strokeWidth={11} strokeLinejoin="round" />
+      <g transform="translate(16 0)">
       {/* cejas: más bajas, gruesas, bordes difuminados */}
       <g transform="translate(0 7) translate(0 -55) scale(1 1.3) translate(0 55)" filter={u("leve")}>
       <path d="M -118 -46 Q -90 -70 -40 -70 Q -14 -70 0 -60 L -2 -46 Q -20 -54 -44 -55 Q -86 -54 -116 -38 Z" fill={PELO} />
       <path d="M 30 -46 Q 34 -60 64 -68 Q 110 -76 146 -64 L 144 -52 Q 110 -60 70 -54 Q 46 -52 30 -46 Z" fill={PELO} />
       </g>
-      {ojo(-68, -20, 34, "i")}{ojo(89, -20, 33, "d")}
+      {ojo(-70, -20, 36, "i")}<g transform="translate(86 -20) scale(0.86 1) translate(-86 20)">{ojo(86, -20, 33, "d")}</g>
       {/* nariz: sombra lateral, alas en C y fosas chiquitas */}
             <path d="M -16 62 Q -36 64 -34 78 Q -32 90 -16 92" fill="none" stroke="#3a1c10" strokeWidth={4} strokeLinecap="round" opacity={0.55} filter={u("leve")} />
       <path d="M 46 62 Q 64 64 62 78 Q 60 90 46 92" fill="none" stroke="#3a1c10" strokeWidth={4} strokeLinecap="round" opacity={0.55} filter={u("leve")} />
@@ -106,6 +107,7 @@ export const CabezaCJ2: React.FC<{ f: number; id: string; g?: GestoCJ; semilla?:
         </g>}
       {/* perilla chica */}
       <path d="M -14 184 Q 12 178 38 184 Q 34 214 12 228 Q -10 214 -14 184 Z" fill="#1e100a" opacity={0.6} filter={u("suave")} />
+      </g>
     </g>
   );
 };
@@ -124,7 +126,7 @@ export const BustoCJ2: React.FC<{ f: number; x: number; y: number; s?: number; i
         <clipPath id={p("cue")}><path d={CUELLO} /></clipPath>
       </defs>
       {/* hombros y brazos (subidos 60 para un cuello más corto) */}
-      <g transform="translate(0 40) scale(1.08 1)">
+      <g transform="translate(0 0) scale(1.08 1)">
       <path d={TORSO} fill={S0} />
       <g clipPath={u("tor")}>
         <path d="M -440 420 L -230 380 C -260 520 -270 760 -250 900 L -440 900 Z" fill={S1} />
@@ -137,7 +139,7 @@ export const BustoCJ2: React.FC<{ f: number; x: number; y: number; s?: number; i
       <path d={TORSO} fill="none" stroke={K} strokeWidth={10} strokeLinejoin="round" />
       </g>
       {/* cuello ancho con banda de sombra bajo la quijada y tendones */}
-      <g transform="translate(0 20) scale(1.25 1.05)">
+      <g transform="translate(0 0) scale(1.3 1.0)">
         <path d={CUELLO} fill={S0} />
         <g clipPath={u("cue")}>
           <path d="M -140 100 L 120 100 L 120 210 Q 0 250 -140 200 Z" fill={S2} />
@@ -148,7 +150,7 @@ export const BustoCJ2: React.FC<{ f: number; x: number; y: number; s?: number; i
         </g>
         <path d="M -140 150 C -136 240 -140 330 -150 420 M 104 420 C 96 330 94 240 98 170" fill="none" stroke={K} strokeWidth={10} strokeLinecap="round" />
       </g>
-      <g transform="translate(0 50) scale(1.05 1)">
+      <g transform="translate(0 10) scale(1.05 1)">
       {/* clavículas */}
       <path d="M -200 380 Q -130 400 -40 370 M 30 370 Q 110 400 170 378" fill="none" stroke={LINEA} strokeWidth={3} strokeLinecap="round" />
       {/* camiseta de tirantes con banda acanalada */}
