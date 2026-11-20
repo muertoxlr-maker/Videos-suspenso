@@ -1,0 +1,53 @@
+{
+ "targets": {
+  "macrodetails/universal-male-young-averagemuscle-averageweight": 1.0,
+  "macrodetails/african-male-young": 1.0,
+  "head/head-oval": 0.4,
+  "head/head-scale-vert-incr": 0.45,
+  "chin/chin-triangle": 0.5,
+  "chin/chin-height-incr": 0.3,
+  "nose/nose-scale-horiz-incr": 0.5,
+  "mouth/mouth-lowerlip-volume-incr": 0.6,
+  "mouth/mouth-angles-down": 0.5,
+  "eyebrows/eyebrows-angle-down": 0.6,
+  "ears/l-ear-scale-incr": 0.5,
+  "ears/r-ear-scale-incr": 0.5,
+  "ears/l-ear-wing-incr": 0.5,
+  "ears/r-ear-wing-incr": 0.5,
+  "head/head-scale-horiz-incr": 0.25,
+  "neck/neck-scale-horiz-incr": 0.4
+ },
+ "labio": "#7a3a2a",
+ "contorno": 0.035,
+ "camara": {
+  "dist": 12,
+  "lente": 85,
+  "dz": -0.9
+ },
+ "pelo_casco": false,
+ "piel": [
+  "#5d2f18",
+  "#7a4426",
+  "#8b502b",
+  "#a86f4c"
+ ],
+ "umbrales": [
+  0,
+  0.12,
+  0.35,
+  0.9
+ ],
+ "zonas": {
+  "perilla_ancho": 0.28,
+  "bigote_abajo": 0.09,
+  "bigote_arriba": 0.1,
+  "perilla_arriba": 0.2,
+  "perilla_base": 0.0,
+  "escote": 0.32,
+  "escote_u": 0.7,
+  "bigote_grosor": 0.022,
+  "sisa_arriba": 0.62,
+  "sisa_abre": 0.5,
+  "hombro": 0.3
+ }
+}
