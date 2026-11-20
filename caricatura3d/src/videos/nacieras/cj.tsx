@@ -10,7 +10,7 @@ const S0 = "#8b502b", S1 = "#7a4426", S2 = "#5d2f18", S3 = "#3e1c0b", SH = "#a86
 const LINEA = "#4a2414"; // líneas internas teñidas
 
 // cabeza calcada por coordenadas sobre el VIDEO ORIGINAL (cuadro 1.5 s, cuadrícula 4x); origen en el centro de la cara
-const CABEZA = "M 0 -258 C 60 -258 112 -236 128 -205 C 146 -170 152 -120 153 -60 C 155 20 150 90 138 130 C 124 175 104 205 70 230 C 50 245 34 254 4 257 C -20 258 -40 250 -64 232 C -96 210 -116 190 -130 168 C -146 140 -152 90 -156 20 C -160 -60 -158 -130 -150 -180 C -136 -230 -74 -258 0 -258 Z";
+const CABEZA = "M 0 -258 C 60 -258 112 -236 128 -205 C 146 -170 152 -120 153 -60 C 155 20 150 90 138 130 C 124 175 96 210 60 234 C 44 246 30 254 4 257 C -20 258 -36 250 -56 236 C -90 214 -112 192 -128 166 C -146 140 -152 90 -156 20 C -160 -60 -158 -130 -150 -180 C -136 -230 -74 -258 0 -258 Z";
 const CUELLO = "M -132 150 C -128 240 -134 330 -146 420 L 140 420 C 128 330 126 240 130 150 Z";
 
 export type GestoCJ = { mirarX?: number; mirarY?: number; cabeza?: number; boca?: "seria" | "abierta" };
@@ -40,6 +40,7 @@ export const CabezaCJ2: React.FC<{ f: number; id: string; g?: GestoCJ; semilla?:
     <g>
       <defs>
         <clipPath id={p("cab")}><path d={CABEZA} /></clipPath>
+        <filter id={p("suave")} x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation={5} /></filter>
         <pattern id={p("perilla")} width="7" height="7" patternUnits="userSpaceOnUse"><rect width="7" height="7" fill={S2} /><circle cx="2" cy="2" r="1.4" fill={PELO} /><circle cx="5.5" cy="5.5" r="1.4" fill={PELO} /></pattern>
       </defs>
       {/* orejas */}
@@ -50,12 +51,14 @@ export const CabezaCJ2: React.FC<{ f: number; id: string; g?: GestoCJ; semilla?:
       {/* cara */}
       <path d={CABEZA} fill={S0} />
       <g clipPath={u("cab")}>
+        <g filter={u("suave")}>
         <path d="M -170 -300 L -122 -300 C -130 -120 -132 20 -116 120 C -100 190 -70 230 -30 280 L -170 280 Z" fill={S1} />
         {/* mejillas: plano de sombra bajo los ojos */}
         <path d="M -126 6 Q -96 20 -76 60 Q -70 100 -96 126 Q -124 120 -134 70 Q -136 30 -126 6 Z M 76 16 Q 112 10 146 24 Q 150 80 132 132 Q 104 118 90 86 Q 78 52 76 16 Z" fill={S1} opacity={0.6} />
         {/* bajo los labios y la quijada */}
         <path d="M -60 176 Q 10 186 84 174 Q 60 200 12 206 Q -36 200 -60 176 Z" fill={S1} />
         <path d="M -150 150 C -110 220 -50 262 4 262 C 50 260 96 230 120 196 L 130 300 L -150 300 Z" fill={S1} opacity={0.55} />
+        </g>
         {/* brillos: frente, puente de la nariz */}
         <path d="M -110 -168 Q -60 -180 -10 -168 Q -20 -140 -60 -136 Q -100 -140 -110 -168 Z" fill={SH} />
         <path d="M -1 11 Q 6 40 13 67 Q 6 74 0 67 Q -4 40 -5 11 Z" fill={SH} />
@@ -74,11 +77,10 @@ export const CabezaCJ2: React.FC<{ f: number; id: string; g?: GestoCJ; semilla?:
       <path d="M -20 68 Q -46 70 -46 90 Q -44 104 -22 102 Q -30 88 -20 68 Z M 38 68 Q 64 70 64 90 Q 62 104 40 102 Q 48 88 38 68 Z" fill={S1} />
       <path d="M -44 82 Q -48 98 -26 103 M 62 82 Q 66 98 44 103" fill="none" stroke={LINEA} strokeWidth={3.5} strokeLinecap="round" />
       <path d="M -20 101 Q 8 108 38 101" fill="none" stroke={LINEA} strokeWidth={3} strokeLinecap="round" />
-      <ellipse cx={-6} cy={95} rx={6} ry={4} fill={S3} /><ellipse cx={24} cy={95} rx={6} ry={4} fill={S3} />
+      <path d="M -24 92 Q 8 86 40 92 Q 8 100 -24 92 Z" fill={S2} />
       {/* rayitas de la nariz a la boca */}
-      <path d="M -44 100 Q -60 118 -62 140 M 62 100 Q 78 118 82 140" fill="none" stroke={LINEA} strokeWidth={3} strokeLinecap="round" opacity={0.85} />
+      <path d="M -44 100 Q -60 118 -62 140 M 62 100 Q 78 118 82 140" fill="none" stroke={LINEA} strokeWidth={3} strokeLinecap="round" opacity={0.4} />
       {/* bigote delgado */}
-      <path d="M -54 118 Q 10 110 74 118" fill="none" stroke="#3e2216" strokeWidth={3.5} strokeLinecap="round" />
       {/* labios: el de arriba grande y oscuro, comisuras hacia abajo */}
       {g.boca === "abierta" ? <path d="M -68 140 Q 10 120 86 140 Q 60 180 10 182 Q -40 180 -68 140 Z" fill="#3a1410" stroke={K} strokeWidth={5} />
         : <g>
@@ -88,7 +90,8 @@ export const CabezaCJ2: React.FC<{ f: number; id: string; g?: GestoCJ; semilla?:
           <path d="M -24 162 Q 10 166 44 161" fill="none" stroke="#bd8670" strokeWidth={4} strokeLinecap="round" />
         </g>}
       {/* perilla chica en la barbilla */}
-      <path d="M -16 202 Q -4 198 8 202 Q 4 228 -4 238 Q -12 228 -16 202 Z" fill={u("perilla")} />
+      <path d="M -42 196 Q -4 226 34 196 Q 30 244 -4 254 Q -38 244 -42 196 Z" fill={S2} filter={u("suave")} opacity={0.9} />
+      <path d="M -14 200 Q -4 196 6 200 Q 4 226 -4 236 Q -12 226 -14 200 Z" fill={PELO} opacity={0.75} filter={u("suave")} />
     </g>
   );
 };
