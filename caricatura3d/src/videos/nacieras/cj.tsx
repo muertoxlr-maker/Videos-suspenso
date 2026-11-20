@@ -22,7 +22,7 @@ export const CabezaCJ2: React.FC<{ f: number; id: string; g?: GestoCJ; semilla?:
     const d = `M ${cx - w} ${cy + 2} Q ${cx - w * 0.1} ${cy - 13} ${cx + w} ${cy} Q ${cx} ${cy + 9} ${cx - w} ${cy + 2} Z`;
     return (
       <g>
-        <path d={d} fill="#efe6d6" />
+        <path d={d} fill={cerr ? S1 : "#efe6d6"} />
         <clipPath id={p("o" + k)}><path d={d} /></clipPath>
         {!cerr && <g clipPath={u("o" + k)}>
           <circle cx={cx + mx} cy={cy - 1 + my} r={9} fill="#4a2a17" /><circle cx={cx + mx} cy={cy - 1 + my} r={4.5} fill="#100805" />

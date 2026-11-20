@@ -3,6 +3,7 @@
 import React from "react";
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { BustoCJ2 } from "./cj";
+import { CalleAtardecer } from "./calle";
 
 export const CJ2_CUADROS = 120;
 const eio = (k: number) => (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2);
@@ -34,28 +35,11 @@ export const PruebaCJ2: React.FC = () => {
           <filter id="bloom" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation={40} /></filter>
         </defs>
         <g transform={`translate(540 900) scale(${z}) translate(-540 -900)`}>
-          {/* fondo lejano, desenfocado y con poco contraste */}
-          <g transform={`translate(${12 * k} 0)`} filter="url(#lejos)">
-            <rect x={-60} y={-60} width={1200} height={2040} fill="url(#cielo)" />
-            <circle cx={300} cy={1180} r={340} fill="url(#sol)" />
-            {[[60, 300], [380, 180], [700, 260]].map(([x, y], i) => <path key={i} d={`M ${x} ${y} h ${260 + i * 40}`} stroke="#a05a6a" strokeWidth={14} strokeLinecap="round" opacity={0.5} />)}
-            <path d="M -60 1240 Q 200 1150 420 1210 Q 680 1140 920 1200 Q 1040 1180 1140 1210 L 1140 1400 L -60 1400 Z" fill="#a35e6a" opacity={0.75} />
-            {[[620, 1090, 70, 170], [700, 1050, 60, 210], [770, 1110, 80, 150], [860, 1070, 60, 190], [930, 1120, 90, 140]].map(([x, y, w, h], i) => (
-              <g key={i} opacity={0.55}><rect x={x} y={y} width={w} height={h} fill="#c78a86" />{Array.from({ length: Math.floor(h / 26) }).map((_, j) => <rect key={j} x={x + 8} y={y + 12 + j * 26} width={w - 16} height={6} fill="#e0a898" />)}</g>
-            ))}
-            <Palmera x={120} y={1250} h={560} f={f} i={0} />
-            <Palmera x={960} y={1240} h={480} f={f} i={1} />
-            <path d="M 0 1250 L 0 520 M -14 560 h 40" stroke="#5d3648" strokeWidth={14} />
-            <path d="M -40 600 Q 540 700 1120 560 M -40 640 Q 540 760 1120 610 M -40 700 Q 540 800 1120 680" fill="none" stroke="#3e2230" strokeWidth={4} />
-            <rect x={-60} y={1250} width={1200} height={120} fill="#5e6a38" />
-            <rect x={-60} y={1370} width={1200} height={40} fill="#c9a690" />
-            <rect x={-60} y={1410} width={1200} height={12} fill="#b23a28" />
-            <rect x={-60} y={1422} width={1200} height={560} fill="#352626" />
-          </g>
+          <CalleAtardecer f={f} k={k} />
           {/* resplandor del sol (bloom) */}
-          <ellipse cx={320} cy={1150} rx={420} ry={260} fill="#ffc890" opacity={0.35} filter="url(#bloom)" style={{ mixBlendMode: "screen" }} />
+          <ellipse cx={300} cy={1060} rx={420} ry={260} fill="#ffc890" opacity={0.3} filter="url(#bloom)" style={{ mixBlendMode: "screen" }} />
           <g transform={`translate(${-24 * k} ${-2 * k})`}>
-            <BustoCJ2 f={f} x={560} y={820} s={1.0} id="cj2" g={{ mirarX: -0.2 }} />
+            <BustoCJ2 f={f} x={640} y={1040} s={0.95} id="cj2" g={{ mirarX: -0.2 }} />
           </g>
         </g>
         <rect width={1080} height={1920} fill="url(#vg)" />
