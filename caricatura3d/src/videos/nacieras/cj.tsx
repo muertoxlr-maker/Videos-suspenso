@@ -31,7 +31,7 @@ export const CabezaCJ2: React.FC<{ f: number; id: string; g?: GestoCJ; semilla?:
         </g>}
         {cerr
           ? <path d={`M ${cx - w} ${cy + 2} Q ${cx} ${cy + 7} ${cx + w} ${cy}`} fill="none" stroke={K} strokeWidth={6} strokeLinecap="round" />
-          : <path d={`M ${cx - w - 2} ${cy + 3} Q ${cx - w * 0.1} ${cy - 15} ${cx + w + 2} ${cy}`} fill="none" stroke={K} strokeWidth={6} strokeLinecap="round" />}
+          : <path d={`M ${cx - w - 2} ${cy + 3} Q ${cx - w * 0.1} ${cy - 15} ${cx + w + 2} ${cy}`} fill="none" stroke="#1a0c06" strokeWidth={5.5} strokeLinecap="round" />}
         <path d={`M ${cx - w * 0.8} ${cy - 16} Q ${cx} ${cy - 24} ${cx + w * 0.8} ${cy - 15}`} fill="none" stroke={S2} strokeWidth={3} strokeLinecap="round" opacity={0.8} />
         <path d={`M ${cx - w * 0.75} ${cy + 9} Q ${cx} ${cy + 13} ${cx + w * 0.75} ${cy + 6}`} fill="none" stroke={LINEA} strokeWidth={2} strokeLinecap="round" opacity={0.7} />
       </g>
@@ -41,7 +41,9 @@ export const CabezaCJ2: React.FC<{ f: number; id: string; g?: GestoCJ; semilla?:
     <g>
       <defs>
         <clipPath id={p("cab")}><path d={CABEZA} /></clipPath>
-        <filter id={p("suave")} x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation={4} /></filter>
+        <filter id={p("suave")} x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation={9} /></filter>
+        <filter id={p("leve")} x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation={1.6} /></filter>
+        <radialGradient id={p("piel")} cx="0.55" cy="0.42" r="0.65"><stop offset="0" stopColor="#9c5e38" /><stop offset="0.6" stopColor={S0} /><stop offset="1" stopColor="#6e3c22" /></radialGradient>
       </defs>
       {/* orejas */}
       <path d="M -156 -42 C -222 -50 -222 112 -150 110 Z" fill={S1} stroke={K} strokeWidth={9} strokeLinejoin="round" />
@@ -50,48 +52,60 @@ export const CabezaCJ2: React.FC<{ f: number; id: string; g?: GestoCJ; semilla?:
       <path d="M 160 -20 C 188 -8 186 74 158 88" fill="none" stroke={S2} strokeWidth={10} strokeLinecap="round" />
       <path d="M 186 -40 C 204 -10 204 70 186 96" fill="none" stroke={RIM} strokeWidth={5} strokeLinecap="round" />
       {/* cara */}
-      <path d={CABEZA} fill={S0} />
+      <path d={CABEZA} fill={u("piel")} />
       <g clipPath={u("cab")}>
         <g filter={u("suave")}>
           <path d="M -190 -300 L -136 -300 C -144 -120 -144 20 -128 120 C -112 190 -76 230 -30 280 L -190 280 Z" fill={S1} />
           <path d="M -126 0 Q -96 14 -78 56 Q -74 96 -98 124 Q -128 116 -138 66 Q -140 26 -126 0 Z M 78 6 Q 112 0 144 12 Q 148 76 132 128 Q 104 114 92 84 Q 80 50 78 6 Z" fill={S1} opacity={0.7} />
           <path d="M -52 176 Q 10 186 78 174 Q 56 204 12 210 Q -32 204 -52 176 Z" fill={S1} />
           <path d="M -150 150 C -110 220 -50 262 4 262 C 50 260 96 226 124 186 L 130 300 L -150 300 Z" fill={S1} opacity={0.5} />
+          {/* cuencas bajo las cejas, lados de la nariz, bajo el labio y bajo la barbilla */}
+          <path d="M -112 -44 Q -68 -58 -14 -44 Q -18 -12 -40 -6 Q -80 -4 -110 -18 Z M 34 -44 Q 90 -60 142 -48 Q 138 -18 120 -8 Q 80 -4 40 -16 Z" fill={S2} opacity={0.75} />
+          <path d="M -6 -20 Q -16 30 -30 74 L -6 78 Z M 26 -20 Q 40 30 54 74 L 30 78 Z" fill={S2} opacity={0.6} />
+          <path d="M -40 180 Q 14 192 70 178 Q 50 200 14 204 Q -20 200 -40 180 Z" fill={S2} opacity={0.6} />
+          <path d="M -36 96 Q -56 120 -62 140 L -50 142 Q -44 118 -28 100 Z M 64 96 Q 82 120 88 140 L 76 142 Q 70 118 54 100 Z" fill={S2} opacity={0.7} />
+        </g>
+        {/* luces suaves: centro de la frente, tabique, pómulos y labio inferior */}
+        <g filter={u("suave")}>
+          <ellipse cx={-30} cy={-140} rx={60} ry={30} fill="#c78a5e" opacity={0.6} />
+          <path d="M 10 -36 Q 16 20 20 70 Q 14 78 8 70 Q 4 20 4 -36 Z" fill="#e3a476" opacity={0.85} />
+          <ellipse cx={-92} cy={30} rx={22} ry={16} fill="#c78a5e" opacity={0.18} />
+          <ellipse cx={110} cy={24} rx={20} ry={16} fill="#e3a476" opacity={0.25} />
+          <ellipse cx={14} cy={78} rx={18} ry={11} fill="#d8996c" opacity={0.6} />
         </g>
         {/* brillos: frente y puente de la nariz */}
-        <ellipse cx={-48} cy={-148} rx={62} ry={28} fill={SH} opacity={0.85} />
-        <path d="M 9 -30 Q 15 20 21 65 Q 15 72 9 65 Q 5 20 5 -30 Z" fill={SH} />
         {/* rim light a la derecha */}
         <path d="M 128 -200 C 144 -140 146 -40 144 40 C 142 100 132 150 116 180" fill="none" stroke={RIM} strokeWidth={6} strokeLinecap="round" />
         {/* pelo */}
         <path d="M -168 -80 C -175 -150 -165 -230 -90 -258 C -40 -274 40 -274 100 -252 C 130 -238 148 -212 150 -180 L 132 -190 L -108 -190 Q -130 -150 -140 -83 Q -156 -78 -168 -80 Z" fill={PELO} />
         <path d="M -108 -190 L 132 -190" fill="none" stroke="#3a2416" strokeWidth={3} strokeDasharray="2 5" />
       </g>
-      <path d={CABEZA} fill="none" stroke={K} strokeWidth={9} strokeLinejoin="round" />
-      {/* cejas */}
+      <path d={CABEZA} fill="none" stroke={K} strokeWidth={16} strokeLinejoin="round" opacity={0.35} filter={u("leve")} />
+      <path d={CABEZA} fill="none" stroke={K} strokeWidth={11} strokeLinejoin="round" />
+      {/* cejas: más bajas, gruesas, bordes difuminados */}
+      <g transform="translate(0 7) translate(0 -55) scale(1 1.3) translate(0 55)" filter={u("leve")}>
       <path d="M -118 -46 Q -90 -70 -40 -70 Q -14 -70 0 -60 L -2 -46 Q -20 -54 -44 -55 Q -86 -54 -116 -38 Z" fill={PELO} />
       <path d="M 30 -46 Q 34 -60 64 -68 Q 110 -76 146 -64 L 144 -52 Q 110 -60 70 -54 Q 46 -52 30 -46 Z" fill={PELO} />
+      </g>
       {ojo(-68, -20, 34, "i")}{ojo(89, -20, 33, "d")}
       {/* nariz: sombra lateral, alas en C y fosas chiquitas */}
-      <path d="M -4 -30 Q -8 20 -18 62 Q -8 58 2 64 Q 2 20 2 -30 Z" fill={S1} />
-      <path d="M -16 60 Q -38 62 -36 78 Q -34 92 -16 92" fill="none" stroke={K} strokeWidth={5} strokeLinecap="round" />
-      <path d="M 46 60 Q 66 62 64 78 Q 62 92 46 92" fill="none" stroke={K} strokeWidth={5} strokeLinecap="round" />
-      <path d="M -14 92 Q 15 98 44 92" fill="none" stroke={LINEA} strokeWidth={3} strokeLinecap="round" />
-      <ellipse cx={-3} cy={85} rx={6} ry={3.5} fill={S3} /><ellipse cx={35} cy={85} rx={6} ry={3.5} fill={S3} />
+            <path d="M -16 62 Q -36 64 -34 78 Q -32 90 -16 92" fill="none" stroke="#3a1c10" strokeWidth={4} strokeLinecap="round" opacity={0.55} filter={u("leve")} />
+      <path d="M 46 62 Q 64 64 62 78 Q 60 90 46 92" fill="none" stroke="#3a1c10" strokeWidth={4} strokeLinecap="round" opacity={0.55} filter={u("leve")} />
+      <path d="M -14 92 Q 15 98 44 92" fill="none" stroke="#3a1c10" strokeWidth={3} strokeLinecap="round" opacity={0.4} filter={u("leve")} />
+      <ellipse cx={-3} cy={86} rx={7} ry={4} fill="#2a140a" opacity={0.6} filter={u("leve")} /><ellipse cx={35} cy={86} rx={7} ry={4} fill="#2a140a" opacity={0.6} filter={u("leve")} />
       {/* rayitas de la nariz a las comisuras */}
-      <path d="M -33 92 Q -50 112 -60 137 M 62 92 Q 78 112 86 137" fill="none" stroke={LINEA} strokeWidth={3} strokeLinecap="round" opacity={0.7} />
       {/* bigote fino justo encima del labio superior */}
-      <path d="M -54 116 Q 14 108 83 116" fill="none" stroke="#2a1810" strokeWidth={3} strokeLinecap="round" />
+      <path d="M -54 116 Q 14 108 83 116" fill="none" stroke="#1e100a" strokeWidth={4} strokeLinecap="round" opacity={0.7} filter={u("leve")} />
       {/* labios */}
       {g.boca === "abierta" ? <path d="M -62 140 Q 14 124 92 140 Q 64 182 14 184 Q -36 182 -62 140 Z" fill="#3a1410" stroke={K} strokeWidth={5} />
         : <g>
           <path d="M -60 142 Q -40 120 14 122 Q 66 120 90 142 Q 14 138 -60 142 Z" fill="#6a3a2a" />
           <path d="M -51 146 Q 14 146 80 146 Q 60 174 14 175 Q -32 174 -51 146 Z" fill="#a8786a" />
           <path d="M -18 156 Q 14 160 46 155" fill="none" stroke="#d6aa9a" strokeWidth={5} strokeLinecap="round" />
-          <path d="M -62 144 Q 14 139 92 144" fill="none" stroke="#1c0e08" strokeWidth={5} strokeLinecap="round" />
+          <path d="M -62 144 Q 14 139 92 144" fill="none" stroke="#2a140c" strokeWidth={4.5} strokeLinecap="round" opacity={0.85} filter={u("leve")} />
         </g>}
       {/* perilla chica */}
-      <path d="M 0 186 Q 12 182 24 186 Q 22 210 12 222 Q 2 210 0 186 Z" fill={S3} filter={u("suave")} />
+      <path d="M -14 184 Q 12 178 38 184 Q 34 214 12 228 Q -10 214 -14 184 Z" fill="#1e100a" opacity={0.6} filter={u("suave")} />
     </g>
   );
 };
