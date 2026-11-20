@@ -124,7 +124,7 @@ export const BustoCJ2: React.FC<{ f: number; x: number; y: number; s?: number; i
         <clipPath id={p("cue")}><path d={CUELLO} /></clipPath>
       </defs>
       {/* hombros y brazos (subidos 60 para un cuello más corto) */}
-      <g transform="translate(0 -70)">
+      <g transform="translate(0 40) scale(1.08 1)">
       <path d={TORSO} fill={S0} />
       <g clipPath={u("tor")}>
         <path d="M -440 420 L -230 380 C -260 520 -270 760 -250 900 L -440 900 Z" fill={S1} />
@@ -137,7 +137,7 @@ export const BustoCJ2: React.FC<{ f: number; x: number; y: number; s?: number; i
       <path d={TORSO} fill="none" stroke={K} strokeWidth={10} strokeLinejoin="round" />
       </g>
       {/* cuello ancho con banda de sombra bajo la quijada y tendones */}
-      <g transform="translate(0 0)">
+      <g transform="translate(0 20) scale(1.25 1.05)">
         <path d={CUELLO} fill={S0} />
         <g clipPath={u("cue")}>
           <path d="M -140 100 L 120 100 L 120 210 Q 0 250 -140 200 Z" fill={S2} />
@@ -148,7 +148,7 @@ export const BustoCJ2: React.FC<{ f: number; x: number; y: number; s?: number; i
         </g>
         <path d="M -140 150 C -136 240 -140 330 -150 420 M 104 420 C 96 330 94 240 98 170" fill="none" stroke={K} strokeWidth={10} strokeLinecap="round" />
       </g>
-      <g transform="translate(0 -80)">
+      <g transform="translate(0 50) scale(1.05 1)">
       {/* clavículas */}
       <path d="M -200 380 Q -130 400 -40 370 M 30 370 Q 110 400 170 378" fill="none" stroke={LINEA} strokeWidth={3} strokeLinecap="round" />
       {/* camiseta de tirantes con banda acanalada */}
@@ -165,7 +165,7 @@ export const BustoCJ2: React.FC<{ f: number; x: number; y: number; s?: number; i
       </g>
       {/* cabeza */}
       <g transform={`rotate(${(g.cabeza ?? 0) + 0.8 * Math.sin(t * 1.3)} 0 200)`}>
-        <CabezaCJ2 f={f} id={id} g={g} semilla={semilla} />
+        <g transform="translate(0 -30) scale(1.2)"><CabezaCJ2 f={f} id={id} g={g} semilla={semilla} /></g>
       </g>
     </g>
   );
